@@ -1,6 +1,6 @@
 /**
- * Enciclopédia Paleontológica Global da Vida na Terra
- * Frontend Controller conectado à API FastAPI
+ * Super Wiki Global da Vida na Terra
+ * Frontend Controller conectado à API FastAPI (GBIF + PBDB + Wikimedia)
  */
 
 // Estado Global da Aplicação
@@ -9,24 +9,27 @@ const state = {
   currentPeriod: 'all',
   currentGroup: 'all',
   currentDiet: 'all',
+  currentSkeletalType: 'all',
   searchQuery: '',
   isExpertMode: false,
   specimens: [],
   selectedSpecimen: null,
   lightboxImages: [],
   lightboxIndex: 0,
+  galleryActiveCategory: 'all',
   leafletMap: null,
   mapMarkersGroup: null
 };
 
-// Placeholder SVG resiliente para paleoarte
-const PLACEHOLDER_IMAGE = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22260%22%20viewBox%3D%220%200%20400%20260%22%3E%3Crect%20fill%3D%22%23121712%22%20width%3D%22400%22%20height%3D%22260%22%2F%3E%3Ctext%20fill%3D%22%234ade80%22%20font-family%3D%22system-ui%22%20font-size%3D%2246%22%20x%3D%2250%25%22%20y%3D%2245%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3E%F0%9F%A6%95%3C%2Ftext%3E%3Ctext%20fill%3D%22%238fa38f%22%20font-family%3D%22system-ui%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2268%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ERepresenta%C3%A7%C3%A3o%20em%20Vida%20(Paleoarte)%3C%2Ftext%3E%3C%2Fsvg%3E";
+// Placeholder SVG resiliente para paleoarte e fotos
+const PLACEHOLDER_IMAGE = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22260%22%20viewBox%3D%220%200%20400%20260%22%3E%3Crect%20fill%3D%22%23121712%22%20width%3D%22400%22%20height%3D%22260%22%2F%3E%3Ctext%20fill%3D%22%234ade80%22%20font-family%3D%22system-ui%22%20font-size%3D%2246%22%20x%3D%2250%25%22%20y%3D%2245%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3E%F0%9F%A6%8E%3C%2Ftext%3E%3Ctext%20fill%3D%22%238fa38f%22%20font-family%3D%22system-ui%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2268%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3EImagem%20Cient%C3%ADfica%20do%20Esp%C3%A9cime%3C%2Ftext%3E%3C%2Fsvg%3E";
 
 // Elementos do DOM
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const clearBtn = document.getElementById('clearBtn');
 const btnAutoIngest = document.getElementById('btnAutoIngest');
+const skeletalFilter = document.getElementById('skeletalFilter');
 const periodFilter = document.getElementById('periodFilter');
 const groupFilter = document.getElementById('groupFilter');
 const dietFilter = document.getElementById('dietFilter');
@@ -49,8 +52,6 @@ const closeWikiBtn = document.getElementById('closeWikiBtn');
 const btnCloseWikiFooter = document.getElementById('btnCloseWikiFooter');
 const btnToggleExpertInFooter = document.getElementById('btnToggleExpertInFooter');
 const wikiTabsBar = document.querySelector('.wiki-tabs-bar');
-const tabBtnExpert = document.getElementById('tabBtnExpert');
-const tabBtnMap = document.getElementById('tabBtnMap');
 
 // Lightbox Elements
 const lightboxModal = document.getElementById('lightboxModal');
@@ -95,10 +96,17 @@ function setupEventListeners() {
     handleSearch();
   });
 
-  // Botão Subir Espécime
+  // Botão Subir via API
   btnAutoIngest.addEventListener('click', () => handleAutoIngestPrompt());
 
   // Filtros de Select
+  if (skeletalFilter) {
+    skeletalFilter.addEventListener('change', () => {
+      state.currentSkeletalType = skeletalFilter.value;
+      loadCatalog();
+    });
+  }
+
   periodFilter.addEventListener('change', () => {
     state.currentPeriod = periodFilter.value;
     loadCatalog();
@@ -125,7 +133,6 @@ function setupEventListeners() {
     btn.classList.add('active');
     
     state.currentEra = btn.getAttribute('data-era');
-    updatePeriodOptionsForEra(state.currentEra);
     loadCatalog();
   });
 
@@ -136,7 +143,7 @@ function setupEventListeners() {
     toggleExpertModeDisplay();
   });
 
-  // Modo Especialista dentro do Modal
+  // Modo Especialista no Modal
   modalExpertToggle.addEventListener('change', () => {
     state.isExpertMode = modalExpertToggle.checked;
     globalExpertToggle.checked = state.isExpertMode;
@@ -159,6 +166,19 @@ function setupEventListeners() {
     const tabId = tabBtn.getAttribute('data-tab');
     switchWikiTab(tabId);
   });
+
+  // Filtros de Categoria da Galeria
+  const catContainer = document.getElementById('galleryCategoryChips');
+  if (catContainer) {
+    catContainer.addEventListener('click', (e) => {
+      const chip = e.target.closest('.gallery-cat-chip');
+      if (!chip) return;
+      document.querySelectorAll('.gallery-cat-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.galleryActiveCategory = chip.getAttribute('data-cat');
+      renderFilteredGallery();
+    });
+  }
 
   // Fechamento de Modais
   closeWikiBtn.addEventListener('click', closeWikiModal);
@@ -223,13 +243,14 @@ function setupEventListeners() {
 // ============================================================================
 
 async function loadCatalog() {
-  showLoading('Consultando catálogo paleontológico...');
+  showLoading('Consultando Super Wiki...');
   
   const params = new URLSearchParams();
   if (state.currentEra && state.currentEra !== 'all') params.append('era', state.currentEra);
   if (state.currentPeriod && state.currentPeriod !== 'all') params.append('period', state.currentPeriod);
   if (state.currentGroup && state.currentGroup !== 'all') params.append('group', state.currentGroup);
   if (state.currentDiet && state.currentDiet !== 'all') params.append('diet', state.currentDiet);
+  if (state.currentSkeletalType && state.currentSkeletalType !== 'all') params.append('skeletal_type', state.currentSkeletalType);
   if (state.searchQuery) params.append('search', state.searchQuery);
 
   try {
@@ -268,8 +289,11 @@ function renderCards(specimens) {
     card.className = `card era-${spec.era}`;
     card.setAttribute('data-id', spec.id);
 
-    // Mapeamento de cor do badge de era
     const eraClass = `badge-era-${spec.era}`;
+    const isVertebrate = spec.skeletal_type === 'vertebrado';
+    const skeletalBadgeClass = isVertebrate ? 'badge-vertebrado' : 'badge-invertebrado';
+    const skeletalIcon = isVertebrate ? '🦴' : '🐚';
+    const skeletalLabel = isVertebrate ? 'Vertebrado' : 'Invertebrado';
 
     card.innerHTML = `
       <div class="card-media-wrap">
@@ -283,7 +307,7 @@ function renderCards(specimens) {
         />
         <div class="card-media-overlay">
           <span class="badge-era ${eraClass}">${spec.era_display}</span>
-          <span class="card-floating-badge">${spec.period}</span>
+          <span class="badge-skeletal ${skeletalBadgeClass}">${skeletalIcon} ${skeletalLabel}</span>
         </div>
       </div>
 
@@ -305,8 +329,8 @@ function renderCards(specimens) {
 
         <div class="card-specs-row">
           <div class="spec-mini">
-            <span class="mini-label">Comprimento</span>
-            <span class="mini-val">${spec.length || '-'}</span>
+            <span class="mini-label">Estrutura</span>
+            <span class="mini-val" style="font-size: 0.75rem;">${truncateText(spec.skeletal_composition || skeletalLabel, 18)}</span>
           </div>
           <div class="spec-mini">
             <span class="mini-label">Massa</span>
@@ -322,8 +346,8 @@ function renderCards(specimens) {
             </svg>
           </button>
           
-          <button class="secondary-btn btn-quick-expert" data-id="${spec.id}" title="Ver detalhes complexos e cladística">
-            🔬
+          <button class="secondary-btn btn-quick-skeleton" data-id="${spec.id}" title="Ver Esqueleto, Ossos ou Cartilagem">
+            🦴
           </button>
         </div>
       </div>
@@ -331,7 +355,7 @@ function renderCards(specimens) {
 
     // Event listeners
     card.querySelector('.btn-open-wiki').addEventListener('click', () => openWikiModal(spec.id, 'tab-overview'));
-    card.querySelector('.btn-quick-expert').addEventListener('click', () => openWikiModal(spec.id, 'tab-expert'));
+    card.querySelector('.btn-quick-skeleton').addEventListener('click', () => openWikiModal(spec.id, 'tab-skeleton'));
     card.querySelector('.card-media-wrap').addEventListener('click', () => openWikiModal(spec.id, 'tab-overview'));
 
     fragment.appendChild(card);
@@ -343,7 +367,6 @@ function renderCards(specimens) {
 
 function handleCardImageError(imgEl, specId) {
   imgEl.onerror = null;
-  // Se falhar direto, tenta o proxy do FastAPI
   const originalSrc = imgEl.src;
   if (!originalSrc.includes('/api/proxy-image')) {
     imgEl.src = `/api/proxy-image?url=${encodeURIComponent(originalSrc)}`;
@@ -357,7 +380,7 @@ function handleCardImageError(imgEl, specId) {
 
 
 // ============================================================================
-// BUSCA E INGESTÃO AUTOMÁTICA
+// BUSCA E INGESTÃO AUTOMÁTICA VIA API (GBIF + PBDB + COMMONS)
 // ============================================================================
 
 async function handleSearch() {
@@ -369,8 +392,7 @@ async function handleSearch() {
     return;
   }
 
-  // Verifica se há resultados locais correspondentes
-  showLoading(`Pesquisando por "${query}" no catálogo...`);
+  showLoading(`Pesquisando por "${query}" no acervo...`);
   const params = new URLSearchParams();
   if (state.currentEra && state.currentEra !== 'all') params.append('era', state.currentEra);
   params.append('search', query);
@@ -386,9 +408,9 @@ async function handleSearch() {
       updateStats(results.length);
       showToast(`Encontrado(s) ${results.length} espécime(s) para "${query}"`, '🔍');
     } else {
-      // Se não encontrou, oferece ou executa ingestão automática
+      // Ingestão dinâmica sob demanda via GBIF, PBDB e Wikimedia
       hideLoading();
-      showToast(`Gênero não catalogado localmente. Buscando na PBDB & Wikimedia...`, '⚡');
+      showToast(`Animal não encontrado localmente. Consultando APIs de biodiversidade...`, '🌐');
       await executeAutoIngest(query);
     }
   } catch (e) {
@@ -401,7 +423,7 @@ async function handleSearch() {
 async function handleAutoIngestPrompt() {
   const query = searchInput.value.trim();
   if (!query) {
-    showToast('Digite o nome do gênero científico no campo de busca para subir!', '💡');
+    showToast('Digite o nome do animal (comum ou científico) para subir via API!', '💡');
     searchInput.focus();
     return;
   }
@@ -410,7 +432,7 @@ async function handleAutoIngestPrompt() {
 
 
 async function executeAutoIngest(taxonName) {
-  showLoading(`Minerando fósseis de "${taxonName}" na PBDB e imagens de paleoarte em vida...`);
+  showLoading(`Minerando dados de "${taxonName}" na GBIF, PBDB e fotos de ossos/esqueleto na Wikimedia...`);
   
   try {
     const res = await fetch('/api/ingest', {
@@ -426,29 +448,32 @@ async function executeAutoIngest(taxonName) {
     hideLoading();
 
     if (data.success && data.specimen) {
-      showToast(data.message, '🦖');
-      // Recarrega e abre a wiki do novo espécime
+      showToast(data.message, '🎉');
       await loadCatalog();
       openWikiModal(data.specimen.id, 'tab-overview');
     } else {
-      showToast(data.message || 'Não foi possível localizar o espécime.', '⚠️');
+      showToast(data.message || 'Não foi possível localizar dados científicos para o animal.', '⚠️');
     }
   } catch (err) {
     hideLoading();
     console.error('Erro na ingestão:', err);
-    showToast('Falha na comunicação com o serviço de ingestão.', '❌');
+    showToast('Falha na comunicação com o serviço de ingestão via API.', '❌');
   }
 }
 
 
 async function openOrIngestSpecimen(name) {
   const cleanId = name.toLowerCase().replace(/ /g, '-');
-  const found = state.specimens.find(s => s.id === cleanId || s.name.toLowerCase().includes(name.toLowerCase()) || s.genus.toLowerCase() === name.toLowerCase());
+  const found = state.specimens.find(s => 
+    s.id === cleanId || 
+    s.name.toLowerCase().includes(name.toLowerCase()) || 
+    s.genus.toLowerCase() === name.toLowerCase() ||
+    (s.scientific_name && s.scientific_name.toLowerCase().includes(name.toLowerCase()))
+  );
   
   if (found) {
     openWikiModal(found.id, 'tab-overview');
   } else {
-    // Tenta carregar do backend ou ingere
     searchInput.value = name;
     clearBtn.classList.remove('hidden');
     await executeAutoIngest(name);
@@ -466,7 +491,7 @@ async function discoverRandomSpecimen(era = 'all') {
 
     if (discoveries && discoveries.length > 0) {
       const lucky = discoveries[0];
-      showToast(`Espécime sorteado: ${lucky.name} (${lucky.era_display})!`, '🎲');
+      showToast(`Sorteado: ${lucky.name} (${lucky.era_display})!`, '🎲');
       openWikiModal(lucky.id, 'tab-overview');
     }
   } catch (e) {
@@ -477,11 +502,11 @@ async function discoverRandomSpecimen(era = 'all') {
 
 
 // ============================================================================
-// WIKI PALEONTOLÓGICA MODAL INTERATIVA
+// SUPER WIKI MODAL INTERATIVA COM FOTOS DE OSSOS / CARTILAGEM
 // ============================================================================
 
 async function openWikiModal(specimenId, initialTab = 'tab-overview') {
-  showLoading('Carregando dossiê paleontológico...');
+  showLoading('Carregando dossiê do espécime...');
 
   try {
     const res = await fetch(`/api/specimens/${specimenId}`);
@@ -493,19 +518,28 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
 
     // Cabeçalho
     document.getElementById('wikiTitle').textContent = spec.name;
-    document.getElementById('wikiEtymology').textContent = spec.etymology || `${spec.genus} • Registro fóssil`;
+    document.getElementById('wikiEtymology').textContent = spec.scientific_name ? `${spec.scientific_name} • ${spec.etymology || 'Classificação biológica'}` : spec.etymology;
     
     // Badges
     const eraBadge = document.getElementById('wikiEraBadge');
     eraBadge.textContent = spec.era_display;
     eraBadge.className = `badge-era badge-era-${spec.era}`;
+
+    const isVertebrate = spec.skeletal_type === 'vertebrado';
+    const skeletalBadge = document.getElementById('wikiSkeletalBadge');
+    skeletalBadge.textContent = isVertebrate ? '🦴 Vertebrado' : '🐚 Invertebrado';
+    skeletalBadge.className = `badge-skeletal ${isVertebrate ? 'badge-vertebrado' : 'badge-invertebrado'}`;
     
     const periodBadge = document.getElementById('wikiPeriodBadge');
     periodBadge.textContent = spec.period;
-    periodBadge.className = `card-floating-badge period-${spec.era}`;
 
     document.getElementById('wikiGroupBadge').textContent = spec.group_display;
     document.getElementById('wikiDietBadge').textContent = spec.diet_display;
+
+    // Ficha Estrutural
+    document.getElementById('specSkeletalType').textContent = isVertebrate ? 'Vertebrado (Possui coluna vertebral e crânio)' : 'Invertebrado (Sem coluna vertebral)';
+    document.getElementById('specSkeletalComp').textContent = spec.skeletal_composition || 'Estrutura corporal não-mineralizada';
+    document.getElementById('specConservationStatus').textContent = spec.conservation_status || (spec.is_contemporary ? 'Espécie Vivente' : 'Fóssil Extinto');
 
     // Ficha Biométrica
     document.getElementById('specLength').textContent = spec.length || 'Em estudo';
@@ -530,12 +564,12 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
     const featuredImg = document.getElementById('wikiFeaturedImg');
     featuredImg.src = spec.image_url;
     featuredImg.onerror = () => { featuredImg.src = PLACEHOLDER_IMAGE; };
-    document.getElementById('wikiFeaturedCaption').textContent = spec.image_caption || 'Representação paleoartística em vida';
+    document.getElementById('wikiFeaturedCaption').textContent = spec.image_caption || 'Representação visual do indivíduo';
 
     // Miniaturas
     const thumbsContainer = document.getElementById('wikiGalleryThumbs');
     thumbsContainer.innerHTML = '';
-    const galleryItems = spec.gallery && spec.gallery.length > 0 ? spec.gallery : [{ url: spec.image_url, caption: spec.image_caption }];
+    const galleryItems = spec.gallery && spec.gallery.length > 0 ? spec.gallery : [{ url: spec.image_url, caption: spec.image_caption, category: 'life_view' }];
     
     document.getElementById('galleryCount').textContent = galleryItems.length;
     state.lightboxImages = galleryItems;
@@ -553,21 +587,26 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
         document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
         thumb.classList.add('active');
         featuredImg.src = item.url;
-        document.getElementById('wikiFeaturedCaption').textContent = item.caption || 'Representação em vida';
+        document.getElementById('wikiFeaturedCaption').textContent = item.caption || 'Representação do indivíduo';
       });
 
       thumbsContainer.appendChild(thumb);
     });
 
-    // Detalhes Complexos (Aba Especialista)
+    // Aba de Esqueleto, Ossos & Cartilagem
+    renderSkeletonTab(spec);
+
+    // Aba de Detalhes Complexos
     renderExpertTab(spec);
 
-    // Galeria Completa (Aba Imagens)
-    renderFullGalleryTab(spec);
+    // Aba de Galeria Completa
+    state.galleryActiveCategory = 'all';
+    document.querySelectorAll('.gallery-cat-chip').forEach(c => c.classList.toggle('active', c.getAttribute('data-cat') === 'all'));
+    renderFilteredGallery();
 
     // Botão Google Imagens
     const googleBtn = document.getElementById('btnSearchGoogleImages');
-    googleBtn.href = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(spec.name + ' paleoart life restoration')}`;
+    googleBtn.href = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(spec.name + ' ' + (spec.scientific_name || '') + ' skeleton skull anatomy')}`;
 
     // Abre modal e ativa aba inicial
     wikiModal.classList.remove('hidden');
@@ -582,10 +621,88 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
 }
 
 
+function renderSkeletonTab(spec) {
+  const isVertebrate = spec.skeletal_type === 'vertebrado';
+  const explanation = document.getElementById('skeletonExplanationText');
+  
+  if (isVertebrate) {
+    explanation.innerHTML = `
+      <strong>${spec.name}</strong> é um <strong>VERTEBRADO</strong>.<br>
+      Possui <strong>${spec.skeletal_composition || 'Endoesqueleto Ósseo Articulado'}</strong> com crânio rígido, coluna vertebral axial, cintura escapular/pélvica e costelas torácicas protetoras.
+    `;
+  } else {
+    explanation.innerHTML = `
+      <strong>${spec.name}</strong> é um <strong>INVERTEBRADO</strong>.<br>
+      Não possui ossos verdadeiros ou coluna vertebral. Sua sustentação mecânica é provida por <strong>${spec.skeletal_composition || 'Exoesqueleto ou Hidroesqueleto'}</strong>.
+    `;
+  }
+
+  // Filtra imagens de esqueleto, crânio, fósseis ou cartilagem
+  const grid = document.getElementById('skeletonImagesGrid');
+  grid.innerHTML = '';
+
+  const items = spec.gallery || [];
+  const skeletalItems = items.filter(img => 
+    img.category === 'skeletal_view' || 
+    ['skeleton', 'skull', 'bones', 'cartilage', 'fossil'].includes(img.type) ||
+    /skeleton|skull|crânio|esqueleto|bone|cartilage|fossil|concha/i.test(img.caption)
+  );
+
+  const displayList = skeletalItems.length > 0 ? skeletalItems : items;
+
+  displayList.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+    card.innerHTML = `
+      <img src="${item.url}" alt="${item.caption || 'Esqueleto / Ossos'}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='${PLACEHOLDER_IMAGE}'" />
+      <div class="gallery-card-info">
+        <span class="gallery-card-caption">${item.caption || 'Vista esquelética / osteologia'}</span>
+        <small class="gallery-card-author">${item.author || 'Wikimedia Commons'}</small>
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      const fullIdx = items.indexOf(item);
+      openLightbox(fullIdx >= 0 ? fullIdx : idx);
+    });
+    grid.appendChild(card);
+  });
+}
+
+
+function renderFilteredGallery() {
+  const container = document.getElementById('fullGalleryGrid');
+  container.innerHTML = '';
+
+  if (!state.selectedSpecimen) return;
+  const items = state.selectedSpecimen.gallery && state.selectedSpecimen.gallery.length > 0 ? state.selectedSpecimen.gallery : [{ url: state.selectedSpecimen.image_url, caption: state.selectedSpecimen.image_caption, category: 'life_view' }];
+
+  const cat = state.galleryActiveCategory;
+  const filtered = cat === 'all' ? items : items.filter(it => it.category === cat);
+  const toRender = filtered.length > 0 ? filtered : items;
+
+  toRender.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+    card.innerHTML = `
+      <img src="${item.url}" alt="${item.caption || 'Imagem'}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='${PLACEHOLDER_IMAGE}'" />
+      <div class="gallery-card-info">
+        <span class="gallery-card-caption">${item.caption || 'Representação visual'}</span>
+        <small class="gallery-card-author">${item.author || 'Wikimedia Commons'}</small>
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      const globalIdx = items.indexOf(item);
+      openLightbox(globalIdx >= 0 ? globalIdx : 0);
+    });
+    container.appendChild(card);
+  });
+}
+
+
 function renderExpertTab(spec) {
   const expert = spec.expert || {};
   
-  // Cladograma
+  // Cladograma (GBIF Backbone Taxonomy)
   const cladContainer = document.getElementById('expertCladogram');
   cladContainer.innerHTML = '';
   if (expert.cladogram && expert.cladogram.length > 0) {
@@ -599,39 +716,12 @@ function renderExpertTab(spec) {
     });
     cladContainer.appendChild(ul);
   } else {
-    cladContainer.innerHTML = '<p class="text-muted">Árvore filogenética em refinamento taxonômico.</p>';
+    cladContainer.innerHTML = '<p class="text-muted">Árvore filogenética em refinamento.</p>';
   }
 
-  // Osteologia
-  document.getElementById('expertOsteology').innerHTML = expert.osteology || '<p>Estrutura óssea em análise comparativa.</p>';
-
-  // Biomecânica
+  document.getElementById('expertOsteology').innerHTML = expert.osteology || '<p>Análise óssea e estrutural em compilação.</p>';
   document.getElementById('expertBiomechanics').innerHTML = expert.biomechanics || '<p>Modelagem biomecânica em simulação computacional.</p>';
-
-  // Histologia
-  document.getElementById('expertHistology').innerHTML = expert.histology || '<p>Cortes histológicos e tafonomia sedimentar em catálogo.</p>';
-}
-
-
-function renderFullGalleryTab(spec) {
-  const container = document.getElementById('fullGalleryGrid');
-  container.innerHTML = '';
-
-  const items = spec.gallery && spec.gallery.length > 0 ? spec.gallery : [{ url: spec.image_url, caption: spec.image_caption }];
-
-  items.forEach((item, idx) => {
-    const card = document.createElement('div');
-    card.className = 'gallery-card';
-    card.innerHTML = `
-      <img src="${item.url}" alt="${item.caption || 'Paleoarte'}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='${PLACEHOLDER_IMAGE}'" />
-      <div class="gallery-card-info">
-        <span class="gallery-card-caption">${item.caption || 'Representação em vida'}</span>
-        <small class="gallery-card-author">${item.author || 'Wikimedia Commons'}</small>
-      </div>
-    `;
-    card.addEventListener('click', () => openLightbox(idx));
-    container.appendChild(card);
-  });
+  document.getElementById('expertHistology').innerHTML = expert.histology || '<p>Cortes histológicos e tecidos em catálogo.</p>';
 }
 
 
@@ -644,9 +734,8 @@ function switchWikiTab(tabId) {
     content.classList.toggle('active', content.id === tabId);
   });
 
-  // Se abrir a aba de mapa, renderiza Leaflet
   if (tabId === 'tab-map') {
-    renderFossilMap(state.selectedSpecimen);
+    renderGlobalMap(state.selectedSpecimen);
   }
 }
 
@@ -658,10 +747,10 @@ function closeWikiModal() {
 
 
 // ============================================================================
-// MAPA FÓSSIL INTERATIVO COM LEAFLET (PBDB)
+// MAPA GLOBAL INTERATIVO (GBIF PARA VIVENTES & PBDB PARA FÓSSEIS)
 // ============================================================================
 
-async function renderFossilMap(specimen) {
+async function renderGlobalMap(specimen) {
   if (!specimen) return;
 
   const mapContainer = document.getElementById('integratedFossilMap');
@@ -670,17 +759,16 @@ async function renderFossilMap(specimen) {
 
   loadingIndicator.classList.remove('hidden');
 
-  // Inicializa mapa Leaflet se ainda não existir
   if (!state.leafletMap) {
     state.leafletMap = L.map('integratedFossilMap', {
       center: [20, 0],
       zoom: 2,
       minZoom: 1,
-      maxZoom: 12
+      maxZoom: 14
     });
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO &copy; GBIF / PBDB',
       subdomains: 'abcd',
       maxZoom: 19
     }).addTo(state.leafletMap);
@@ -688,29 +776,31 @@ async function renderFossilMap(specimen) {
     state.mapMarkersGroup = L.layerGroup().addTo(state.leafletMap);
   }
 
-  // Limpa marcadores anteriores
   state.mapMarkersGroup.clearLayers();
 
   try {
-    const res = await fetch(`/api/occurrences/${encodeURIComponent(specimen.genus || specimen.name)}`);
+    const res = await fetch(`/api/occurrences/${encodeURIComponent(specimen.scientific_name || specimen.genus || specimen.name)}`);
     const occurrences = await res.json();
     loadingIndicator.classList.add('hidden');
 
     if (!occurrences || occurrences.length === 0) {
-      countBadge.textContent = '0 sítios mapeados';
+      countBadge.textContent = '0 ocorrências mapeadas';
       state.leafletMap.setView([20, 0], 2);
       return;
     }
 
-    countBadge.textContent = `${occurrences.length} sítios fósseis plotados`;
+    const isContemporary = specimen.is_contemporary;
+    countBadge.textContent = `${occurrences.length} pontos globais (${isContemporary ? 'Observações GBIF' : 'Fósseis PBDB'})`;
 
     const bounds = [];
 
     occurrences.forEach(occ => {
       if (typeof occ.lat === 'number' && typeof occ.lng === 'number') {
+        const markerColor = isContemporary ? '#10b981' : '#ea580c';
+        
         const marker = L.circleMarker([occ.lat, occ.lng], {
           radius: 7,
-          fillColor: '#ea580c',
+          fillColor: markerColor,
           color: '#ffffff',
           weight: 1.5,
           opacity: 1,
@@ -719,10 +809,10 @@ async function renderFossilMap(specimen) {
 
         marker.bindPopup(`
           <div style="font-family: sans-serif; color: #111;">
-            <strong style="font-size: 14px; color: #d97706;">${specimen.name}</strong><br>
+            <strong style="font-size: 14px; color: ${markerColor};">${specimen.name}</strong><br>
             <span style="font-size: 12px;"><strong>País:</strong> ${occ.country || 'Global'}</span><br>
-            <span style="font-size: 12px;"><strong>Formação:</strong> ${occ.formation || 'Estrato fóssil'}</span><br>
-            <span style="font-size: 11px; color: #666;">Idade: ${occ.early_age || ''} - ${occ.late_age || ''} Ma</span>
+            <span style="font-size: 12px;"><strong>Local:</strong> ${occ.formation || 'Habitat natural'}</span><br>
+            <span style="font-size: 11px; color: #666;">${isContemporary ? 'Registro Contemporâneo (GBIF)' : `Idade fóssil: ${occ.early_age || ''} - ${occ.late_age || ''} Ma`}</span>
           </div>
         `);
 
@@ -731,7 +821,6 @@ async function renderFossilMap(specimen) {
       }
     });
 
-    // Redimensiona o mapa no DOM e ajusta bounds
     setTimeout(() => {
       state.leafletMap.invalidateSize();
       if (bounds.length > 0) {
@@ -741,8 +830,8 @@ async function renderFossilMap(specimen) {
 
   } catch (err) {
     loadingIndicator.classList.add('hidden');
-    console.error('Erro ao renderizar mapa fóssil:', err);
-    countBadge.textContent = 'Erro ao carregar sítios';
+    console.error('Erro ao renderizar mapa global:', err);
+    countBadge.textContent = 'Erro ao carregar mapa';
   }
 }
 
@@ -762,7 +851,7 @@ function updateLightboxView() {
   const current = state.lightboxImages[state.lightboxIndex];
   lightboxImg.src = current.url;
   lightboxImg.onerror = () => { lightboxImg.src = PLACEHOLDER_IMAGE; };
-  lightboxCaption.textContent = current.caption || 'Representação paleoartística em vida';
+  lightboxCaption.textContent = current.caption || 'Representação do espécime';
   lightboxCounter.textContent = `${state.lightboxIndex + 1} de ${state.lightboxImages.length}`;
 }
 
@@ -783,7 +872,7 @@ function closeLightbox() {
 
 function toggleExpertModeDisplay() {
   if (state.isExpertMode) {
-    showToast('Modo Paleontólogo Ativado: Detalhes Complexos & Cladística liberados!', '🔬');
+    showToast('Modo Especialista Ativado: Taxonomia GBIF & Osteologia Aprofundada!', '🔬');
     if (!wikiModal.classList.contains('hidden')) {
       switchWikiTab('tab-expert');
     }
@@ -792,22 +881,17 @@ function toggleExpertModeDisplay() {
   }
 }
 
-function updatePeriodOptionsForEra(era) {
-  // Ajusta opções do dropdown conforme a era selecionada
-  const options = periodFilter.options;
-  periodFilter.value = 'all';
-  state.currentPeriod = 'all';
-}
-
 function resetAllFilters() {
   state.currentEra = 'all';
   state.currentPeriod = 'all';
   state.currentGroup = 'all';
   state.currentDiet = 'all';
+  state.currentSkeletalType = 'all';
   state.searchQuery = '';
 
   searchInput.value = '';
   clearBtn.classList.add('hidden');
+  if (skeletalFilter) skeletalFilter.value = 'all';
   periodFilter.value = 'all';
   groupFilter.value = 'all';
   dietFilter.value = 'all';
@@ -830,10 +914,10 @@ function hideLoading() {
 }
 
 function updateStats(count) {
-  resultsStats.textContent = `Exibindo ${count} espécime(s) no acervo global`;
+  resultsStats.textContent = `Exibindo ${count} espécime(s) no acervo universal`;
 }
 
-function showToast(text, icon = '🦖') {
+function showToast(text, icon = '🌍') {
   toastText.textContent = text;
   document.querySelector('.toast-icon').textContent = icon;
   toastNotification.classList.remove('hidden');

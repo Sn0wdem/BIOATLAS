@@ -1,9 +1,8 @@
 from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse
 import httpx
-import re
 import os
 import random
 import logging
@@ -18,17 +17,18 @@ from app.database import (
 )
 from app.seed_data import seed_database
 from app.services.pbdb_service import fetch_taxon_info, fetch_taxon_occurrences, infer_era_from_ma
+from app.services.gbif_service import match_gbif_species, fetch_gbif_occurrences
 from app.services.wiki_service import (
-    fetch_wikipedia_summary, fetch_commons_life_restorations, infer_taxonomy_and_ecology, USER_AGENT
+    fetch_wikipedia_summary, fetch_multi_perspective_images, infer_taxonomy_and_ecology, USER_AGENT
 )
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("mesozoico_api")
+logger = logging.getLogger("superwiki_api")
 
 app = FastAPI(
-    title="Enciclopédia Paleontológica Global da Vida na Terra",
-    description="API com FastAPI e SQLite para exploração e ingestão de espécimes fósseis de todas as eras geológicas (Pré-Cambriano, Paleozoico, Mesozoico e Cenozoico).",
-    version="2.0.0"
+    title="Super Wiki Global da Vida na Terra",
+    description="Enciclopédia universal com FastAPI, GBIF, PBDB e Wikimedia Commons cobrindo animais de todas as eras, contemporâneos e fósseis, vertebrados e invertebrados.",
+    version="3.0.0"
 )
 
 # Enable CORS for all origins
@@ -40,41 +40,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Ensure DB is initialized on startup
 @app.on_event("startup")
 async def startup_event():
     init_db()
-    # Check if DB has specimens, if not seed it
     specs = get_all_specimens()
-    if len(specs) < 10:
+    if len(specs) < 15:
         seed_database()
 
 
-# Geological eras metadata
+# Metadata for all Geological and Contemporary Eras
 ERAS_DATA = [
     EraMetadata(
-        id="precambriano",
-        name="Pré-Cambriano / Ediacarano",
-        time_span="635 a 541 Ma",
-        range_ma="635 - 541",
-        icon="🦠",
-        color="#06b6d4",
-        bg_color="rgba(6, 182, 212, 0.15)",
-        description="A alvorada da vida multicelular macroscópica na Terra: organismos enigmáticos de corpo mole e simetrias fascinantes nos mares primitivos.",
-        periods=["Ediacarano"],
-        iconic_creatures=["Dickinsonia", "Charnia", "Spriggina", "Kimberella"]
-    ),
-    EraMetadata(
-        id="paleozoico",
-        name="Paleozoico",
-        time_span="541 a 252 Ma",
-        range_ma="541 - 252",
-        icon="🦐",
+        id="contemporaneo",
+        name="Era Contemporânea / Fauna Atual",
+        time_span="Holoceno ao Presente (0 Ma)",
+        range_ma="Atual",
+        icon="🌍",
         color="#10b981",
         bg_color="rgba(16, 185, 129, 0.15)",
-        description="A Explosão Cambriana, o surgimento dos primeiros vertebrados, a colonização da terra firme, artrópodes gigantes e os ancestrais sinapsídeos dos mamíferos.",
-        periods=["Cambriano", "Ordoviciano", "Siluriano", "Devoniano", "Carbonífero", "Permiano"],
-        iconic_creatures=["Anomalocaris", "Opabinia", "Dunkleosteus", "Tiktaalik", "Meganeura", "Arthropleura", "Dimetrodon", "Gorgonops"]
+        description="A espetacular biodiversidade vivente no Planeta Terra: vertebrados mamíferos, aves, répteis, anfíbios, peixes ósseos e cartilaginosos, além de artrópodes e moluscos invertebrados.",
+        periods=["Holoceno / Atualidade"],
+        iconic_creatures=["Panthera onca", "Balaenoptera musculus", "Carcharodon carcharias", "Octopus vulgaris", "Loxodonta africana", "Varanus komodoensis"]
+    ),
+    EraMetadata(
+        id="cenozoico",
+        name="Cenozoico Pré-Histórico",
+        time_span="66 Ma a 10.000 anos",
+        range_ma="66 - 0.01",
+        icon="🦣",
+        color="#38bdf8",
+        bg_color="rgba(56, 189, 248, 0.15)",
+        description="A Era dos Mamíferos Gigantes e Megafauna fóssil: dentes-de-sabre, mamutes-lanosos, preguiças-gigantes, serpentes colossais e o maior tubarão da história.",
+        periods=["Paleógeno", "Neógeno", "Pleistoceno"],
+        iconic_creatures=["Titanoboa", "Basilosaurus", "Otodus megalodon", "Purussaurus", "Smilodon", "Mammuthus", "Megatherium"]
     ),
     EraMetadata(
         id="mesozoico",
@@ -84,22 +82,34 @@ ERAS_DATA = [
         icon="🦖",
         color="#f59e0b",
         bg_color="rgba(245, 158, 11, 0.15)",
-        description="A lendária 'Era dos Dinossauros': grandes répteis terrestres, répteis marinhos colossais nos oceanos e pterossauros gigantes dominando os céus.",
+        description="A lendária 'Era dos Dinossauros': grandes terópodes, saurópodes titânicos, ceratopsídeos, pterossauros alados e répteis marinhos mosassauros.",
         periods=["Triássico", "Jurássico", "Cretáceo"],
         iconic_creatures=["Tyrannosaurus", "Spinosaurus", "Triceratops", "Velociraptor", "Brachiosaurus", "Quetzalcoatlus", "Mosasaurus"]
     ),
     EraMetadata(
-        id="cenozoico",
-        name="Cenozoico",
-        time_span="66 Ma ao Presente",
-        range_ma="66 - 0",
-        icon="🦣",
-        color="#38bdf8",
-        bg_color="rgba(56, 189, 248, 0.15)",
-        description="A 'Era dos Mamíferos': a explosão da megafauna pré-histórica, mamutes-lanosos, dentes-de-sabre, serpentes titânicas, caimões amazônicos e preguiças gigantes.",
-        periods=["Paleógeno", "Neógeno", "Quaternário"],
-        iconic_creatures=["Titanoboa", "Basilosaurus", "Purussaurus", "Otodus megalodon", "Smilodon", "Mammuthus", "Megatherium"]
+        id="paleozoico",
+        name="Paleozoico",
+        time_span="541 a 252 Ma",
+        range_ma="541 - 252",
+        icon="🦐",
+        color="#14b8a6",
+        bg_color="rgba(20, 184, 166, 0.15)",
+        description="A Explosão Cambriana, os primeiros animais com conchas e carapaças, peixes placodermos blindados, libélulas gigantes e os ancestrais sinapsídeos dos mamíferos.",
+        periods=["Cambriano", "Devoniano", "Carbonífero", "Permiano"],
+        iconic_creatures=["Anomalocaris", "Opabinia", "Dunkleosteus", "Tiktaalik", "Meganeura", "Arthropleura", "Dimetrodon", "Gorgonops"]
     ),
+    EraMetadata(
+        id="precambriano",
+        name="Pré-Cambriano / Ediacarano",
+        time_span="635 a 541 Ma",
+        range_ma="635 - 541",
+        icon="🦠",
+        color="#06b6d4",
+        bg_color="rgba(6, 182, 212, 0.15)",
+        description="A alvorada da vida animal macroscópica na Terra: os primeiros seres multicelulares enigmáticos de corpo mole no leito marinho primitivo.",
+        periods=["Ediacarano"],
+        iconic_creatures=["Dickinsonia", "Charnia", "Spriggina", "Kimberella"]
+    )
 ]
 
 
@@ -109,36 +119,38 @@ ERAS_DATA = [
 
 @app.get("/api/eras", response_model=List[EraMetadata])
 def get_eras():
-    """Returns metadata for all 4 geological eras."""
+    """Returns metadata for all eras (contemporary and prehistoric)."""
     return ERAS_DATA
 
 
 @app.get("/api/specimens", response_model=List[Specimen])
 def list_specimens(
-    era: Optional[str] = Query(None, description="Filtrar por era (precambriano, paleozoico, mesozoico, cenozoico)"),
-    period: Optional[str] = Query(None, description="Filtrar por período geológico"),
+    era: Optional[str] = Query(None, description="Filtrar por era (contemporaneo, cenozoico, mesozoico, paleozoico, precambriano)"),
+    period: Optional[str] = Query(None, description="Filtrar por período geológico ou Holoceno"),
     diet: Optional[str] = Query(None, description="Filtrar por dieta (carnivoro, herbivoro, piscivoro, etc)"),
-    group: Optional[str] = Query(None, description="Filtrar por grupo taxonômico / habitat"),
+    group: Optional[str] = Query(None, description="Filtrar por grupo taxonômico"),
     habitat: Optional[str] = Query(None, description="Filtrar por habitat"),
+    skeletal_type: Optional[str] = Query(None, description="Filtrar por vertebrado ou invertebrado"),
     search: Optional[str] = Query(None, description="Termo de busca textual"),
 ):
     """Returns specimens matching query parameters."""
     return get_all_specimens(
-        era=era, period=period, diet=diet, group=group, habitat=habitat, search=search
+        era=era, period=period, diet=diet, group=group, habitat=habitat,
+        skeletal_type=skeletal_type, search=search
     )
 
 
 @app.get("/api/specimens/{identifier}", response_model=Specimen)
 async def get_specimen_detail(identifier: str):
-    """Returns full details of a specimen by ID, slug or genus name."""
+    """Returns full details of a specimen by ID, slug, common name or scientific name."""
     clean_id = identifier.lower().strip().replace(" ", "-")
     spec = get_specimen_by_id(clean_id)
     if not spec:
         spec = get_specimen_by_id(identifier.strip())
         
     if not spec:
-        # If not found locally, attempt on-the-fly auto-ingestion
-        logger.info(f"Specimen '{identifier}' not found in database. Attempting auto-ingestion...")
+        # Automatic live ingestion on demand if not present in SQLite!
+        logger.info(f"Specimen '{identifier}' not found in database. Performing automated API ingestion...")
         try:
             ingested = await perform_auto_ingest(identifier)
             if ingested:
@@ -146,102 +158,127 @@ async def get_specimen_detail(identifier: str):
         except Exception as e:
             logger.error(f"Auto-ingest on query failed for '{identifier}': {e}")
             
-        raise HTTPException(status_code=404, detail=f"Espécime fóssil '{identifier}' não encontrado no catálogo.")
+        raise HTTPException(status_code=404, detail=f"Espécime '{identifier}' não encontrado no acervo.")
     
     return spec
 
 
 async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -> Optional[Specimen]:
-    """Ingests any genus from PBDB and Wikipedia Commons into the database."""
+    """Dynamically ingests any animal species (contemporary or extinct) via GBIF, Wikipedia, Commons & PBDB."""
     name_clean = taxon_name.strip()
     slug = name_clean.lower().replace(" ", "-")
 
-    # Check if already present
+    # Check local cache first
     existing = get_specimen_by_id(slug)
     if existing:
         return existing
 
-    # 1. Fetch PBDB data
-    pbdb_data = await fetch_taxon_info(name_clean)
-    
-    # 2. Fetch Wikipedia Summary
-    wiki_data = await fetch_wikipedia_summary(name_clean)
+    # 1. Query GBIF Backbone Taxonomy for global classification
+    gbif_data = await match_gbif_species(name_clean)
+    canonical = gbif_data.get("canonical_name", name_clean) if gbif_data else name_clean
+    scientific = gbif_data.get("scientific_name", f"{name_clean}") if gbif_data else name_clean
 
-    # 3. Fetch Commons Life Restorations
-    images = await fetch_commons_life_restorations(name_clean, limit=8)
+    # 2. Query Wikipedia (PT/EN) for Portuguese summary & lead image
+    wiki_data = await fetch_wikipedia_summary(canonical)
 
-    # Determine primary image URL
+    # 3. Query PBDB to see if it's a prehistoric fossil taxon
+    pbdb_data = await fetch_taxon_info(canonical)
+
+    # 4. Determine Era & Contemporary status
+    is_contemporary = False
+    conservation_status = "Fóssil Extinto"
+
+    if era_hint == "contemporaneo":
+        is_contemporary = True
+        era_key = "contemporaneo"
+        era_name = "Contemporâneo (Fauna Atual)"
+        period_pt = "Holoceno / Atualidade"
+        geo_range = "Época Atual (Holoceno - Presente)"
+        conservation_status = "Espécie Vivente"
+    elif pbdb_data and (pbdb_data.get("max_ma", 0) > 0.01):
+        # Definitely a fossil taxon
+        era_key = pbdb_data.get("era", "mesozoico")
+        era_name = pbdb_data.get("era_display", "Mesozoico")
+        period_pt = pbdb_data.get("period", "Período Fóssil")
+        geo_range = pbdb_data.get("geological_range", "Registro fóssil paleontológico")
+        conservation_status = "Extinto no Registro Fóssil"
+    else:
+        # If PBDB didn't match as a fossil, check if it's contemporary fauna
+        is_contemporary = True
+        era_key = "contemporaneo"
+        era_name = "Contemporâneo (Fauna Atual)"
+        period_pt = "Holoceno / Atualidade"
+        geo_range = "Época Atual (Holoceno - Presente)"
+        conservation_status = "Espécie Vivente da Fauna Global"
+
+    # 5. Vertebrate vs Invertebrate & Skeletal Composition
+    if gbif_data:
+        skeletal_type = gbif_data.get("skeletal_type", "vertebrado")
+        skeletal_comp = gbif_data.get("skeletal_composition", "Endoesqueleto Ósseo e Cartilagem")
+        cladogram = gbif_data.get("cladogram", [])
+    else:
+        skeletal_type = "vertebrado"
+        skeletal_comp = "Endoesqueleto Ósseo e Cartilagem"
+        cladogram = ["Metazoa", "Chordata", "Vertebrata", canonical]
+
+    # 6. Infer ecology and habitat
+    ecology = infer_taxonomy_and_ecology(canonical, pbdb_data, wiki_data, gbif_data)
+
+    # 7. Fetch multi-perspective images (Living individual + Bones/Skeleton/Cartilage + Anatomy)
+    images = await fetch_multi_perspective_images(canonical, limit=10)
+
+    # Determine primary lead image
     primary_image = None
-    if images:
+    # Prefer living view for main card
+    life_imgs = [img for img in images if img.get("category") == "life_view"]
+    if life_imgs:
+        primary_image = life_imgs[0]["url"]
+    elif images:
         primary_image = images[0]["url"]
     elif wiki_data.get("image_url"):
         primary_image = wiki_data.get("image_url")
         images.append({
             "url": primary_image,
-            "caption": f"Representação de {name_clean}",
-            "type": "life_restoration",
+            "caption": f"Representação de {canonical}",
+            "type": "living_specimen",
+            "category": "life_view",
             "author": "Wikimedia Commons"
         })
     else:
-        # High quality generic paleo placeholder
-        primary_image = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tyrannosaurus_rex_by_mariolanzas.jpg/960px-Tyrannosaurus_rex_by_mariolanzas.jpg"
+        primary_image = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Purussaurus_brasiliensis_reconstruction.png/960px-Purussaurus_brasiliensis_reconstruction.png"
 
-    # Infer era and stratigraphy
-    if pbdb_data:
-        era_key = pbdb_data.get("era", "mesozoico")
-        era_name = pbdb_data.get("era_display", "Mesozoico")
-        period_pt = pbdb_data.get("period", "Período Geológico Fóssil")
-        geo_range = pbdb_data.get("geological_range", "Registro geológico fóssil")
-    else:
-        era_key, era_name = infer_era_from_ma(None, None, era_hint or "")
-        period_pt = era_hint.capitalize() if era_hint else "Período Pré-Histórico"
-        geo_range = "Registro fóssil paleontológico"
-
-    # Infer ecology
-    ecology = infer_taxonomy_and_ecology(name_clean, pbdb_data, wiki_data)
-
-    # Format gallery
     gallery_items = [
         GalleryItem(
             url=img["url"],
-            caption=img.get("caption", f"Representação em vida de {name_clean}"),
-            type=img.get("type", "life_restoration"),
+            caption=img.get("caption", f"Representação de {canonical}"),
+            type=img.get("type", "living_specimen"),
+            category=img.get("category", "life_view"),
             author=img.get("author", "Wikimedia Commons")
         )
         for img in images
     ]
 
-    # Generate expert details
-    cladogram = [
-        "Metazoa",
-        pbdb_data.get("phylum") or "Chordata",
-        pbdb_data.get("class_name") or ecology["group_display"],
-        pbdb_data.get("order_name") or "Ordem fóssil extinta",
-        pbdb_data.get("family_name") or f"{name_clean}idae",
-        name_clean
-    ]
-
-    bio_text = wiki_data.get("extract") or f"{name_clean} é um gênero extinto do registro fóssil da Era {era_name}."
+    bio_text = wiki_data.get("extract") or f"{canonical} ({scientific}) é um espécime zoológico da biodiversidade da Terra."
     
     curiosities = [
-        f"Gênero fóssil identificado no registro estratigráfico como habitante da Era {era_name}.",
-        f"Classificado no grupo {ecology['group_display']} com adaptação alimentar do tipo {ecology['diet_display']}.",
-        f"Consome dados científicos integrados da Paleobiology Database (PBDB) e acervos abertos de paleoarte.",
-        f"Apresenta distribuição fóssil catalogada em camadas sedimentares globais do período {period_pt}."
+        f"Classificação Estrutural: {skeletal_type.capitalize()} ({skeletal_comp}).",
+        f"Pertence ao grupo taxonômico {ecology['group_display']} com hábito alimentar {ecology['diet_display']}.",
+        f"Consome dados científicos abertos integrados da GBIF, PBDB e acervos mundiais de anatomia.",
+        f"Status e Época: {era_name} ({period_pt})."
     ]
 
     expert_data = ExpertData(
         cladogram=cladogram,
-        osteology=f"Morfologia esquelética adaptada ao nicho de {ecology['diet_display']} em ambiente {ecology['habitat']}. Crânio e apêndices exibem sinapomorfias diagnósticas de {ecology['group_display']}.",
-        biomechanics=f"Biomecânica locomotora adaptada para movimentação em substrato {ecology['habitat']}, com cinemática compatível com seu porte anatômico.",
-        histology=f"Osso laminar com taxas de aposição perióstea e linhas de crescimento arrestado características de vertebrados do período {period_pt}."
+        osteology=f"Organização esquelética do tipo {skeletal_type.upper()}: {skeletal_comp}. Morfologia adaptada ao nicho de {ecology['diet_display']} em habitat {ecology['habitat']}.",
+        biomechanics=f"Cinemática e biofísica de locomoção adaptadas ao meio {ecology['habitat']}, com sustentação mecânica proporcionada por {skeletal_comp.lower()}.",
+        histology=f"Estrutura tecidual com densidade celular e matriz extracelular típica de espécimes da classe {gbif_data.get('class_name', ecology['group_display']) if gbif_data else ecology['group_display']}."
     )
 
     specimen = Specimen(
         id=slug,
-        name=name_clean,
-        genus=name_clean,
-        scientific_name=f"{name_clean} sp.",
+        name=wiki_data.get("title", canonical),
+        genus=gbif_data.get("genus", canonical) if gbif_data else canonical,
+        scientific_name=scientific,
         era=era_key,
         era_display=era_name,
         period=period_pt,
@@ -252,20 +289,24 @@ async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -
         diet=ecology["diet"],
         diet_display=ecology["diet_display"],
         habitat=ecology["habitat"],
+        skeletal_type=skeletal_type,
+        skeletal_composition=skeletal_comp,
+        is_contemporary=is_contemporary,
+        conservation_status=conservation_status,
         length="Estimativa anatômica em estudo",
         height="Estimativa anatômica em estudo",
         weight="Estimativa biomecânica em estudo",
         speed="Estimativa locomotora em estudo",
         bite_force="Estimativa de força em estudo",
         image_url=primary_image,
-        image_caption=f"Representação em vida de {name_clean}",
+        image_caption=f"Representação de {canonical}",
         gallery=gallery_items,
-        etymology=f"Gênero científico descrito a partir de fósseis do período {period_pt}.",
+        etymology=f"Táxon descrito cientificamente na classe {gbif_data.get('class_name', '') if gbif_data else ''}.",
         bio=bio_text,
         curiosities=curiosities,
         expert=expert_data,
-        occurrences_count=10,
-        fossil_locations=f"Camadas fossilíferas globais do período {period_pt}",
+        occurrences_count=15,
+        fossil_locations="Distribuição biogeográfica global" if is_contemporary else f"Estratos fósseis do período {period_pt}",
         is_custom_ingested=True
     )
 
@@ -275,7 +316,7 @@ async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -
 
 @app.post("/api/ingest", response_model=IngestResponse)
 async def ingest_specimen_endpoint(req: IngestRequest):
-    """Ingests any specimen by name dynamically into the database."""
+    """Dynamic ingestion endpoint taking any animal name (common in Portuguese or scientific)."""
     name = req.name.strip()
     if not name:
         raise HTTPException(status_code=400, detail="Nome do espécime não pode ser vazio.")
@@ -290,7 +331,7 @@ async def ingest_specimen_endpoint(req: IngestRequest):
             )
         return IngestResponse(
             success=True,
-            message=f"Espécime '{specimen.name}' catalogado com sucesso no acervo da Era {specimen.era_display}!",
+            message=f"Espécime '{specimen.name}' ({specimen.skeletal_type.capitalize()}) catalogado com sucesso na Super Wiki!",
             specimen=specimen
         )
     except Exception as e:
@@ -315,10 +356,29 @@ def discover_specimens(era: Optional[str] = None):
 
 @app.get("/api/occurrences/{taxon_name}", response_model=List[Occurrence])
 async def get_occurrences(taxon_name: str, limit: int = 40):
-    """Fetches real georeferenced coordinates from PBDB for Leaflet mapping."""
+    """Fetches real georeferenced coordinates from GBIF (living species) or PBDB (fossil species)."""
     clean_name = taxon_name.strip()
+    
+    # Check if specimen is contemporary
+    spec = get_specimen_by_id(clean_name.lower().replace(" ", "-")) or get_specimen_by_id(clean_name)
+    
+    if spec and spec.is_contemporary:
+        # Query GBIF for live coordinates
+        gbif_match = await match_gbif_species(clean_name)
+        if gbif_match and gbif_match.get("usage_key"):
+            occs = await fetch_gbif_occurrences(gbif_match["usage_key"], limit=limit)
+            if occs:
+                return occs
+    
+    # Fallback / Fossil: Query PBDB
     occs = await fetch_taxon_occurrences(clean_name, limit=limit)
-    return occs
+    if not occs:
+        # Try GBIF as fallback even for fossils
+        gbif_match = await match_gbif_species(clean_name)
+        if gbif_match and gbif_match.get("usage_key"):
+            occs = await fetch_gbif_occurrences(gbif_match["usage_key"], limit=limit)
+
+    return occs or []
 
 
 @app.get("/api/proxy-image")

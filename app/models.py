@@ -4,8 +4,9 @@ from pydantic import BaseModel, Field
 
 class GalleryItem(BaseModel):
     url: str
-    caption: str = "Representação paleoartística em vida"
-    type: str = "life_restoration"  # life_restoration, reconstruction, skeletal, fossil
+    caption: str = "Representação visual do espécime"
+    type: str = "living_specimen"  # living_specimen, life_restoration, skeleton, skull, bones, cartilage, fossil, anatomy, scale
+    category: str = "life_view"    # life_view, skeletal_view, anatomy_view, comparison_view
     author: Optional[str] = "Acervo Científico / Wikimedia Commons"
 
 
@@ -21,7 +22,7 @@ class Specimen(BaseModel):
     name: str
     genus: str
     scientific_name: Optional[str] = None
-    era: str  # "precambriano", "paleozoico", "mesozoico", "cenozoico"
+    era: str  # "contemporaneo", "cenozoico", "mesozoico", "paleozoico", "precambriano"
     era_display: str
     period: str
     epoch: Optional[str] = ""
@@ -31,13 +32,17 @@ class Specimen(BaseModel):
     diet: str
     diet_display: str
     habitat: str = "terrestre"
+    skeletal_type: str = "vertebrado"  # "vertebrado" ou "invertebrado"
+    skeletal_composition: str = "Osso e Cartilagem"  # "Osso e Cartilagem", "Cartilagem Calcificada", "Exoesqueleto Quitinoso", "Concha Calcária", "Hidroesqueleto"
+    is_contemporary: bool = False
+    conservation_status: Optional[str] = "Fóssil Extinto"
     length: str = "Desconhecido"
     height: str = "Desconhecido"
     weight: str = "Desconhecido"
     speed: str = "Desconhecido"
     bite_force: str = "Desconhecido"
     image_url: str
-    image_caption: str = "Representação paleoartística em vida"
+    image_caption: str = "Representação visual do indivíduo"
     gallery: List[GalleryItem] = Field(default_factory=list)
     etymology: str = ""
     bio: str = ""
@@ -60,6 +65,8 @@ class SpecimenSummary(BaseModel):
     group_display: str
     diet: str
     diet_display: str
+    skeletal_type: str
+    is_contemporary: bool = False
     length: str
     weight: str
     image_url: str
@@ -99,3 +106,4 @@ class Occurrence(BaseModel):
     early_age: Optional[float] = None
     late_age: Optional[float] = None
     collection_name: Optional[str] = None
+    is_contemporary: bool = False

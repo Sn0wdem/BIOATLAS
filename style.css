@@ -1887,3 +1887,106 @@ body.expert-mode-active .card {
   color: #7dd3fc;
   border: 1px solid rgba(56, 189, 248, 0.4);
 }
+
+/* ==========================================================================
+   BADGES & ESTILOS: VERTEBRADOS, INVERTEBRADOS & ERA CONTEMPORÂNEA
+   ========================================================================== */
+
+/* Era Contemporânea */
+.badge-era-contemporaneo {
+  background: rgba(16, 185, 129, 0.22);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.era-tab-btn[data-era="contemporaneo"].active {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+}
+
+/* Badges Vertebrado vs Invertebrado */
+.badge-skeletal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+
+.badge-vertebrado {
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.badge-invertebrado {
+  background: rgba(168, 85, 247, 0.18);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+/* Ficha Estrutural no Modal */
+.structural-spec-box {
+  background: rgba(22, 30, 22, 0.65);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.structural-spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+}
+
+.structural-spec-label {
+  color: var(--text-secondary);
+}
+
+.structural-spec-val {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Filtros da Galeria por Tipo de Visualização */
+.gallery-category-chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.gallery-cat-chip {
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-full);
+  background: rgba(20, 26, 20, 0.85);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gallery-cat-chip:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.gallery-cat-chip.active {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: #4ade80;
+  color: #4ade80;
+}

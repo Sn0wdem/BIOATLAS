@@ -32,6 +32,10 @@ def init_db():
             diet TEXT NOT NULL,
             diet_display TEXT NOT NULL,
             habitat TEXT NOT NULL,
+            skeletal_type TEXT DEFAULT 'vertebrado',
+            skeletal_composition TEXT DEFAULT 'Osso e Cartilagem',
+            is_contemporary INTEGER DEFAULT 0,
+            conservation_status TEXT DEFAULT 'Fóssil Extinto',
             length TEXT,
             height TEXT,
             weight TEXT,
@@ -50,10 +54,23 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    
+    # Safe migrations for existing databases
+    existing_cols = [c[1] for c in cursor.execute("PRAGMA table_info(specimens)").fetchall()]
+    if "skeletal_type" not in existing_cols:
+        cursor.execute("ALTER TABLE specimens ADD COLUMN skeletal_type TEXT DEFAULT 'vertebrado'")
+    if "skeletal_composition" not in existing_cols:
+        cursor.execute("ALTER TABLE specimens ADD COLUMN skeletal_composition TEXT DEFAULT 'Osso e Cartilagem'")
+    if "is_contemporary" not in existing_cols:
+        cursor.execute("ALTER TABLE specimens ADD COLUMN is_contemporary INTEGER DEFAULT 0")
+    if "conservation_status" not in existing_cols:
+        cursor.execute("ALTER TABLE specimens ADD COLUMN conservation_status TEXT DEFAULT 'Fóssil Extinto'")
+
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_era ON specimens(era)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_period ON specimens(period)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_diet ON specimens(diet)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_group ON specimens(group_type)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_skeletal_type ON specimens(skeletal_type)")
     conn.commit()
     conn.close()
 
@@ -65,6 +82,12 @@ def row_to_specimen(row: sqlite3.Row) -> Specimen:
     curiosities = json.loads(row["curiosities_json"] or "[]")
     expert_dict = json.loads(row["expert_json"] or "{}")
     expert = ExpertData(**expert_dict)
+
+    # Detect vertebrate vs invertebrate fallback if column was NULL
+    skeletal_type = row["skeletal_type"] if "skeletal_type" in row.keys() and row["skeletal_type"] else "vertebrado"
+    skeletal_comp = row["skeletal_composition"] if "skeletal_composition" in row.keys() and row["skeletal_composition"] else "Osso e Cartilagem"
+    is_contemp = bool(row["is_contemporary"]) if "is_contemporary" in row.keys() and row["is_contemporary"] is not None else False
+    status = row["conservation_status"] if "conservation_status" in row.keys() and row["conservation_status"] else "Fóssil Extinto"
 
     return Specimen(
         id=row["id"],
@@ -81,13 +104,17 @@ def row_to_specimen(row: sqlite3.Row) -> Specimen:
         diet=row["diet"],
         diet_display=row["diet_display"],
         habitat=row["habitat"],
+        skeletal_type=skeletal_type,
+        skeletal_composition=skeletal_comp,
+        is_contemporary=is_contemp,
+        conservation_status=status,
         length=row["length"] or "Desconhecido",
         height=row["height"] or "Desconhecido",
         weight=row["weight"] or "Desconhecido",
         speed=row["speed"] or "Desconhecido",
         bite_force=row["bite_force"] or "Desconhecido",
         image_url=row["image_url"],
-        image_caption=row["image_caption"] or "Representação paleoartística em vida",
+        image_caption=row["image_caption"] or "Representação visual do indivíduo",
         gallery=gallery,
         etymology=row["etymology"] or "",
         bio=row["bio"] or "",
@@ -105,6 +132,7 @@ def get_all_specimens(
     diet: Optional[str] = None,
     group: Optional[str] = None,
     habitat: Optional[str] = None,
+    skeletal_type: Optional[str] = None,
     search: Optional[str] = None
 ) -> List[Specimen]:
     conn = get_db_connection()
@@ -114,8 +142,8 @@ def get_all_specimens(
     params = []
 
     if era and era != "all":
-        query += " AND (LOWER(era) = LOWER(?) OR LOWER(era_display) = LOWER(?))"
-        params.extend([era, era])
+        query += " AND (LOWER(era) = LOWER(?) OR LOWER(era_display) LIKE LOWER(?))"
+        params.extend([era, f"%{era}%"])
 
     if period and period != "all":
         query += " AND (LOWER(period) LIKE LOWER(?) OR LOWER(epoch) LIKE LOWER(?))"
@@ -133,12 +161,16 @@ def get_all_specimens(
         query += " AND LOWER(habitat) = LOWER(?)"
         params.append(habitat)
 
+    if skeletal_type and skeletal_type != "all":
+        query += " AND LOWER(skeletal_type) = LOWER(?)"
+        params.append(skeletal_type)
+
     if search and search.strip():
         s = f"%{search.strip().lower()}%"
-        query += " AND (LOWER(name) LIKE ? OR LOWER(genus) LIKE ? OR LOWER(scientific_name) LIKE ? OR LOWER(bio) LIKE ?)"
-        params.extend([s, s, s, s])
+        query += " AND (LOWER(name) LIKE ? OR LOWER(genus) LIKE ? OR LOWER(scientific_name) LIKE ? OR LOWER(bio) LIKE ? OR LOWER(group_display) LIKE ?)"
+        params.extend([s, s, s, s, s])
 
-    query += " ORDER BY is_custom_ingested DESC, name ASC"
+    query += " ORDER BY is_contemporary DESC, is_custom_ingested DESC, name ASC"
     
     cursor.execute(query, params)
     rows = cursor.fetchall()
@@ -150,8 +182,14 @@ def get_all_specimens(
 def get_specimen_by_id(specimen_id: str) -> Optional[Specimen]:
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM specimens WHERE LOWER(id) = LOWER(?) OR LOWER(name) = LOWER(?) OR LOWER(genus) = LOWER(?) LIMIT 1", 
-                   (specimen_id, specimen_id, specimen_id))
+    cursor.execute("""
+        SELECT * FROM specimens 
+        WHERE LOWER(id) = LOWER(?) 
+           OR LOWER(name) = LOWER(?) 
+           OR LOWER(genus) = LOWER(?) 
+           OR LOWER(scientific_name) = LOWER(?)
+        LIMIT 1
+    """, (specimen_id, specimen_id, specimen_id, specimen_id))
     row = cursor.fetchone()
     conn.close()
     if row:
@@ -171,12 +209,14 @@ def upsert_specimen(specimen: Specimen) -> bool:
         INSERT INTO specimens (
             id, name, genus, scientific_name, era, era_display, period, epoch,
             geological_range, group_type, group_display, diet, diet_display, habitat,
+            skeletal_type, skeletal_composition, is_contemporary, conservation_status,
             length, height, weight, speed, bite_force, image_url, image_caption,
             gallery_json, etymology, bio, curiosities_json, expert_json,
             occurrences_count, fossil_locations, is_custom_ingested
         ) VALUES (
             ?, ?, ?, ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?,
             ?, ?, ?
@@ -194,6 +234,10 @@ def upsert_specimen(specimen: Specimen) -> bool:
             diet=excluded.diet,
             diet_display=excluded.diet_display,
             habitat=excluded.habitat,
+            skeletal_type=excluded.skeletal_type,
+            skeletal_composition=excluded.skeletal_composition,
+            is_contemporary=excluded.is_contemporary,
+            conservation_status=excluded.conservation_status,
             length=excluded.length,
             height=excluded.height,
             weight=excluded.weight,
@@ -214,6 +258,7 @@ def upsert_specimen(specimen: Specimen) -> bool:
         specimen.era, specimen.era_display, specimen.period, specimen.epoch,
         specimen.geological_range, specimen.group, specimen.group_display,
         specimen.diet, specimen.diet_display, specimen.habitat,
+        specimen.skeletal_type, specimen.skeletal_composition, 1 if specimen.is_contemporary else 0, specimen.conservation_status,
         specimen.length, specimen.height, specimen.weight, specimen.speed, specimen.bite_force,
         specimen.image_url, specimen.image_caption,
         gallery_json, specimen.etymology, specimen.bio, curiosities_json, expert_json,
@@ -239,10 +284,14 @@ def get_stats() -> Dict[str, Any]:
     cursor.execute("SELECT group_type, COUNT(*) FROM specimens GROUP BY group_type")
     group_counts = {r[0]: r[1] for r in cursor.fetchall()}
 
+    cursor.execute("SELECT skeletal_type, COUNT(*) FROM specimens GROUP BY skeletal_type")
+    skeletal_counts = {r[0]: r[1] for r in cursor.fetchall()}
+
     conn.close()
     return {
         "total_specimens": total,
         "by_era": era_counts,
         "by_diet": diet_counts,
-        "by_group": group_counts
+        "by_group": group_counts,
+        "by_skeletal_type": skeletal_counts
     }
