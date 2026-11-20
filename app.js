@@ -831,7 +831,9 @@ async function fetchCommonsLifeRestorations(genusName) {
     const queries = [
       `${genusName} life restoration`,
       `${genusName} paleoart`,
-      `${genusName} reconstruction`
+      `${genusName} reconstruction`,
+      `${genusName} dinosaur`,
+      `${genusName}`
     ];
     const results = [];
     const seen = new Set();
@@ -844,6 +846,10 @@ async function fetchCommonsLifeRestorations(genusName) {
       const pages = data.query?.pages || {};
 
       for (const page of Object.values(pages)) {
+        const title = (page.title || '').toLowerCase();
+        // Evita PDFs, áudios e arquivos que não sejam imagens
+        if (title.endsWith('.pdf') || title.endsWith('.ogg') || title.endsWith('.mp3') || title.endsWith('.webm')) continue;
+
         const info = page.imageinfo && page.imageinfo[0];
         const thumbUrl = info?.thumburl || (info?.responsiveUrls && info.responsiveUrls['2']);
         if (thumbUrl && !seen.has(thumbUrl)) {
@@ -862,6 +868,49 @@ async function fetchCommonsLifeRestorations(genusName) {
   } catch (err) {
     console.warn('Erro ao consultar Commons:', err);
     return [];
+  }
+}
+
+/**
+ * Consulta Wikipedia Action API para obter resumo e miniatura lead de 500px sem risco de 429
+ */
+async function fetchWikipediaSummary(genusName) {
+  try {
+    // 1. Tenta Wikipedia em Português
+    const ptUrl = `https://pt.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(genusName)}&prop=pageimages|extracts&piprop=thumbnail&pithumbsize=500&exintro=true&explaintext=true&format=json&origin=*`;
+    const ptRes = await fetch(ptUrl);
+    if (ptRes.ok) {
+      const ptData = await ptRes.json();
+      const ptPages = ptData.query?.pages || {};
+      const ptPage = Object.values(ptPages)[0];
+      if (ptPage && ptPage.pageid && ptPage.extract) {
+        return {
+          title: ptPage.title,
+          extract: ptPage.extract,
+          thumbnail: ptPage.thumbnail?.source
+        };
+      }
+    }
+
+    // 2. Tenta Wikipedia em Inglês
+    const enUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(genusName)}&prop=pageimages|extracts&piprop=thumbnail&pithumbsize=500&exintro=true&explaintext=true&format=json&origin=*`;
+    const enRes = await fetch(enUrl);
+    if (enRes.ok) {
+      const enData = await enRes.json();
+      const enPages = enData.query?.pages || {};
+      const enPage = Object.values(enPages)[0];
+      if (enPage && enPage.pageid && enPage.extract) {
+        return {
+          title: enPage.title,
+          extract: enPage.extract,
+          thumbnail: enPage.thumbnail?.source
+        };
+      }
+    }
+    return null;
+  } catch (err) {
+    console.warn('Erro ao consultar Wikipedia:', err);
+    return null;
   }
 }
 
@@ -949,8 +998,40 @@ function deduceGroupFromTaxon(taxon) {
 }
 
 /**
+ * Pools curados de gêneros mesozoicos com representações visuais ricas
+ */
+const DISCOVERY_POOLS = {
+  Cretaceous: [
+    'Therizinosaurus', 'Argentinosaurus', 'Giganotosaurus', 'Deinonychus', 'Baryonyx',
+    'Pachycephalosaurus', 'Majungasaurus', 'Amargasaurus', 'Yutyrannus', 'Oxalaia',
+    'Microraptor', 'Sauroposeidon', 'Carcharodontosaurus', 'Oviraptor', 'Psittacosaurus',
+    'Edmontosaurus', 'Corythosaurus', 'Parasaurolophus', 'Lambeosaurus', 'Euoplocephalus',
+    'Suchomimus', 'Mapusaurus', 'Dreadnoughtus', 'Buitreraptor'
+  ],
+  Jurassic: [
+    'Dilophosaurus', 'Kentrosaurus', 'Ceratosaurus', 'Torvosaurus', 'Sinraptor',
+    'Cryolophosaurus', 'Mamenchisaurus', 'Diplodocus', 'Apatosaurus', 'Camarasaurus',
+    'Giraffatitan', 'Dryosaurus', 'Camptosaurus', 'Tuojiangosaurus', 'Metriacanthosaurus',
+    'Archaeopteryx', 'Eustreptospondylus', 'Gargoyleosaurus', 'Scelidosaurus'
+  ],
+  Triassic: [
+    'Herrerasaurus', 'Plateosaurus', 'Staurikosaurus', 'Buriolestes', 'Eoraptor',
+    'Liliensternus', 'Guaibasaurus', 'Saturnalia', 'Tawa', 'Pisanosaurus',
+    'Massospondylus', 'Riojasaurus', 'Melanorosaurus'
+  ],
+  Pterosauria: [
+    'Quetzalcoatlus', 'Tapejara', 'Tupandactylus', 'Pterodactylus', 'Rhamphorhynchus',
+    'Dimorphodon', 'Dsungaripterus', 'Tropeognathus', 'Anhanguera', 'Hatzegopteryx'
+  ],
+  Plesiosauria: [
+    'Liopleurodon', 'Elasmosaurus', 'Ichthyosaurus', 'Kronosaurus', 'Tylosaurus',
+    'Shonisaurus', 'Sarcosuchus', 'Deinosuchus', 'Nothosaurus', 'Pliosaurus'
+  ]
+};
+
+/**
  * INGESTÃO AUTOMÁTICA DE QUALQUER ESPÉCIME
- * Consulta Commons Action API, PBDB, Wikipedia PT/EN e Media-List para minerar representações visuais em vida.
+ * Consulta Commons Action API, PBDB, Wikipedia e Media-List para minerar representações visuais em vida.
  */
 async function ingestAnySpecimen(rawQuery) {
   const inputQuery = rawQuery.trim();
@@ -980,12 +1061,11 @@ async function ingestAnySpecimen(rawQuery) {
   loadingMessage.textContent = `Buscando paleoarte e registros fósseis de ${query}...`;
 
   try {
-    // 2. Consulta paralela: Commons Action API (garante foto 500px), PBDB Taxon, Wikipedia PT/EN e Media List
-    const [commonsImgs, pbdbRes, wikiPtRes, wikiEnRes, mediaListRes] = await Promise.allSettled([
+    // 2. Consulta paralela: Commons Action API (500px), Wikipedia Action API, PBDB Taxon e Media-List
+    const [commonsImgs, wikiRes, pbdbRes, mediaListRes] = await Promise.allSettled([
       fetchCommonsLifeRestorations(query),
+      fetchWikipediaSummary(query),
       fetch(`https://paleobiodb.org/data1.2/taxa/single.json?name=${encodeURIComponent(query)}&show=attr,app`),
-      fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`),
-      fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`),
       fetch(`https://en.wikipedia.org/api/rest_v1/page/media-list/${encodeURIComponent(query)}`)
     ]);
 
@@ -995,13 +1075,7 @@ async function ingestAnySpecimen(rawQuery) {
       taxon = data.records && data.records[0] ? data.records[0] : null;
     }
 
-    let wikiData = null;
-    if (wikiPtRes.status === 'fulfilled' && wikiPtRes.value.ok) {
-      wikiData = await wikiPtRes.value.json();
-    }
-    if ((!wikiData || !wikiData.extract) && wikiEnRes.status === 'fulfilled' && wikiEnRes.value.ok) {
-      wikiData = await wikiEnRes.value.json();
-    }
+    const wikiData = wikiRes.status === 'fulfilled' ? wikiRes.value : null;
 
     let mediaItems = [];
     if (mediaListRes.status === 'fulfilled' && mediaListRes.value.ok) {
@@ -1036,8 +1110,8 @@ async function ingestAnySpecimen(rawQuery) {
       gallery.unshift(bestLifeRestoration);
     }
 
-    // Prioridade 3: Thumbnail da página da Wikipedia
-    const wikiThumb = wikiData?.thumbnail?.source;
+    // Prioridade 3: Thumbnail da página da Wikipedia (Action API 500px)
+    const wikiThumb = wikiData?.thumbnail;
     if (wikiThumb && !seenUrls.has(wikiThumb)) {
       seenUrls.add(wikiThumb);
       gallery.push({
@@ -1117,53 +1191,76 @@ async function ingestAnySpecimen(rawQuery) {
 }
 
 /**
- * Autodescoberta em massa na PBDB por Grupo e Intervalo
+ * Autodescoberta inteligente por Grupo e Intervalo com paleoartes garantidas
  */
 async function autoDiscoverPBDB(groupName, intervalName) {
-  showToast(`Descobrindo novos gêneros de ${groupName} (${intervalName}) na PBDB...`, '⚡');
-  loading.classList.remove('hidden');
-  loadingMessage.textContent = `Consultando base taxonômica da PBDB para ${groupName}...`;
+  let poolKey = 'Cretaceous';
+  if (groupName === 'Pterosauria') poolKey = 'Pterosauria';
+  else if (groupName === 'Plesiosauria') poolKey = 'Plesiosauria';
+  else if (intervalName === 'Jurassic') poolKey = 'Jurassic';
+  else if (intervalName === 'Triassic') poolKey = 'Triassic';
+  else poolKey = 'Cretaceous';
 
-  try {
-    const url = `https://paleobiodb.org/data1.2/taxa/list.json?base_name=${encodeURIComponent(groupName)}&interval=${encodeURIComponent(intervalName)}&rank=genus&show=attr&limit=8`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Falha na resposta da PBDB');
-    const data = await res.json();
-    const records = data.records || [];
+  const pool = DISCOVERY_POOLS[poolKey] || DISCOVERY_POOLS.Cretaceous;
 
-    let addedCount = 0;
-    for (const rec of records) {
-      if (rec.nam && !activeCatalog.some(c => c.name.toLowerCase() === rec.nam.toLowerCase())) {
-        await ingestAnySpecimen(rec.nam);
-        addedCount++;
-        if (addedCount >= 3) break;
-      }
-    }
+  // Encontra o próximo espécime do pool que ainda não está no catálogo
+  const uncataloged = pool.filter(
+    g => !activeCatalog.some(c => c.name.toLowerCase() === g.toLowerCase())
+  );
 
-    loading.classList.add('hidden');
-    if (addedCount === 0) {
-      showToast(`Gêneros retornados já estavam no acervo. Experimente o botão aleatório!`, 'ℹ️');
-    }
-  } catch (err) {
-    console.error('Erro na autodescoberta:', err);
-    loading.classList.add('hidden');
-    showToast('Não foi possível conectar à PBDB no momento.', '⚠️');
+  let targetGenus;
+  if (uncataloged.length > 0) {
+    targetGenus = uncataloged[0];
+  } else {
+    targetGenus = pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  showToast(`Auto-minerando reconstituição em vida de "${targetGenus}" (${poolKey})...`, '⚡');
+  searchInput.value = targetGenus;
+  clearBtn.classList.remove('hidden');
+
+  const newSpecimen = await ingestAnySpecimen(targetGenus);
+  if (newSpecimen) {
+    periodFilter.value = 'all';
+    groupFilter.value = 'all';
+    dietFilter.value = 'all';
+    renderAllCards(activeCatalog.filter(c => c.name.toLowerCase() === newSpecimen.name.toLowerCase()));
+    highlightExistingCard(newSpecimen.name);
   }
 }
 
 /**
- * Sorteia e ingere um gênero mesozoico aleatório
+ * Sorteia e ingere um gênero mesozoico aleatório com paleoarte garantida
  */
 async function discoverRandomSpecimen() {
-  const uncataloged = FAMOUS_MESOZOIC_GENERA.filter(
+  const allGenera = [
+    ...DISCOVERY_POOLS.Cretaceous,
+    ...DISCOVERY_POOLS.Jurassic,
+    ...DISCOVERY_POOLS.Triassic,
+    ...DISCOVERY_POOLS.Pterosauria,
+    ...DISCOVERY_POOLS.Plesiosauria
+  ];
+
+  const uncataloged = allGenera.filter(
     g => !activeCatalog.some(c => c.name.toLowerCase() === g.toLowerCase())
   );
 
-  const genusToIngest = uncataloged.length > 0
+  const targetGenus = uncataloged.length > 0
     ? uncataloged[Math.floor(Math.random() * uncataloged.length)]
-    : FAMOUS_MESOZOIC_GENERA[Math.floor(Math.random() * FAMOUS_MESOZOIC_GENERA.length)];
+    : allGenera[Math.floor(Math.random() * allGenera.length)];
 
-  await ingestAnySpecimen(genusToIngest);
+  showToast(`Sorteando espécime mesozoico: "${targetGenus}"...`, '🎲');
+  searchInput.value = targetGenus;
+  clearBtn.classList.remove('hidden');
+
+  const newSpecimen = await ingestAnySpecimen(targetGenus);
+  if (newSpecimen) {
+    periodFilter.value = 'all';
+    groupFilter.value = 'all';
+    dietFilter.value = 'all';
+    renderAllCards(activeCatalog.filter(c => c.name.toLowerCase() === newSpecimen.name.toLowerCase()));
+    highlightExistingCard(newSpecimen.name);
+  }
 }
 
 // ==========================================================================
@@ -1203,6 +1300,8 @@ function searchCatalog(query) {
 async function handleMainSearch(forceIngest = false) {
   const rawQuery = searchInput.value.trim();
   if (!rawQuery) {
+    showToast('Digite o nome de um dinossauro ou gênero fóssil para buscar!', '💡');
+    searchInput.focus();
     renderAllCards(activeCatalog);
     return;
   }
@@ -1215,7 +1314,7 @@ async function handleMainSearch(forceIngest = false) {
     dietFilter.value = 'all';
     renderAllCards(matches);
     highlightExistingCard(matches[0].name);
-    showToast(`Encontrado: ${matches[0].name} (${matches.length} resultado(s))`, '🔍');
+    showToast(`Exibindo ${matches.length} resultado(s) para "${rawQuery}"`, '🔍');
     return;
   }
 
@@ -1737,10 +1836,14 @@ function setupEventListeners() {
   });
 
   // Busca e Filtro na Página
-  searchBtn.addEventListener('click', () => handleMainSearch());
+  searchBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleMainSearch();
+  });
 
   // Botão explícito de Subir Qualquer Espécime
-  btnAutoIngest.addEventListener('click', () => {
+  btnAutoIngest.addEventListener('click', (e) => {
+    e.preventDefault();
     const val = searchInput.value.trim();
     if (!val) {
       showToast('Digite o nome de qualquer gênero fóssil no campo antes de subir!', '💡');
@@ -1772,7 +1875,8 @@ function setupEventListeners() {
     }
   });
 
-  clearBtn.addEventListener('click', () => {
+  clearBtn.addEventListener('click', (e) => {
+    e.preventDefault();
     searchInput.value = '';
     clearBtn.classList.add('hidden');
     searchInput.focus();
@@ -1788,7 +1892,8 @@ function setupEventListeners() {
     });
   });
 
-  resetFiltersBtn.addEventListener('click', () => {
+  resetFiltersBtn.addEventListener('click', (e) => {
+    e.preventDefault();
     searchInput.value = '';
     clearBtn.classList.add('hidden');
     periodFilter.value = 'all';
@@ -1796,15 +1901,20 @@ function setupEventListeners() {
     dietFilter.value = 'all';
     quickTags.forEach(t => t.classList.remove('active'));
     renderAllCards(activeCatalog);
+    showToast('Filtros resetados. Exibindo catálogo completo.', '🦕');
   });
 
   reloadSuggestionsBtn.addEventListener('click', () => resetFiltersBtn.click());
 
   // Chips de autodescoberta na PBDB
-  btnRandomDino.addEventListener('click', discoverRandomSpecimen);
+  btnRandomDino.addEventListener('click', (e) => {
+    e.preventDefault();
+    discoverRandomSpecimen();
+  });
 
   discoveryBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const group = btn.getAttribute('data-group');
       const interval = btn.getAttribute('data-interval');
       autoDiscoverPBDB(group, interval);
@@ -1813,7 +1923,8 @@ function setupEventListeners() {
 
   // Chips de espécimes famosos
   quickTags.forEach(tag => {
-    tag.addEventListener('click', async () => {
+    tag.addEventListener('click', async (e) => {
+      e.preventDefault();
       quickTags.forEach(t => t.classList.remove('active'));
       tag.classList.add('active');
       const creatureName = tag.getAttribute('data-name');
@@ -1837,12 +1948,16 @@ function setupEventListeners() {
   });
 
   // Busca de Imagens na Web dentro da Wiki
-  btnSearchWebImages.addEventListener('click', () => {
+  btnSearchWebImages.addEventListener('click', (e) => {
+    e.preventDefault();
     searchWebImages(webImageSearchInput.value.trim());
   });
 
   webImageSearchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') btnSearchWebImages.click();
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      btnSearchWebImages.click();
+    }
   });
 
   imageSearchChips.forEach(chip => {
@@ -1885,9 +2000,15 @@ function setupEventListeners() {
   });
 }
 
-// Inicialização
-window.addEventListener('DOMContentLoaded', () => {
+// Inicialização Resiliente (funciona com carregamento assíncrono ou síncrono)
+function initApp() {
   loadCatalogFromLocalStorage();
   setupEventListeners();
   renderAllCards(activeCatalog);
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
