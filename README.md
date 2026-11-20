@@ -27,10 +27,14 @@
 
 ```plaintext
 mesozoico-explorer/
-├── index.html        # Estrutura semântica, meta tags e containers
-├── style.css         # Design moderno, tema dark fóssil e responsividade
-├── app.js            # Integrações com PBDB API, Wikipedia API e Leaflet.js
-└── README.md         # Documentação e guia de publicação
+├── index.html          # Estrutura semântica, meta tags e containers
+├── style.css           # Design moderno, tema dark fóssil e responsividade
+├── app.js              # Integrações com PBDB API, Wikipedia API e Leaflet.js
+├── Dockerfile          # Imagem de produção leve baseada em Nginx Alpine
+├── docker-compose.yml  # Orquestração do container Docker na porta 8080
+├── nginx.conf          # Configuração otimizada do Nginx (Gzip, Cache, Segurança)
+├── .dockerignore       # Arquivos ignorados no build do Docker
+└── README.md           # Documentação e guia de publicação
 ```
 
 ---
@@ -54,6 +58,28 @@ Em seguida, abra no navegador: `http://localhost:8000`
 ### Opção 3: Extensão Live Server (VS Code)
 1. Instale a extensão **Live Server** no VS Code.
 2. Clique com o botão direito em `index.html` e selecione **"Open with Live Server"**.
+
+### Opção 4: Usando Docker (Recomendado para produção ou containers)
+
+#### Usando Docker Compose:
+```bash
+docker compose up -d --build
+```
+Acesse no navegador: **`http://localhost:8080`**
+
+Para parar o container:
+```bash
+docker compose down
+```
+
+#### Ou usando apenas a Docker CLI:
+```bash
+# 1. Construir a imagem
+docker build -t mesozoico-explorer .
+
+# 2. Executar o container na porta 8080
+docker run -d -p 8080:80 --name mesozoico-explorer mesozoico-explorer
+```
 
 ---
 

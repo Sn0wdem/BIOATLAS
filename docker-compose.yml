@@ -1,0 +1,14 @@
+services:
+  mesozoico-explorer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mesozoico-explorer
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    # Descomente a seção abaixo para refletir alterações nos arquivos em tempo real sem precisar rebuildar:
+    # volumes:
+    #   - ./index.html:/usr/share/nginx/html/index.html:ro
+    #   - ./style.css:/usr/share/nginx/html/style.css:ro
+    #   - ./app.js:/usr/share/nginx/html/app.js:ro
