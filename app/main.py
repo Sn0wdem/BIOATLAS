@@ -420,6 +420,13 @@ if os.path.exists(STATIC_DIR):
     def serve_app_js():
         return FileResponse(os.path.join(STATIC_DIR, "app.js"), media_type="application/javascript")
 
+    @app.get("/favicon.ico", include_in_schema=False)
+    def serve_favicon():
+        return Response(
+            content='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌍</text></svg>',
+            media_type="image/svg+xml"
+        )
+
     @app.get("/")
     def serve_index():
         return FileResponse(os.path.join(STATIC_DIR, "index.html"))
