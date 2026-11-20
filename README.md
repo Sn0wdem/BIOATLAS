@@ -1,165 +1,155 @@
-# 🦖 Explorador da Era Mesozoica (Mesozoic Explorer)
+# 🌍 Enciclopédia Paleontológica Global da Vida na Terra
 
-> Uma aplicação web interativa, moderna e responsiva para explorar seres vivos da Era Mesozoica (Triássico, Jurássico e Cretáceo) consumindo dados abertos da **Paleobiology Database (PBDB)**, da **Wikipedia REST API** e mapeamento georreferenciado de fósseis via **Leaflet.js**.
-
----
-
-## 🌟 Funcionalidades
-
-- 🔍 **Busca Dinâmica em Tempo Real**: Busque por qualquer gênero de réptil fóssil, dinossauro, pterossauro ou réptil marinho (*ex: Tyrannosaurus, Velociraptor, Mosasaurus, Spinosaurus, Stegosaurus*).
-- ⏳ **Filtros por Período Geológico**:
-  - **Triássico** (252 – 201 Ma)
-  - **Jurássico** (201 – 145 Ma)
-  - **Cretáceo** (145 – 66 Ma)
-- 🌿 **Filtros por Dieta e Habitat**:
-  - Terrestres (Dinossauros), Aéreos (Pterossauros) e Aquáticos (Répteis Marinhos).
-  - Carnívoros, Herbívoros e Piscívoros.
-- ⚡ **Ingestão Automática de QUALQUER Espécime Mesozoico**:
-  - Digite qualquer gênero fóssil da Era Mesozoica (*ex: Therizinosaurus, Argentinosaurus, Giganotosaurus, Deinonychus, Quetzalcoatlus, Liopleurodon, Oxalaia*) e o sistema ingere automaticamente os dados da PBDB e da Wikipedia em tempo real.
-  - Botão de **Descoberta Automática na PBDB**: sorteie novos espécimes aleatórios ou descubra novos gêneros do Cretáceo, Jurássico, Triássico, pterossauros e répteis marinhos com um clique.
-- 🎨 **Representações Visuais de Como Eram em Vida (Paleoarte Colorida)**:
-  - Algoritmo que filtra e prioriza reconstituições artísticas anatômicas em vida (*life restorations*), exibindo a pele, escamas, penas, musculatura e ecossistema original dos animais em vez de apenas ossos de museu.
-- 📖 **Wiki Paleontológica Própria (100% no App, Sem Redirecionamentos)**:
-  - Ficha técnica biométrica completa (comprimento, altura, massa, velocidade, força de mordida em Newtons/kgf, etimologia e curiosidades).
-  - Nunca joga o usuário para páginas externas da Wikipedia.
-- 🔬 **Modo Especialista (Detalhes Complexos & Cladística)**:
-  - Chave seletora (*toggle switch*) para alternar entre visão geral e o modo paleontológico aprofundado.
-  - Árvore filogenética / cladograma completo (*Dinosauria > Theropoda > Coelurosauria...*).
-  - Osteologia craniana e pós-craniana, análise biomecânica de elementos finitos (FEA), dinâmica muscular e histologia com anéis de crescimento (*LAGs*).
-- 🖼️ **Busca Interativa de Imagens & Google Imagens**:
-  - Aba com busca em tempo real de fotos e fósseis por termos livres (*crânio, dentes, esqueleto, penas, filhotes*).
-  - Botão integrado para busca direta no Google Imagens com filtros paleontológicos.
-  - Visualizador Pop-up (*Lightbox*) em tela cheia com navegação por setas (`←`, `→`, `ESC`).
-- 🗺️ **Mapa Global de Ocorrências Fósseis (Leaflet.js + PBDB Integrado)**:
-  - Mapa interativo mundial embutido diretamente na aba da Wiki do espécime, exibindo sítios de escavação, país e datação das formações geológicas.
-- ⚡ **Zero Dependências Pesadas**:
-  - Desenvolvido em HTML5, CSS3 moderno e Vanilla JavaScript, permitindo hospedagem estática 100% gratuita no **GitHub Pages** ou **Vercel**.
+> Uma plataforma paleontológica moderna, interativa e de alta performance desenvolvida com **Python**, **FastAPI**, **SQLite**, **Paleobiology Database (PBDB)**, **Wikimedia Commons** e **Leaflet.js**, cobrindo **TODAS as eras geológicas da história da Terra**: do **Pré-Cambriano ao Quaternário** (635 milhões de anos ao presente).
 
 ---
 
-## 📂 Estrutura de Arquivos
+## 🌟 Visão Geral & Novidades da Versão 2.0 (FastAPI)
+
+1. **Reescrita Completa com Python & FastAPI**:
+   - Backend robusto e assíncrono com Uvicorn e HTTPX.
+   - Banco de dados relacional **SQLite** com inicialização e semeadura automática.
+   - Ingestão server-side com *User-Agent* em conformidade científica, eliminando problemas de CORS e limites de taxa de requisições de navegadores.
+
+2. **Expansão para TODAS as Eras da Terra**:
+   - 🦠 **Pré-Cambriano / Ediacarano (635 a 541 Ma)**: A origem dos primeiros organismos multicelulares complexos (*Dickinsonia, Charnia, Spriggina, Kimberella*).
+   - 🦐 **Paleozoico (541 a 252 Ma)**: A Explosão Cambriana, peixes couraçados, os primeiros tetrápodes na terra firme, artrópodes gigantes e ancestrais sinapsídeos (*Anomalocaris, Opabinia, Dunkleosteus, Tiktaalik, Meganeura, Arthropleura, Dimetrodon, Gorgonops*).
+   - 🦖 **Mesozoico (252 a 66 Ma)**: A Era dos Dinossauros, Pterossauros gigantes e répteis marinhos pelágicos (*Tyrannosaurus, Spinosaurus, Triceratops, Velociraptor, Brachiosaurus, Quetzalcoatlus, Mosasaurus*).
+   - 🦣 **Cenozoico (66 Ma ao Presente)**: A Era dos Mamíferos Gigantes, serpentes colossais, caimões amazônicos e a megafauna da Idade do Gelo (*Titanoboa, Basilosaurus, Otodus megalodon, Purussaurus, Smilodon, Mammuthus primigenius, Megatherium*).
+
+3. **Representações Visuais de Como Eram em Vida (Paleoarte)**:
+   - Algoritmo que prioriza e busca ilustrações científicas de *life restoration* (pele, escamas, penas, musculatura e habitat natural) em vez de simples fotos de ossos desarticulados de museu.
+   - Galeria rica com múltiplas reconstruções por espécime e visualizador *Lightbox* em tela cheia.
+
+4. **Wiki Paleontológica Própria (100% Integrada, Sem Redirecionamentos)**:
+   - Ficha técnica biométrica completa (comprimento, altura, massa, velocidade estimada, força de mordida em Newtons, etimologia e curiosidades marcantes).
+   - Nunca redireciona para links externos da Wikipedia.
+
+5. **🔬 Modo Paleontólogo / Especialista (Detalhes Complexos)**:
+   - Cladograma filogenético interativo em árvore taxonômica.
+   - Osteologia e morfometria craniana detalhada.
+   - Biomecânica, cinemática de mordida e Análise de Elementos Finitos (FEA).
+   - Histologia óssea, linhas de crescimento arrestado (LAGs) e tafonomia sedimentar.
+
+6. **🗺️ Mapa Fóssil Global Interativo (PBDB + Leaflet.js)**:
+   - Mapeamento em tempo real de coordenadas georreferenciadas dos sítios de escavação onde os fósseis da espécie foram realmente descobertos no planeta.
+
+7. **⚡ Ingestão Automática de QUALQUER Espécime de Qualquer Época**:
+   - Digite qualquer gênero fóssil no buscador e clique em **"Subir Espécime"** ou busque diretamente. O backend Python consulta a PBDB e a Wikimedia Action API, monta a ficha biométrica, compila o cladograma e salva no SQLite.
+
+---
+
+## 📂 Estrutura do Projeto
 
 ```plaintext
 mesozoico-explorer/
-├── index.html          # Estrutura semântica, meta tags e containers
-├── style.css           # Design moderno, tema dark fóssil e responsividade
-├── app.js              # Integrações com PBDB API, Wikipedia API e Leaflet.js
-├── Dockerfile          # Imagem de produção leve baseada em Nginx Alpine
-├── docker-compose.yml  # Orquestração do container Docker na porta 8080
-├── nginx.conf          # Configuração otimizada do Nginx (Gzip, Cache, Segurança)
-├── .dockerignore       # Arquivos ignorados no build do Docker
-└── README.md           # Documentação e guia de publicação
+├── app/
+│   ├── __init__.py            # Inicializador do pacote
+│   ├── main.py                # Aplicação FastAPI, rotas da API e montagem estática
+│   ├── models.py              # Esquemas de dados Pydantic (Specimen, Era, Occurrence, etc.)
+│   ├── database.py            # Camada SQLite, persistência e consultas filtradas
+│   ├── seed_data.py           # Catálogo inicial de 25+ espécimes icônicos de todas as eras
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── pbdb_service.py    # Cliente da Paleobiology Database (táxons e ocorrências)
+│   │   └── wiki_service.py    # Cliente Wikimedia Commons (paleoarte) e Wikipedia (dossiês)
+│   └── static/                # Frontend responsivo
+│       ├── index.html         # Interface com seletor de eras, busca e modais
+│       ├── style.css          # Tema dark fóssil com paletas cromáticas por era
+│       └── app.js             # Controlador JavaScript assíncrono conectado à API
+├── venv/                      # Ambiente virtual Python
+├── Dockerfile                 # Contêiner Python 3.11-slim com FastAPI e Uvicorn
+├── docker-compose.yml         # Orquestração do container na porta 8000
+├── requirements.txt           # Dependências Python (fastapi, uvicorn, httpx, pydantic)
+└── README.md                  # Documentação completa
 ```
 
 ---
 
-## 🚀 Como Rodar Localmente
+## 🚀 Como Executar o Projeto
 
-Você não precisa instalar Node.js nem ferramentas complexas. Basta ter um navegador web:
+Você pode rodar a aplicação de duas formas simples: diretamente com **Python** local ou via **Docker**.
 
-### Opção 1: Abrir diretamente no navegador
-Dê um duplo clique no arquivo `index.html` ou arraste-o para o Chrome, Firefox ou Edge.
+### Opção 1: Execução Local com Python (Recomendado para Desenvolvimento)
 
-### Opção 2: Usando o Python (Recomendado para evitar bloqueios de CORS em file://)
-No terminal, dentro da pasta do projeto:
+1. **Crie e ative o ambiente virtual:**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-```bash
-# Python 3
-python3 -m http.server 8000
-```
-Em seguida, abra no navegador: `http://localhost:8000`
+2. **Instale as dependências:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Opção 3: Extensão Live Server (VS Code)
-1. Instale a extensão **Live Server** no VS Code.
-2. Clique com o botão direito em `index.html` e selecione **"Open with Live Server"**.
+3. **Inicie o servidor FastAPI com Uvicorn:**
+   ```bash
+   uvicorn app.main:app --reload --port 8000
+   ```
 
-### Opção 4: Usando Docker (Recomendado para produção ou containers)
-
-#### Usando Docker Compose:
-```bash
-docker compose up -d --build
-```
-Acesse no navegador: **`http://localhost:8080`**
-
-Para parar o container:
-```bash
-docker compose down
-```
-
-#### Ou usando apenas a Docker CLI:
-```bash
-# 1. Construir a imagem
-docker build -t mesozoico-explorer .
-
-# 2. Executar o container na porta 8080
-docker run -d -p 8080:80 --name mesozoico-explorer mesozoico-explorer
-```
+4. **Acesse a aplicação no navegador:**
+   - 🌐 **Interface Web:** [http://localhost:8000](http://localhost:8000)
+   - 📚 **Documentação Interativa Swagger (OpenAPI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+   - 📖 **Documentação Redoc:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
 ---
 
-## 🛰️ Publicando no GitHub e GitHub Pages (Passo a Passo)
+### Opção 2: Execução com Docker & Docker Compose
 
-### 1. Inicializar o repositório Git local
-No terminal do seu computador (dentro da pasta do projeto):
+Certifique-se de que o Docker esteja instalado e em execução no seu sistema.
 
-```bash
-git init
-git add .
-git commit -m "feat: versão inicial do Explorador da Era Mesozoica"
-```
+1. **Suba o contêiner com build automático:**
+   ```bash
+   docker compose up --build
+   ```
 
-### 2. Criar o repositório no GitHub
-1. Acesse o [GitHub](https://github.com) e faça login.
-2. Clique no botão **"+"** (canto superior direito) e selecione **New repository**.
-3. Escolha o nome do repositório (ex: `mesozoico-explorer`).
-4. Mantenha-o como **Public** e **NÃO** marque a opção de adicionar README (já criamos localmente).
-5. Clique em **Create repository**.
+2. **Para rodar em segundo plano (modo daemon):**
+   ```bash
+   docker compose up -d
+   ```
 
-### 3. Vincular e subir o código para o GitHub
-Substitua `SEU_USUARIO` pelo seu nome de usuário no GitHub:
+3. **Acesse no navegador:**
+   - [http://localhost:8000](http://localhost:8000)
 
-```bash
-git branch -M main
-git remote add origin https://github.com/SEU_USUARIO/mesozoico-explorer.git
-git push -u origin main
-```
-
-### 4. Ativar o GitHub Pages (Hospedagem Gratuita)
-1. No seu repositório no GitHub, clique na aba **Settings** (Configurações).
-2. Na barra lateral esquerda, clique em **Pages**.
-3. Em **Build and deployment > Source**, selecione:
-   - Branch: `main`
-   - Pasta: `/ (root)`
-4. Clique em **Save**.
-5. Aguarde cerca de 1 a 2 minutos. O GitHub gerará um link público parecido com:
-   `https://SEU_USUARIO.github.io/mesozoico-explorer/`
-
-Pronto! Seu site estará no ar mundialmente.
+4. **Para parar o contêiner:**
+   ```bash
+   docker compose down
+   ```
 
 ---
 
-## 🌐 Alternativa: Publicando na Vercel
+## 📡 Endpoints da API REST (FastAPI)
 
-1. Acesse [vercel.com](https://vercel.com) e faça login com sua conta do GitHub.
-2. Clique em **"Add New..."** > **"Project"**.
-3. Importe o repositório `mesozoico-explorer`.
-4. Deixe todas as opções como padrão e clique em **Deploy**.
-5. Em segundos, sua aplicação receberá uma URL de alta velocidade (ex: `mesozoico-explorer.vercel.app`).
-
----
-
-## 🔬 Fontes de Dados e APIs
-
-- **[Paleobiology Database (PBDB) API](https://paleobiodb.org/data1.2/)**:
-  - Dados taxonômicos: `/taxa/single.json?name={nome}&show=attr`
-  - Coordenadas georreferenciadas de fósseis: `/occs/list.json?base_name={nome}&show=coords,loc`
-- **[Wikipedia REST API](https://www.mediawiki.org/wiki/API:REST_API)**:
-  - Resumo e imagem: `/api/rest_v1/page/summary/{nome}`
-- **[Leaflet.js](https://leafletjs.com/)**:
-  - Biblioteca open-source para renderização de mapas interativos.
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/` | Serve a interface web completa (`index.html`) |
+| `GET` | `/api/eras` | Retorna metadados das 4 eras geológicas (nome, período, cor, criaturas) |
+| `GET` | `/api/specimens` | Lista espécimes com filtros (`era`, `period`, `diet`, `group`, `search`) |
+| `GET` | `/api/specimens/{id}` | Retorna detalhes biométricos, biológicos e cladísticos de um espécime |
+| `POST` | `/api/ingest` | Ingestão automática de qualquer espécime por nome científico via PBDB + Wikimedia |
+| `GET` | `/api/discover` | Retorna sugestões aleatórias ou curadas de uma era para exploração rápida |
+| `GET` | `/api/occurrences/{taxon}` | Coordenadas georreferenciadas da PBDB para o mapa Leaflet |
+| `GET` | `/api/proxy-image?url=...` | Proxy e cache de imagens Wikimedia com cabeçalho seguro |
+| `GET` | `/api/stats` | Estatísticas gerais do acervo (contagem por era, dieta e grupo) |
 
 ---
 
-## 📜 Licença
+## 🏛️ Acervo Científico Pré-Catalogado
 
-Distribuído sob a licença **MIT**. Sinta-se livre para utilizar, modificar e expandir este projeto para estudos, feiras de ciências ou divulgação paleontológica!
+A aplicação já vem pré-alimentada no SQLite com espécimes fundamentais de todas as eras:
+
+| Era Geológica | Período | Espécimes Pré-Semeados |
+|---|---|---|
+| **Pré-Cambriano** | Ediacarano (635–541 Ma) | *Dickinsonia costata*, *Charnia masoni*, *Spriggina floundersi* |
+| **Paleozoico** | Cambriano, Devoniano, Carbonífero, Permiano (541–252 Ma) | *Anomalocaris*, *Opabinia*, *Dunkleosteus*, *Tiktaalik*, *Meganeura*, *Arthropleura*, *Dimetrodon*, *Gorgonops* |
+| **Mesozoico** | Triássico, Jurássico, Cretáceo (252–66 Ma) | *Tyrannosaurus rex*, *Spinosaurus*, *Triceratops*, *Brachiosaurus*, *Velociraptor*, *Quetzalcoatlus*, *Mosasaurus* |
+| **Cenozoico** | Paleógeno, Neógeno, Quaternário (66 Ma–Presente) | *Titanoboa*, *Basilosaurus*, *Otodus megalodon*, *Purussaurus*, *Smilodon*, *Mammuthus primigenius*, *Megatherium* |
+
+---
+
+## 🔬 Fontes de Dados Científicos
+
+- **[Paleobiology Database (PBDB)](https://paleobiodb.org/):** Base de dados paleontológica global mantida por paleontólogos internacionais com registros estratigráficos e coordenadas georreferenciadas de espécimes fósseis.
+- **[Wikimedia Commons](https://commons.wikimedia.org/):** Acervo livre de paleoarte e representações visuais anatômicas sob licenças Creative Commons.
+- **[Wikipedia REST API](https://www.mediawiki.org/wiki/API:REST_API):** Dossiês textuais científicos e etimológicos em português e inglês.

@@ -1720,3 +1720,170 @@ body.expert-mode-active .card {
     justify-content: space-between;
   }
 }
+
+/* ==========================================================================
+   MELHORIAS: SUPORTE A TODAS AS ERAS GEOLÓGICAS (PRÉ-CAMBRIANO AO CENOZOICO)
+   ========================================================================== */
+
+:root {
+  --accent-precambrian: #06b6d4;
+  --accent-precambrian-bg: rgba(6, 182, 212, 0.18);
+  --accent-paleozoic: #10b981;
+  --accent-paleozoic-bg: rgba(16, 185, 129, 0.18);
+  --accent-mesozoic: #f59e0b;
+  --accent-mesozoic-bg: rgba(245, 158, 11, 0.18);
+  --accent-cenozoic: #38bdf8;
+  --accent-cenozoic-bg: rgba(56, 189, 248, 0.18);
+}
+
+/* Seletor de Eras Geológicas */
+.era-tabs-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.era-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-full);
+  background: rgba(19, 26, 19, 0.85);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.era-tab-btn:hover {
+  background: rgba(27, 35, 27, 0.95);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.era-tab-btn.active {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #4ade80;
+  color: #4ade80;
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+}
+
+.era-tab-btn[data-era="precambriano"].active {
+  background: rgba(6, 182, 212, 0.22);
+  border-color: #06b6d4;
+  color: #06b6d4;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.35);
+}
+
+.era-tab-btn[data-era="paleozoico"].active {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: #10b981;
+  color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+}
+
+.era-tab-btn[data-era="mesozoico"].active {
+  background: rgba(245, 158, 11, 0.22);
+  border-color: #f59e0b;
+  color: #f59e0b;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+}
+
+.era-tab-btn[data-era="cenozoico"].active {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+}
+
+/* Badges de Era nos Cards e na Wiki */
+.badge-era {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+
+.badge-era-precambriano {
+  background: rgba(6, 182, 212, 0.18);
+  color: #06b6d4;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.badge-era-paleozoico {
+  background: rgba(16, 185, 129, 0.18);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.badge-era-mesozoico {
+  background: rgba(245, 158, 11, 0.18);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.badge-era-cenozoico {
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+/* Períodos geológicos adicionais */
+.period-ediacaran, .period-ediacarano {
+  background: rgba(6, 182, 212, 0.2);
+  color: #06b6d4;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.period-cambrian, .period-cambriano {
+  background: rgba(20, 184, 166, 0.2);
+  color: #14b8a6;
+  border: 1px solid rgba(20, 184, 166, 0.4);
+}
+
+.period-devonian, .period-devoniano {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.period-carboniferous, .period-carbonifero, .period-carbonífero {
+  background: rgba(5, 150, 105, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(5, 150, 105, 0.4);
+}
+
+.period-permian, .period-permiano {
+  background: rgba(217, 119, 6, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(217, 119, 6, 0.4);
+}
+
+.period-paleogene, .period-paleogeno, .period-paleógeno {
+  background: rgba(99, 102, 241, 0.2);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.period-neogene, .period-neogeno, .period-neógeno {
+  background: rgba(2, 132, 199, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(2, 132, 199, 0.4);
+}
+
+.period-quaternary, .period-quaternario, .period-quaternário {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}

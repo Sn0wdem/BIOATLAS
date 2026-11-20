@@ -4,22 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title>Explorador da Era Mesozoica | Wiki & Ingestão Automática de Espécimes</title>
-  <meta name="description" content="Enciclopédia e Wiki do Mesozoico com ingestão automática de qualquer espécime via Paleobiology Database (PBDB) e representações visuais em vida de paleoarte.">
+  <title>Enciclopédia Paleontológica Global da Vida na Terra | Pré-Cambriano ao Quaternário</title>
+  <meta name="description" content="Enciclopédia Paleontológica Global com FastAPI, PBDB e Wikimedia Commons: representações visuais em vida de paleoarte, dossiês interativos, cladística e mapas mundiais de fósseis para todas as eras da Terra.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <!-- Leaflet CSS para o mapa de fósseis -->
+  <!-- Leaflet CSS para o mapa mundial de fósseis -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="style.css?v=3.7">
+  <link rel="stylesheet" href="/static/style.css?v=4.0">
 </head>
 <body>
   <header class="hero">
     <div class="hero-content">
       <div class="hero-top-bar">
-        <div class="logo-tag">Mesozoic Auto-Ingest & Wiki • 252 a 66 Ma</div>
+        <div class="logo-tag">FastAPI Paleontology Engine • 635 Ma ao Presente</div>
         
-        <!-- Toggle Global de Modo Especialista -->
+        <!-- Toggle Global de Modo Especialista / Paleontólogo -->
         <div class="expert-mode-toggle-wrap">
           <label class="toggle-switch">
             <input type="checkbox" id="globalExpertToggle">
@@ -33,11 +33,30 @@
         </div>
       </div>
 
-      <h1 class="hero-title">Enciclopédia Paleontológica Mesozoica</h1>
+      <h1 class="hero-title">Enciclopédia da História da Vida na Terra</h1>
       <p class="hero-subtitle">
-        Catálogo dinâmico com <strong>ingestão automática de qualquer espécime</strong> da Paleobiology Database (PBDB),
-        <strong>representações visuais de como eles eram em vida</strong>, dossiês científicos e mapas mundiais de escavação.
+        Do <strong>Pré-Cambriano ao Quaternário</strong>: catálogo paleontológico com <strong>ingestão automática de qualquer espécime</strong> via Paleobiology Database (PBDB),
+        <strong>representações visuais de como eram em vida (paleoarte)</strong>, dossiês anatômicos profundos e mapas georreferenciados.
       </p>
+
+      <!-- Seletor Rápido de Eras Geológicas -->
+      <div class="era-tabs-container" id="eraTabsContainer">
+        <button class="era-tab-btn active" data-era="all">
+          <span>🌍</span> Todas as Eras (635 Ma - Presente)
+        </button>
+        <button class="era-tab-btn" data-era="precambriano">
+          <span>🦠</span> Pré-Cambriano (635 - 541 Ma)
+        </button>
+        <button class="era-tab-btn" data-era="paleozoico">
+          <span>🦐</span> Paleozoico (541 - 252 Ma)
+        </button>
+        <button class="era-tab-btn" data-era="mesozoico">
+          <span>🦖</span> Mesozoico (252 - 66 Ma)
+        </button>
+        <button class="era-tab-btn" data-era="cenozoico">
+          <span>🦣</span> Cenozoico (66 Ma - Presente)
+        </button>
+      </div>
 
       <!-- Painel de Busca e Ingestão Automática -->
       <div class="search-panel">
@@ -50,7 +69,7 @@
             <input 
               type="text" 
               id="searchInput" 
-              placeholder="Digite QUALQUER gênero mesozoico (ex: T-Rex, Therizinosaurus, Argentinosaurus)..." 
+              placeholder="Digite QUALQUER gênero fóssil (ex: Anomalocaris, Dimetrodon, T-Rex, Titanoboa, Smilodon, Dunkleosteus)..." 
               autocomplete="off"
             >
             <button id="clearBtn" class="clear-btn hidden" title="Limpar busca">&times;</button>
@@ -66,7 +85,7 @@
           </button>
           
           <!-- Botão de Ingestão Automática de Qualquer Espécime -->
-          <button id="btnAutoIngest" class="accent-btn" title="Subir e catalogar automaticamente qualquer gênero da Era Mesozoica">
+          <button id="btnAutoIngest" class="accent-btn" title="Subir e catalogar automaticamente qualquer gênero fóssil de qualquer era">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 5v14M5 12h14"/>
             </svg>
@@ -74,24 +93,37 @@
           </button>
         </div>
 
+        <!-- Filtros Secundários -->
         <div class="filters-row">
           <div class="filter-control">
             <label for="periodFilter">Período:</label>
             <select id="periodFilter">
               <option value="all">Todos os Períodos</option>
-              <option value="Triassic">Triássico (252 - 201 Ma)</option>
-              <option value="Jurassic">Jurássico (201 - 145 Ma)</option>
-              <option value="Cretaceous">Cretáceo (145 - 66 Ma)</option>
+              <option value="Ediacarano">Ediacarano (635 - 541 Ma)</option>
+              <option value="Cambriano">Cambriano (541 - 485 Ma)</option>
+              <option value="Devoniano">Devoniano (419 - 359 Ma)</option>
+              <option value="Carbonífero">Carbonífero (359 - 299 Ma)</option>
+              <option value="Permiano">Permiano (299 - 252 Ma)</option>
+              <option value="Triássico">Triássico (252 - 201 Ma)</option>
+              <option value="Jurássico">Jurássico (201 - 145 Ma)</option>
+              <option value="Cretáceo">Cretáceo (145 - 66 Ma)</option>
+              <option value="Paleógeno">Paleógeno (66 - 23 Ma)</option>
+              <option value="Neógeno">Neógeno (23 - 2.6 Ma)</option>
+              <option value="Quaternário">Quaternário (2.6 Ma - Presente)</option>
             </select>
           </div>
 
           <div class="filter-control">
-            <label for="groupFilter">Tipo / Habitat:</label>
+            <label for="groupFilter">Tipo / Grupo:</label>
             <select id="groupFilter">
-              <option value="all">Todos os Tipos</option>
-              <option value="dinossauro">Dinossauros (Terrestres)</option>
-              <option value="pterossauro">Pterossauros (Aéreos)</option>
-              <option value="reptil-marinho">Répteis Marinhos (Aquáticos)</option>
+              <option value="all">Todos os Grupos</option>
+              <option value="dinossauro">Dinossauros</option>
+              <option value="pterossauro">Pterossauros & Voadores</option>
+              <option value="reptil-marinho">Répteis Marinhos & Placodermes</option>
+              <option value="sinapsideo">Sinapsídeos & Ancestrais Mamalianos</option>
+              <option value="mamifero-megafauna">Mamíferos & Megafauna</option>
+              <option value="artropode-invertebrado">Artrópodes & Invertebrados Primitivos</option>
+              <option value="ediacarano">Biota Ediacarana</option>
             </select>
           </div>
 
@@ -102,6 +134,8 @@
               <option value="carnivoro">Carnívoros</option>
               <option value="herbivoro">Herbívoros</option>
               <option value="piscivoro">Piscívoros</option>
+              <option value="filtrador">Filtradores / Osmotrofia</option>
+              <option value="onivoro">Onívoros</option>
             </select>
           </div>
 
@@ -110,7 +144,7 @@
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
               <path d="M3 3v5h5"/>
             </svg>
-            <span>Limpar Filtros</span>
+            <span>Resetar</span>
           </button>
         </div>
 
@@ -118,52 +152,56 @@
         <div class="auto-discovery-row">
           <div class="discovery-header">
             <span class="quick-label">⚡ Descoberta Automática na PBDB:</span>
-            <span class="discovery-hint">Clique para ingerir novos gêneros científicos em tempo real</span>
+            <span class="discovery-hint">Clique para ingerir ou sortear gêneros científicos de qualquer época</span>
           </div>
           <div class="discovery-chips-container">
             <button id="btnRandomDino" class="discovery-btn random">
-              🎲 Sortear Espécime Aleatório
+              🎲 Sortear Qualquer Espécime
             </button>
-            <button class="discovery-btn" data-group="Dinosauria" data-interval="Cretaceous">
-              🦖 Auto-Cretáceo
+            <button class="discovery-btn" data-era="precambriano">
+              🦠 Auto-Pré-Cambriano
             </button>
-            <button class="discovery-btn" data-group="Dinosauria" data-interval="Jurassic">
-              🦕 Auto-Jurássico
+            <button class="discovery-btn" data-era="paleozoico">
+              🦐 Auto-Paleozoico
             </button>
-            <button class="discovery-btn" data-group="Dinosauria" data-interval="Triassic">
-              🦎 Auto-Triássico
+            <button class="discovery-btn" data-era="mesozoico">
+              🦖 Auto-Mesozoico
             </button>
-            <button class="discovery-btn" data-group="Pterosauria" data-interval="Mesozoic">
-              🦅 Auto-Pterossauros
-            </button>
-            <button class="discovery-btn" data-group="Plesiosauria" data-interval="Mesozoic">
-              🌊 Auto-Répteis Marinhos
+            <button class="discovery-btn" data-era="cenozoico">
+              🦣 Auto-Megafauna Cenozoica
             </button>
           </div>
         </div>
 
-        <!-- Sugestões Rápidas de Espécimes Famosos -->
+        <!-- Sugestões Rápidas de Espécimes Famosos de Todas as Eras -->
         <div class="quick-tags">
-          <span class="quick-label">Espécimes Famosos (Clique para Ingerir / Abrir):</span>
+          <span class="quick-label">Espécimes Famosos de Todas as Eras (Clique para Abrir / Ingerir):</span>
           <div class="tags-container">
+            <button class="tag-chip" data-name="Dickinsonia">Dickinsonia</button>
+            <button class="tag-chip" data-name="Charnia">Charnia</button>
+            <button class="tag-chip" data-name="Spriggina">Spriggina</button>
+            <button class="tag-chip" data-name="Anomalocaris">Anomalocaris</button>
+            <button class="tag-chip" data-name="Opabinia">Opabinia</button>
+            <button class="tag-chip" data-name="Dunkleosteus">Dunkleosteus</button>
+            <button class="tag-chip" data-name="Tiktaalik">Tiktaalik</button>
+            <button class="tag-chip" data-name="Meganeura">Meganeura</button>
+            <button class="tag-chip" data-name="Arthropleura">Arthropleura</button>
+            <button class="tag-chip" data-name="Dimetrodon">Dimetrodon</button>
+            <button class="tag-chip" data-name="Gorgonops">Gorgonops</button>
             <button class="tag-chip" data-name="Tyrannosaurus">T-Rex</button>
             <button class="tag-chip" data-name="Spinosaurus">Spinosaurus</button>
             <button class="tag-chip" data-name="Triceratops">Triceratops</button>
-            <button class="tag-chip" data-name="Therizinosaurus">Therizinosaurus</button>
-            <button class="tag-chip" data-name="Giganotosaurus">Giganotosaurus</button>
-            <button class="tag-chip" data-name="Argentinosaurus">Argentinosaurus</button>
-            <button class="tag-chip" data-name="Deinonychus">Deinonychus</button>
-            <button class="tag-chip" data-name="Velociraptor">Velociraptor</button>
-            <button class="tag-chip" data-name="Stegosaurus">Stegosaurus</button>
             <button class="tag-chip" data-name="Brachiosaurus">Brachiosaurus</button>
-            <button class="tag-chip" data-name="Dilophosaurus">Dilophosaurus</button>
+            <button class="tag-chip" data-name="Velociraptor">Velociraptor</button>
             <button class="tag-chip" data-name="Quetzalcoatlus">Quetzalcoatlus</button>
             <button class="tag-chip" data-name="Mosasaurus">Mosasaurus</button>
-            <button class="tag-chip" data-name="Carnotaurus">Carnotaurus</button>
-            <button class="tag-chip" data-name="Ankylosaurus">Ankylosaurus</button>
-            <button class="tag-chip" data-name="Liopleurodon">Liopleurodon</button>
-            <button class="tag-chip" data-name="Plesiosaurus">Plesiosaurus</button>
-            <button class="tag-chip" data-name="Coelophysis">Coelophysis</button>
+            <button class="tag-chip" data-name="Titanoboa">Titanoboa</button>
+            <button class="tag-chip" data-name="Basilosaurus">Basilosaurus</button>
+            <button class="tag-chip" data-name="Smilodon">Smilodon (Dente-de-Sabre)</button>
+            <button class="tag-chip" data-name="Mammuthus">Mamute-Lanoso</button>
+            <button class="tag-chip" data-name="Otodus">Megalodon</button>
+            <button class="tag-chip" data-name="Purussaurus">Purussaurus</button>
+            <button class="tag-chip" data-name="Megatherium">Preguiça-Gigante</button>
           </div>
         </div>
       </div>
@@ -178,9 +216,9 @@
 
   <main class="container">
     <div class="results-header">
-      <div id="resultsStats" class="results-stats">Carregando acervo paleontológico...</div>
+      <div id="resultsStats" class="results-stats">Conectando ao backend FastAPI...</div>
       <div class="view-actions">
-        <button id="resetFiltersBtn" class="secondary-btn">Resetar Filtros</button>
+        <button id="refreshCatalogBtn" class="secondary-btn" title="Atualizar catálogo">Atualizar Catálogo</button>
       </div>
     </div>
 
@@ -194,16 +232,16 @@
     <div id="emptyState" class="empty-state hidden">
       <div class="empty-icon">🦴</div>
       <h3 id="emptyTitle">Nenhum registro fóssil encontrado</h3>
-      <p id="emptyDesc">Você pode subir qualquer gênero mesozoico instantaneamente digitando o nome no campo acima e clicando em <strong>Subir Qualquer Espécime</strong>!</p>
+      <p id="emptyDesc">Você pode subir qualquer gênero de qualquer era instantaneamente digitando o nome no campo acima e clicando em <strong>Subir Espécime</strong>!</p>
       <button id="reloadSuggestionsBtn" class="primary-btn mt-3">Recarregar Acervo Principal</button>
     </div>
 
-    <!-- Grid de Cards -->
+    <!-- Grid de Cards de Espécimes -->
     <section id="results" class="grid-container" aria-live="polite"></section>
   </main>
 
   <!-- =======================================================================
-       MODAL: WIKI PALEONTOLÓGICA INTERATIVA PROPRIA COM TABS E MODO ESPECIALISTA
+       MODAL: WIKI PALEONTOLÓGICA INTERATIVA PRÓPRIA COM TABS E MODO ESPECIALISTA
        ======================================================================= -->
   <div id="wikiModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="wikiTitle">
     <div class="modal-backdrop" id="wikiModalBackdrop"></div>
@@ -213,6 +251,7 @@
       <div class="modal-header wiki-modal-header">
         <div class="wiki-header-info">
           <div class="wiki-badge-row">
+            <span id="wikiEraBadge" class="badge-era badge-era-mesozoico">Mesozoico</span>
             <span id="wikiPeriodBadge" class="card-floating-badge period-cretaceous">Cretáceo</span>
             <span id="wikiGroupBadge" class="chip">Dinossauro</span>
             <span id="wikiDietBadge" class="chip">Carnívoro</span>
@@ -280,9 +319,7 @@
       <!-- Corpo do Modal com Conteúdo das Abas -->
       <div class="modal-body wiki-modal-body">
         
-        <!-- ==========================================
-             ABA 1: DOSSIÊ GERAL
-             ========================================== -->
+        <!-- ABA 1: DOSSIÊ GERAL -->
         <div id="tab-overview" class="wiki-tab-content active">
           <div class="wiki-grid">
             <!-- Galeria e Imagem de Destaque -->
@@ -345,9 +382,7 @@
           </div>
         </div>
 
-        <!-- ==========================================
-             ABA 2: MODO ESPECIALISTA (DETALHES COMPLEXOS)
-             ========================================== -->
+        <!-- ABA 2: MODO ESPECIALISTA (DETALHES COMPLEXOS) -->
         <div id="tab-expert" class="wiki-tab-content">
           <div class="expert-banner">
             <span class="expert-badge-lg">🔬 MODO PALEONTÓLOGO ATIVADO</span>
@@ -381,9 +416,7 @@
           </div>
         </div>
 
-        <!-- ==========================================
-             ABA 3: IMAGENS & BUSCA NA WEB / GOOGLE
-             ========================================== -->
+        <!-- ABA 3: IMAGENS & BUSCA NA WEB / GOOGLE -->
         <div id="tab-images" class="wiki-tab-content">
           <div class="web-images-header">
             <div>
@@ -402,40 +435,15 @@
             </a>
           </div>
 
-          <!-- Barra de busca interativa de imagens livres -->
-          <div class="web-image-search-bar">
-            <input type="text" id="webImageSearchInput" placeholder="Pesquisar termo específico (ex: life restoration, paleoart, caça, penas, filhotes)...">
-            <button id="btnSearchWebImages" class="primary-btn">
-              <span>Buscar Paleoarte</span>
-            </button>
-          </div>
-
-          <!-- Tags rápidas de termos paleontológicos -->
-          <div class="image-search-chips" id="imageSearchChips">
-            <span class="chips-label">Filtros de visualização:</span>
-            <button class="image-chip active" data-term="life restoration">Representação em Vida</button>
-            <button class="image-chip" data-term="paleoart">Paleoarte Colorida</button>
-            <button class="image-chip" data-term="reconstruction">Reconstrução Corporal</button>
-            <button class="image-chip" data-term="skeleton">Esqueleto / Fóssil</button>
-            <button class="image-chip" data-term="all">Todas as Mídias</button>
-          </div>
-
-          <div id="webImagesLoading" class="hidden text-center py-4">
-            <div class="fossil-spinner small"></div>
-            <span>Buscando representações visuais na web...</span>
-          </div>
-
           <!-- Grid de Imagens da Galeria Interativa -->
           <div id="fullGalleryGrid" class="full-gallery-grid"></div>
         </div>
 
-        <!-- ==========================================
-             ABA 4: MAPA FÓSSIL INTERATIVO INTEGRADO (PBDB)
-             ========================================== -->
+        <!-- ABA 4: MAPA FÓSSIL INTERATIVO INTEGRADO (PBDB) -->
         <div id="tab-map" class="wiki-tab-content">
           <div class="integrated-map-header">
             <div>
-              <h3>Distribuição Geográfica e Sítios de Escavação</h3>
+              <h3>Distribuição Geográfica e Sítios de Escavação Fóssil</h3>
               <p id="integratedMapSubtitle">Mapeando coordenadas georreferenciadas da Paleobiology Database (PBDB)...</p>
             </div>
             <div class="map-stats-badge">
@@ -456,7 +464,7 @@
       <!-- Rodapé do Modal da Wiki -->
       <div class="modal-footer wiki-modal-footer">
         <div class="footer-left-info">
-          <span class="wiki-source-note">Wiki Paleontológica Integrada • Dados PBDB & Wikimedia Commons</span>
+          <span class="wiki-source-note">Wiki Paleontológica Integrada • FastAPI Engine, PBDB & Wikimedia Commons</span>
         </div>
         <div class="footer-right-actions">
           <button id="btnToggleExpertInFooter" class="secondary-btn">
@@ -497,17 +505,17 @@
   <footer class="footer">
     <div class="footer-content">
       <p>
-        <strong>Enciclopédia Paleontológica da Era Mesozoica</strong> — Ingestão automática de espécimes PBDB e representações visuais em vida.
+        <strong>Enciclopédia da História da Vida na Terra</strong> — Motor Python FastAPI com ingestão de espécimes PBDB e paleoarte em vida.
       </p>
       <p class="sources">
         Consome dados científicos abertos da 
-        <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a> e acervos científicos livres.
+        <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a> e acervos abertos da Wikimedia Commons.
       </p>
     </div>
   </footer>
 
-  <!-- Leaflet JS para mapeamento -->
+  <!-- Leaflet JS para mapeamento de fósseis -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="app.js?v=3.7"></script>
+  <script src="/static/app.js?v=4.0"></script>
 </body>
 </html>
