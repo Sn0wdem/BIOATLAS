@@ -14,14 +14,19 @@
 - 🌿 **Filtros por Dieta e Habitat**:
   - Terrestres (Dinossauros), Aéreos (Pterossauros) e Aquáticos (Répteis Marinhos).
   - Carnívoros, Herbívoros e Piscívoros.
-- 🗺️ **Mapa Global de Ocorrências Fósseis (Leaflet.js + PBDB)**:
-  - Visualize no mapa mundial os locais exatos onde os fósseis daquele animal foram desenterrados pela ciência, incluindo formação rochosa e país de origem.
-- 📖 **Wiki & Dossiê Paleontológico Interno (100% no App)**:
-  - Ficha técnica completa de cada criatura dentro da própria aplicação (comprimento, altura, peso, velocidade, dieta, etimologia e curiosidades).
-  - Nunca redireciona o usuário para links externos da Wikipedia.
-- 🖼️ **Pop-up Interativo de Múltiplas Imagens (Lightbox)**:
-  - Galeria de cada espécime com reconstituições em vida, montagens de esqueletos fósseis, crânios e comparativo de tamanho com a escala humana.
-  - Pop-up em tela cheia com navegação por setas (anterior / próxima) e atalhos de teclado (`←`, `→`, `ESC`).
+- 📖 **Wiki Paleontológica Própria (100% no App, Sem Redirecionamentos)**:
+  - Ficha técnica biométrica completa (comprimento, altura, massa, velocidade, força de mordida em Newtons/kgf, etimologia e curiosidades).
+  - Nunca joga o usuário para páginas externas da Wikipedia.
+- 🔬 **Modo Especialista (Detalhes Complexos & Cladística)**:
+  - Chave seletora (*toggle switch*) para alternar entre visão geral e o modo paleontológico aprofundado.
+  - Árvore filogenética / cladograma completo (*Dinosauria > Theropoda > Coelurosauria...*).
+  - Osteologia craniana e pós-craniana, análise biomecânica de elementos finitos (FEA), dinâmica muscular e histologia com anéis de crescimento (*LAGs*).
+- 🖼️ **Busca Interativa de Imagens & Google Imagens**:
+  - Aba com busca em tempo real de fotos e fósseis por termos livres (*crânio, dentes, esqueleto, penas, filhotes*).
+  - Botão integrado para busca direta no Google Imagens com filtros paleontológicos.
+  - Visualizador Pop-up (*Lightbox*) em tela cheia com navegação por setas (`←`, `→`, `ESC`).
+- 🗺️ **Mapa Global de Ocorrências Fósseis (Leaflet.js + PBDB Integrado)**:
+  - Mapa interativo mundial embutido diretamente na aba da Wiki do espécime, exibindo sítios de escavação, país e datação das formações geológicas.
 - ⚡ **Zero Dependências Pesadas**:
   - Desenvolvido em HTML5, CSS3 moderno e Vanilla JavaScript, permitindo hospedagem estática 100% gratuita no **GitHub Pages** ou **Vercel**.
 

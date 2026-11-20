@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Explorador da Era Mesozoica | Wiki Paleontológica Interativa</title>
-  <meta name="description" content="Wiki interativa da Era Mesozoica: explore fichas técnicas completas, anatomia, fósseis e galerias de imagens de dinossauros, pterossauros e répteis marinhos.">
+  <meta name="description" content="Enciclopédia e Wiki própria da Era Mesozoica com mapas fósseis interativos, busca de imagens na web, dossiês científicos e Modo Especialista com anatomia e cladística detalhadas.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <!-- Leaflet CSS para o mapa de fósseis -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="style.css">
@@ -15,10 +15,27 @@
 <body>
   <header class="hero">
     <div class="hero-content">
-      <div class="logo-tag">Mesozoic Wiki • 252 a 66 Ma</div>
-      <h1 class="hero-title">Enciclopédia da Era Mesozoica</h1>
+      <div class="hero-top-bar">
+        <div class="logo-tag">Mesozoic Explorer & Wiki • 252 a 66 Ma</div>
+        
+        <!-- Toggle Global de Modo Especialista -->
+        <div class="expert-mode-toggle-wrap">
+          <label class="toggle-switch">
+            <input type="checkbox" id="globalExpertToggle">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">
+            <span class="expert-icon">🔬</span> 
+            <strong>Modo Paleontólogo</strong> 
+            <small class="expert-badge">Detalhes Complexos</small>
+          </span>
+        </div>
+      </div>
+
+      <h1 class="hero-title">Enciclopédia Paleontológica Mesozoica</h1>
       <p class="hero-subtitle">
-        Dossiês científicos interativos, anatomia, galerias de imagens e dados fósseis do 
+        Dossiês científicos com mapas interativos de fósseis (PBDB), pesquisa de imagens na web,
+        biomecânica e cladística do 
         <strong class="highlight-triassic">Triássico</strong>, 
         <strong class="highlight-jurassic">Jurássico</strong> e 
         <strong class="highlight-cretaceous">Cretáceo</strong>.
@@ -33,7 +50,7 @@
           <input 
             type="text" 
             id="searchInput" 
-            placeholder="Digite o nome (ex: Tyrannosaurus, Velociraptor, Mosasaurus, Spinosaurus)..." 
+            placeholder="Digite o gênero ou espécie (ex: Tyrannosaurus, Spinosaurus, Mosasaurus, Carnotaurus)..." 
             autocomplete="off"
           >
           <button id="clearBtn" class="clear-btn hidden" title="Limpar busca">&times;</button>
@@ -71,7 +88,7 @@
           </div>
 
           <button id="searchBtn" class="primary-btn">
-            <span>Explorar Wiki</span>
+            <span>Explorar Acervo</span>
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -80,7 +97,7 @@
 
         <!-- Quick Tags -->
         <div class="quick-tags">
-          <span class="quick-label">Espécimes em Destaque:</span>
+          <span class="quick-label">Espécimes Catalogados:</span>
           <div class="tags-container">
             <button class="tag-chip" data-name="Tyrannosaurus">T-Rex</button>
             <button class="tag-chip" data-name="Spinosaurus">Spinosaurus</button>
@@ -88,6 +105,7 @@
             <button class="tag-chip" data-name="Velociraptor">Velociraptor</button>
             <button class="tag-chip" data-name="Stegosaurus">Stegosaurus</button>
             <button class="tag-chip" data-name="Brachiosaurus">Brachiosaurus</button>
+            <button class="tag-chip" data-name="Allosaurus">Allosaurus</button>
             <button class="tag-chip" data-name="Pteranodon">Pteranodon</button>
             <button class="tag-chip" data-name="Mosasaurus">Mosasaurus</button>
             <button class="tag-chip" data-name="Carnotaurus">Carnotaurus</button>
@@ -111,7 +129,7 @@
     <!-- Status / Loading -->
     <div id="loading" class="loading-state hidden">
       <div class="fossil-spinner"></div>
-      <p class="loading-text">Consultando arquivos fósseis e galerias anatômicas...</p>
+      <p class="loading-text">Escavando dados fósseis e galerias anatômicas...</p>
     </div>
 
     <!-- Feedback vazio -->
@@ -127,11 +145,13 @@
   </main>
 
   <!-- =======================================================================
-       MODAL 1: WIKI INTERATIVA / DOSSIÊ DO ESPÉCIME
+       MODAL: WIKI PALEONTOLÓGICA INTERATIVA PROPRIA COM TABS E MODO ESPECIALISTA
        ======================================================================= -->
   <div id="wikiModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="wikiTitle">
     <div class="modal-backdrop" id="wikiModalBackdrop"></div>
     <div class="modal-content wiki-modal-content">
+      
+      <!-- Cabeçalho da Wiki -->
       <div class="modal-header wiki-modal-header">
         <div class="wiki-header-info">
           <div class="wiki-badge-row">
@@ -140,105 +160,276 @@
             <span id="wikiDietBadge" class="chip">Carnívoro</span>
           </div>
           <h2 id="wikiTitle" class="wiki-heading">Tyrannosaurus rex</h2>
-          <p id="wikiEtymology" class="wiki-etymology">"Rei dos lagartos tiranos" • Descoberto em 1902 por Barnum Brown</p>
+          <p id="wikiEtymology" class="wiki-etymology">"Rei dos lagartos tiranos" • Descrito em 1905 por Henry Fairfield Osborn</p>
         </div>
-        <button id="closeWikiBtn" class="close-btn" aria-label="Fechar Wiki">&times;</button>
-      </div>
 
-      <div class="modal-body wiki-modal-body">
-        <!-- Layout em 2 colunas: Galeria à esquerda, Ficha Técnica à direita -->
-        <div class="wiki-grid">
-          <!-- Coluna da Galeria Interativa -->
-          <div class="wiki-gallery-col">
-            <div class="featured-image-wrapper">
-              <img id="wikiFeaturedImg" src="" alt="Destaque do espécime" class="featured-img">
-              <button id="btnZoomFeatured" class="zoom-btn" title="Ampliar imagem em pop-up">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                </svg>
-                <span>Ampliar Foto</span>
-              </button>
-              <div id="wikiFeaturedCaption" class="featured-caption">Reconstituição paleoartística em vida</div>
-            </div>
-
-            <!-- Miniaturas para navegar pelas fotos -->
-            <div class="gallery-thumbs-header">
-              <span>Galeria de Imagens & Fósseis (<span id="galleryCount">0</span>)</span>
-              <span class="gallery-hint">Clique para alternar</span>
-            </div>
-            <div id="wikiGalleryThumbs" class="gallery-thumbs-scroll">
-              <!-- Injetado dinamicamente via JS -->
-            </div>
+        <div class="wiki-header-controls">
+          <!-- Toggle do Modo Especialista dentro do Modal -->
+          <div class="expert-mode-toggle-wrap modal-expert-toggle">
+            <label class="toggle-switch">
+              <input type="checkbox" id="modalExpertToggle">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">
+              <span class="expert-icon">🔬</span>
+              <strong>Modo Especialista</strong>
+            </span>
           </div>
 
-          <!-- Coluna da Ficha Técnica & Anatomia -->
-          <div class="wiki-specs-col">
-            <h3 class="section-title">📊 Ficha Técnica Paleontológica</h3>
-            <div class="specs-grid">
-              <div class="spec-card">
-                <span class="spec-label">Comprimento</span>
-                <span id="specLength" class="spec-value">-</span>
-              </div>
-              <div class="spec-card">
-                <span class="spec-label">Altura</span>
-                <span id="specHeight" class="spec-value">-</span>
-              </div>
-              <div class="spec-card">
-                <span class="spec-label">Peso Estimado</span>
-                <span id="specWeight" class="spec-value">-</span>
-              </div>
-              <div class="spec-card">
-                <span class="spec-label">Velocidade Máxima</span>
-                <span id="specSpeed" class="spec-value">-</span>
-              </div>
-              <div class="spec-card">
-                <span class="spec-label">Período Geológico</span>
-                <span id="specPeriod" class="spec-value">-</span>
-              </div>
-              <div class="spec-card">
-                <span class="spec-label">Localização Fóssil</span>
-                <span id="specLocation" class="spec-value">-</span>
-              </div>
-            </div>
-
-            <h3 class="section-title mt-4">🦴 Biologia e Anatomia</h3>
-            <div id="wikiBioText" class="wiki-text-block">
-              <!-- Texto detalhado gerado -->
-            </div>
-
-            <h3 class="section-title mt-4">💡 Curiosidades Paleontológicas</h3>
-            <ul id="wikiCuriositiesList" class="curiosities-list">
-              <!-- Lista de curiosidades -->
-            </ul>
-          </div>
+          <button id="closeWikiBtn" class="close-btn" aria-label="Fechar Wiki">&times;</button>
         </div>
       </div>
 
-      <div class="modal-footer wiki-modal-footer">
-        <button id="btnOpenMapFromWiki" class="btn-card-map">
+      <!-- Barra de Abas da Wiki -->
+      <nav class="wiki-tabs-bar">
+        <button class="wiki-tab-btn active" data-tab="tab-overview">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          Dossiê Geral
+        </button>
+
+        <button class="wiki-tab-btn" data-tab="tab-expert" id="tabBtnExpert">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          Detalhes Complexos & Cladística
+          <span class="expert-indicator-dot"></span>
+        </button>
+
+        <button class="wiki-tab-btn" data-tab="tab-images">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          Imagens & Busca na Web
+        </button>
+
+        <button class="wiki-tab-btn" data-tab="tab-map" id="tabBtnMap">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
             <line x1="8" y1="2" x2="8" y2="18"></line>
             <line x1="16" y1="6" x2="16" y2="22"></line>
           </svg>
-          Mapear Ocorrências Fósseis no Globo
+          Mapa Fóssil Interativo (PBDB)
         </button>
-        <span class="wiki-source-note">Wiki Interativa Própria • Dados de domínio paleontológico aberto</span>
+      </nav>
+
+      <!-- Corpo do Modal com Conteúdo das Abas -->
+      <div class="modal-body wiki-modal-body">
+        
+        <!-- ==========================================
+             ABA 1: DOSSIÊ GERAL
+             ========================================== -->
+        <div id="tab-overview" class="wiki-tab-content active">
+          <div class="wiki-grid">
+            <!-- Galeria e Imagem de Destaque -->
+            <div class="wiki-gallery-col">
+              <div class="featured-image-wrapper">
+                <img id="wikiFeaturedImg" src="" alt="Destaque do espécime" class="featured-img">
+                <button id="btnZoomFeatured" class="zoom-btn" title="Ampliar imagem em tela cheia">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                  </svg>
+                  <span>Ampliar Pop-up</span>
+                </button>
+                <div id="wikiFeaturedCaption" class="featured-caption">Reconstituição em vida</div>
+              </div>
+
+              <!-- Miniaturas -->
+              <div class="gallery-thumbs-header">
+                <span>Galeria Rápida (<span id="galleryCount">0</span>)</span>
+                <span class="gallery-hint">Clique para alternar</span>
+              </div>
+              <div id="wikiGalleryThumbs" class="gallery-thumbs-scroll"></div>
+            </div>
+
+            <!-- Ficha Técnica e Biologia -->
+            <div class="wiki-specs-col">
+              <h3 class="section-title">📊 Ficha Biométrica</h3>
+              <div class="specs-grid">
+                <div class="spec-card">
+                  <span class="spec-label">Comprimento</span>
+                  <span id="specLength" class="spec-value">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Altura</span>
+                  <span id="specHeight" class="spec-value">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Massa Estimada</span>
+                  <span id="specWeight" class="spec-value">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Velocidade Máxima</span>
+                  <span id="specSpeed" class="spec-value">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Força de Mordida</span>
+                  <span id="specBiteForce" class="spec-value">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Período / Época</span>
+                  <span id="specPeriod" class="spec-value">-</span>
+                </div>
+              </div>
+
+              <h3 class="section-title mt-4">🦴 Biologia & Paleobiologia</h3>
+              <div id="wikiBioText" class="wiki-text-block"></div>
+
+              <h3 class="section-title mt-4">💡 Curiosidades Marcantes</h3>
+              <ul id="wikiCuriositiesList" class="curiosities-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             ABA 2: MODO ESPECIALISTA (DETALHES COMPLEXOS)
+             ========================================== -->
+        <div id="tab-expert" class="wiki-tab-content">
+          <div class="expert-banner">
+            <span class="expert-badge-lg">🔬 MODO PALEONTÓLOGO ATIVADO</span>
+            <p>Análise filogenética avançada, histologia óssea, osteologia craniana e biofísica de locomoção.</p>
+          </div>
+
+          <div class="expert-grid">
+            <!-- Coluna 1: Filogenia e Cladística -->
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">🌿 Taxonomia & Cladograma Filogenético</h4>
+              <div id="expertCladogram" class="cladogram-tree">
+                <!-- Árvore filogenética gerada via JS -->
+              </div>
+            </div>
+
+            <!-- Coluna 2: Osteologia e Morfometria Craniana -->
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">💀 Osteologia & Morfometria Craniana</h4>
+              <div id="expertOsteology" class="expert-info-text">
+                <!-- Informações osteológicas complexas -->
+              </div>
+            </div>
+
+            <!-- Coluna 3: Biomecânica, Forças e FEA -->
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">⚙️ Biomecânica & Análise de Elementos Finitos (FEA)</h4>
+              <div id="expertBiomechanics" class="expert-info-text">
+                <!-- Dinâmica de mordida e locomoção -->
+              </div>
+            </div>
+
+            <!-- Coluna 4: Histologia Óssea, Ontogenia e Taxonomia -->
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">🔬 Histologia (LAGs), Ontogenia & Tafonomia</h4>
+              <div id="expertHistology" class="expert-info-text">
+                <!-- Anéis de crescimento e sedimentologia -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             ABA 3: IMAGENS & BUSCA NA WEB / GOOGLE
+             ========================================== -->
+        <div id="tab-images" class="wiki-tab-content">
+          <div class="web-images-header">
+            <div>
+              <h3>Galeria Expandida & Pesquisa na Web</h3>
+              <p>Explore reconstituições artísticas, fósseis originais, esqueletos e pesquise na web em tempo real.</p>
+            </div>
+            <!-- Botão de busca externa no Google Imagens -->
+            <a id="btnSearchGoogleImages" href="#" target="_blank" rel="noopener noreferrer" class="google-images-btn">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+              </svg>
+              <span>Buscar no Google Imagens</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Barra de busca interativa de imagens livres -->
+          <div class="web-image-search-bar">
+            <input type="text" id="webImageSearchInput" placeholder="Pesquisar termo específico (ex: crânio, esqueleto, dentes, filhote, pena)...">
+            <button id="btnSearchWebImages" class="primary-btn">
+              <span>Buscar Imagens</span>
+            </button>
+          </div>
+
+          <!-- Tags rápidas de termos paleontológicos -->
+          <div class="image-search-chips" id="imageSearchChips">
+            <span class="chips-label">Filtros rápidos:</span>
+            <button class="image-chip active" data-term="all">Todas as Imagens</button>
+            <button class="image-chip" data-term="skull">Crânio / Dentição</button>
+            <button class="image-chip" data-term="skeleton">Esqueleto / Museu</button>
+            <button class="image-chip" data-term="scale">Comparativo de Escala</button>
+            <button class="image-chip" data-term="restoration">Reconstituição em Vida</button>
+          </div>
+
+          <div id="webImagesLoading" class="hidden text-center py-4">
+            <div class="fossil-spinner small"></div>
+            <span>Buscando imagens científicas no acervo aberto...</span>
+          </div>
+
+          <!-- Grid de Imagens da Galeria Interativa -->
+          <div id="fullGalleryGrid" class="full-gallery-grid"></div>
+        </div>
+
+        <!-- ==========================================
+             ABA 4: MAPA FÓSSIL INTERATIVO INTEGRADO (PBDB)
+             ========================================== -->
+        <div id="tab-map" class="wiki-tab-content">
+          <div class="integrated-map-header">
+            <div>
+              <h3>Distribuição Geográfica e Sítios de Escavação</h3>
+              <p id="integratedMapSubtitle">Mapeando coordenadas georreferenciadas da Paleobiology Database (PBDB)...</p>
+            </div>
+            <div class="map-stats-badge">
+              <span id="integratedMapCount">0 sítios plotados</span>
+            </div>
+          </div>
+
+          <div id="integratedMapLoading" class="map-loading hidden">
+            <div class="fossil-spinner small"></div>
+            <span>Plotando sítios de fósseis no globo...</span>
+          </div>
+
+          <div id="integratedFossilMap" style="height: 480px; width: 100%; border-radius: 8px;"></div>
+        </div>
+
       </div>
+
+      <!-- Rodapé do Modal da Wiki -->
+      <div class="modal-footer wiki-modal-footer">
+        <div class="footer-left-info">
+          <span class="wiki-source-note">Wiki Paleontológica Integrada • Dados PBDB & Wikimedia Commons</span>
+        </div>
+        <div class="footer-right-actions">
+          <button id="btnToggleExpertInFooter" class="secondary-btn">
+            Alternar Modo Especialista
+          </button>
+          <button id="btnCloseWikiFooter" class="primary-btn">
+            Fechar Dossiê
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <!-- =======================================================================
-       MODAL 2: POP-UP LIGHTBOX DE IMAGENS EM TELA CHEIA
+       MODAL: LIGHTBOX EM TELA CHEIA (POP-UP DE IMAGENS)
        ======================================================================= -->
   <div id="lightboxModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Visualizador de Imagem">
     <div class="modal-backdrop" id="lightboxBackdrop"></div>
     <div class="lightbox-container">
       <button id="closeLightboxBtn" class="lightbox-close" aria-label="Fechar visualizador">&times;</button>
       
-      <button id="lightboxPrevBtn" class="lightbox-arrow left" aria-label="Imagem anterior">
-        &#10094;
-      </button>
+      <button id="lightboxPrevBtn" class="lightbox-arrow left" aria-label="Imagem anterior">&#10094;</button>
 
       <div class="lightbox-content">
         <img id="lightboxImg" src="" alt="Imagem do espécime ampliada">
@@ -248,48 +439,19 @@
         </div>
       </div>
 
-      <button id="lightboxNextBtn" class="lightbox-arrow right" aria-label="Próxima imagem">
-        &#10095;
-      </button>
+      <button id="lightboxNextBtn" class="lightbox-arrow right" aria-label="Próxima imagem">&#10095;</button>
     </div>
   </div>
 
-  <!-- =======================================================================
-       MODAL 3: MAPA LEAFLET DE OCORRÊNCIAS FÓSSEIS
-       ======================================================================= -->
-  <div id="mapModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-backdrop" id="modalBackdrop"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <h2 id="modalTitle">Mapa de Ocorrências Fósseis</h2>
-          <p id="modalSubtitle" class="modal-subtitle">Locais de escavação registrados no registro fóssil mundial (PBDB)</p>
-        </div>
-        <button id="closeModalBtn" class="close-btn" aria-label="Fechar">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div id="mapLoading" class="map-loading">
-          <div class="fossil-spinner small"></div>
-          <span>Mapeando fósseis catalogados no planeta...</span>
-        </div>
-        <div id="fossilMap" style="height: 450px; width: 100%; border-radius: 8px;"></div>
-      </div>
-      <div class="modal-footer">
-        <span id="mapOccurrencesCount" class="badge-text">0 fósseis plotados</span>
-        <span class="source-credit">Dados: <a href="https://paleobiodb.org" target="_blank" rel="noopener">Paleobiology Database</a></span>
-      </div>
-    </div>
-  </div>
-
+  <!-- Rodapé Global -->
   <footer class="footer">
     <div class="footer-content">
       <p>
-        <strong>Enciclopédia & Wiki da Era Mesozoica</strong> — Dossiês paleontológicos interativos integrados.
+        <strong>Enciclopédia Paleontológica da Era Mesozoica</strong> — Dossiês integrados, mapas mundiais e busca interativa de imagens.
       </p>
       <p class="sources">
         Consome dados científicos abertos da 
-        <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database</a> e do acervo científico livre da 
-        <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>.
+        <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a> e acervos científicos livres.
       </p>
     </div>
   </footer>
