@@ -158,21 +158,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tyrannosaurus_rex_mmartyniuk.png/800px-Tyrannosaurus_rex_mmartyniuk.png',
-        caption: 'Reconstituição paleoartística anatômica em vida do T-Rex adulto'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Tyrannosaurus_Rex_Holotype.jpg/500px-Tyrannosaurus_Rex_Holotype.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Tyrannosaurus_Rex_Holotype.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Tyrannosaurus_rex_Sue_at_The_Field_Museum_02.jpg/800px-Tyrannosaurus_rex_Sue_at_The_Field_Museum_02.jpg',
-        caption: 'Esqueleto completo de "Sue" (FMNH PR 2081) em Chicago'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/AMNH_3982_Manospondylus.jpg/500px-AMNH_3982_Manospondylus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Type specimen (AMNH 3982) of Manospondylus gigas"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tyrannosaurus_skull.jpg/800px-Tyrannosaurus_skull.jpg',
-        caption: 'Crânio fóssil exibindo abóbada nasal fundida e dentes robustos'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Tyrannosaurus_skeleton.jpg/500px-Tyrannosaurus_skeleton.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Outdated skeletal restoration by William D. Matthew from 1905, published alongside Osborn's descript"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/T-rex_scale.svg/800px-T-rex_scale.svg.png',
-        caption: 'Diagrama métrico comparativo com a estatura humana'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Dynamosaurus_holotype.jpg/500px-Dynamosaurus_holotype.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Dynamosaurus imperiosus holotype (NHMUK PV R8020, previously AMNH 5886) on display at the Natural Hi"
+      },
     ]
   },
   {
@@ -225,17 +225,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Spinosaurus_life_restoration.png/800px-Spinosaurus_life_restoration.png',
-        caption: 'Reconstituição do Spinosaurus demonstrando a cauda em remo'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/FSAC-KK-11888.jpg/500px-FSAC-KK-11888.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "FSAC-KK-11888.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Spinosaurus_mount.jpg/800px-Spinosaurus_mount.jpg',
-        caption: 'Esqueleto fóssil montado em postura natatória'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Spinosaurus_holotype.jpg/500px-Spinosaurus_holotype.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Plate I of elements of the S. aegyptiacus holotype (name-bearing) specimen from Stromer (1915)"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Spinosaurus_scale.svg/800px-Spinosaurus_scale.svg.png',
-        caption: 'Comparativo métrico de envergadura com o corpo humano'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Spinosaurus_Monograph.png/500px-Spinosaurus_Monograph.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Erhardt's 1936 skeletal reconstruction of S. aegyptiacus, with shaded areas being known parts of the"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Sigilmassasaurus_vertebra.png/500px-Sigilmassasaurus_vertebra.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Holotype of S. maroccanus which was later reclassified as a vertabrae of the controversial Sigilmass"
+      },
     ]
   },
   {
@@ -286,17 +290,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Triceratops_prorsus_clean.png/800px-Triceratops_prorsus_clean.png',
-        caption: 'Reconstituição paleoartística anatômica do Triceratops'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/LA-Triceratops_mount-2.jpg/500px-LA-Triceratops_mount-2.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "LA-Triceratops_mount-2.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Triceratops_BW.jpg/800px-Triceratops_BW.jpg',
-        caption: 'Esqueleto completo montado no Museu Americano de História Natural'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Triceratops_alticornis.jpg/500px-Triceratops_alticornis.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Illustration of specimen USNM 4739, the horn cores that were erroneously attributed to Bison alticor"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Triceratops_scale.svg/800px-Triceratops_scale.svg.png',
-        caption: 'Escala métrica de porte do espécime adulto comparado ao humano'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Triceratops_holotype.jpg/500px-Triceratops_holotype.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Type specimen YPM 1820 of the type species, T. horridus"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Triceratops_prorsus_old.jpg/500px-Triceratops_prorsus_old.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "1896 skeletal restoration of T. prorsus by O. C. Marsh, based on the holotype skull YPM 1822 and ref"
+      },
     ]
   },
   {
@@ -346,17 +354,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Velociraptor_restoration.jpg/800px-Velociraptor_restoration.jpg',
-        caption: 'Reconstituição científica moderna emplumada do Velociraptor'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Velociraptor_skeleton_white_background.jpg/500px-Velociraptor_skeleton_white_background.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Velociraptor_skeleton_white_background.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Velociraptor_skeleton.png/800px-Velociraptor_skeleton.png',
-        caption: 'Esqueleto destacando a garra curva do pé e a fúrcula'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Bayanzag_%28Flaming_Cliffs%29.jpg/500px-Bayanzag_%28Flaming_Cliffs%29.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Bayanzag_(Flaming_Cliffs).jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Velociraptor_scale.svg/800px-Velociraptor_scale.svg.png',
-        caption: 'Proporção real de tamanho em relação ao ser humano'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Velociraptor_mongoliensis_type_skull_and_jaws.jpg/500px-Velociraptor_mongoliensis_type_skull_and_jaws.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Velociraptor_mongoliensis_type_skull_and_jaws.jpg"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Velociraptorine_skulls.png/500px-Velociraptorine_skulls.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Velociraptorine skulls, B, D, E are V. mongoliensis, C is V sp., and F is V. osmolskae (known parts "
+      },
     ]
   },
   {
@@ -405,17 +417,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Stegosaurus_stenops_life_restoration.png/800px-Stegosaurus_stenops_life_restoration.png',
-        caption: 'Reconstituição do Stegosaurus com suas placas dérmicas'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Journal.pone.0138352.g001A.jpg/500px-Journal.pone.0138352.g001A.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Journal.pone.0138352.g001A.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Stegosaurus_skeleton.jpg/800px-Stegosaurus_skeleton.jpg',
-        caption: 'Esqueleto completo do espécime "Sophie" em Londres'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Stego-marsh-1896-US_geological_survey.png/500px-Stego-marsh-1896-US_geological_survey.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Marsh's 1891 illustration of S. ungulatus. Note the single row of 12 large rounded plates, based on "
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Stegosaurus_scale.svg/800px-Stegosaurus_scale.svg.png',
-        caption: 'Comparativo de altura e escala com o ser humano'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Stegosaurus_ungulatus_skeleton_peabody_museum_1910.png/500px-Stegosaurus_ungulatus_skeleton_peabody_museum_1910.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "The first mounted skeleton of a stegosaur (S. ungulatus), Peabody Museum of Natural History, 1910"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Stegosaur.jpg/500px-Stegosaur.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "1899 life restoration showing the plates lying flat on the back with spikes all over the back"
+      },
     ]
   },
   {
@@ -464,17 +480,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Brachiosaurus_DB.jpg/800px-Brachiosaurus_DB.jpg',
-        caption: 'Reconstituição paleoartística do Brachiosaurus no dossel'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Brachiosaurus_mount.jpg/500px-Brachiosaurus_mount.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Brachiosaurus_mount.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Brachiosaurus_skeleton_Berlin.jpg/800px-Brachiosaurus_skeleton_Berlin.jpg',
-        caption: 'O monumental esqueleto montado no Museu de Berlim'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/PSM_V67_D572_Fossil_bones_of_the_great_brachiosaurus_altithorax.png/500px-PSM_V67_D572_Fossil_bones_of_the_great_brachiosaurus_altithorax.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Holotype material during excavation. Dorsal vertebrae, sacrum, ilium and ribs are in view."
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Brachiosaurus_scale.svg/800px-Brachiosaurus_scale.svg.png',
-        caption: 'Diagrama métrico monumental em relação à escala humana'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Brach_humerus.jpg/500px-Brach_humerus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "An expedition member lying by the humerus during the excavation in 1900"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Altithorax.jpg/500px-Altithorax.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Riggs (right) and laboratory assistant working on the holotype bones in 1899. The still-jacketed thi"
+      },
     ]
   },
   {
@@ -511,13 +531,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Allosaurus_fragilis_life_restoration.png/800px-Allosaurus_fragilis_life_restoration.png',
-        caption: 'Reconstituição do Allosaurus fragilis em caçada'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/WLA_hmns_Allosaurus_White_Background.jpg/500px-WLA_hmns_Allosaurus_White_Background.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "WLA_hmns_Allosaurus_White_Background.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Allosaurus_skeleton.jpg/800px-Allosaurus_skeleton.jpg',
-        caption: 'Esqueleto fóssil completo em postura predatória'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/AMNH_Allosaurus.jpg/500px-AMNH_Allosaurus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "AMNH_Allosaurus.jpg"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/Allosaurus4.jpg/500px-Allosaurus4.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Allosaurus4.jpg"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/CLDQ_map.jpg/500px-CLDQ_map.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Map showing the thousands of dinosaur bones excavated at the Cleveland-Lloyd Dinosaur Quarry. Fossil"
+      },
     ]
   },
   {
@@ -554,13 +582,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Mosasaurus_hoffmanni.png/800px-Mosasaurus_hoffmanni.png',
-        caption: 'Reconstituição científica do Mosasaurus pelágico'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Mosasaurus_hoffmannii_-_skeleton.jpg/500px-Mosasaurus_hoffmannii_-_skeleton.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Mosasaurus_hoffmannii_-_skeleton.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Mosasaurus_beaugi.jpg/800px-Mosasaurus_beaugi.jpg',
-        caption: 'Crânio fóssil exibindo a arcada de dentes carnívoros'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Mosasaurus_hoffmanni_first_specimen.jpg/500px-Mosasaurus_hoffmanni_first_specimen.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "TM 7424, the first known specimen of M. hoffmanni"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Mosasaurus2.JPG/500px-Mosasaurus2.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Mosasaurus2.JPG"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/MosasaurDiscovery.jpg/500px-MosasaurDiscovery.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "MosasaurDiscovery.jpg"
+      },
     ]
   },
   {
@@ -597,13 +633,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Pteranodon_longiceps_mmartyniuk.png/800px-Pteranodon_longiceps_mmartyniuk.png',
-        caption: 'Reconstituição do voo planar do Pteranodon'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Pteranodon_amnh_martyniuk.jpg/500px-Pteranodon_amnh_martyniuk.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Pteranodon_amnh_martyniuk.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Pteranodon_skeleton.jpg/800px-Pteranodon_skeleton.jpg',
-        caption: 'Esqueleto fóssil suspenso em posição de voo'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Ornithochirus_umbrosus.jpg/500px-Ornithochirus_umbrosus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Early illustration of Ornithocheirus umbrosus (now Pteranodon), when teeth erroneously were attribut"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Pteranodon_longiceps_YPM1177.jpg/500px-Pteranodon_longiceps_YPM1177.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Short-crested P. longiceps holotype specimen YPM1177, now interpreted as a female individual"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Pteranodon_scale.png/330px-Pteranodon_scale.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Size of P. longiceps male (green) and female (orange) compared with a human"
+      },
     ]
   },
   {
@@ -640,13 +684,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ankylosaurus_magniventris.png/800px-Ankylosaurus_magniventris.png',
-        caption: 'Reconstituição da couraça e clava do Ankylosaurus'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Ankylosaur_head_-_cast_-_Custer_County_Montana_-_Museum_of_the_Rockies_-_2013-07-08.jpg/500px-Ankylosaur_head_-_cast_-_Custer_County_Montana_-_Museum_of_the_Rockies_-_2013-07-08.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Ankylosaur_head_-_cast_-_Custer_County_Montana_-_Museum_of_the_Rockies_-_2013-07-08.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Ankylosaurus_scale.svg/800px-Ankylosaurus_scale.svg.png',
-        caption: 'Comparativo de largura e escala com o ser humano'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Skull_of_Ankylosaurus.jpg/500px-Skull_of_Ankylosaurus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Skull of holotype AMNH 5895 and reconstruction diagram of same"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Ankylosaurus.jpg/500px-Ankylosaurus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Ankylosaurus.jpg"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Ankylosaurus%3B_from_Offensive_weapons_and_means_of_defense_of_fossil_vertebrates_%28Abel_1908%29.png/500px-Ankylosaurus%3B_from_Offensive_weapons_and_means_of_defense_of_fossil_vertebrates_%28Abel_1908%29.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Ankylosaurus;_from_Offensive_weapons_and_means_of_defense_of_fossil_vertebrates_(Abel_1908).png"
+      },
     ]
   },
   {
@@ -683,13 +735,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Carnotaurus_sastrei_life_restoration.png/800px-Carnotaurus_sastrei_life_restoration.png',
-        caption: 'Reconstituição do Carnotauro com seus chifres'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Carnotaurus%2C_Chlup%C3%A1%C4%8D_Museum%2C_Prague-2.jpg/500px-Carnotaurus%2C_Chlup%C3%A1%C4%8D_Museum%2C_Prague-2.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Carnotaurus,_Chlupáč_Museum,_Prague-2.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Carnotaurus_skeleton.jpg/800px-Carnotaurus_skeleton.jpg',
-        caption: 'Esqueleto original no Museu de Ciências Naturais de Buenos Aires'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/DinosaursCalci.JPG/500px-DinosaursCalci.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Casts of Amargasaurus and Carnotaurus, both discovered by the same 1984 expedition in Argentina, Nat"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/Carnotaurus_reconstruction_Headden.jpg/500px-Carnotaurus_reconstruction_Headden.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Illustration of the known material of Carnotaurus"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Carnotaurus_Size_Chart.png/500px-Carnotaurus_Size_Chart.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Scale diagram comparing Carnotaurus to a human"
+      },
     ]
   },
   {
@@ -726,13 +786,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Plesiosaurus_dolichodeirus.png/800px-Plesiosaurus_dolichodeirus.png',
-        caption: 'Reconstituição do Plesiosaurus em seu habitat marinho'
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Plesiosaurus_dolichodeirus_NHM.jpg/500px-Plesiosaurus_dolichodeirus_NHM.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Plesiosaurus_dolichodeirus_NHM.jpg"
       },
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Plesiosaurus_skeleton.jpg/800px-Plesiosaurus_skeleton.jpg',
-        caption: 'Fóssil histórico descoberto por Mary Anning'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Mary_Anning_Plesiosaurus.jpg/500px-Mary_Anning_Plesiosaurus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Letter concerning the discovery of the genus from Mary Anning"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Plesiosaurus_Scale.svg/500px-Plesiosaurus_Scale.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Plesiosaurus with a human to scale."
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Conybeare_Plesiosaur_1824.jpg/500px-Conybeare_Plesiosaur_1824.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Illustration of the skeletal anatomy of a Plesiosaurus dolichodeirus from Conybeare's 1824 paper tha"
+      },
     ]
   },
   {
@@ -769,9 +837,21 @@ const PALEONTOLOGY_DATABASE = [
     },
     gallery: [
       {
-        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Coelophysis_bauri.png/800px-Coelophysis_bauri.png',
-        caption: 'Reconstituição paleoartística do Coelophysis bauri'
-      }
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Coelophysis_bauri_mount.jpg/500px-Coelophysis_bauri_mount.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Coelophysis_bauri_mount.jpg"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Euskelosaurus_Coelophysis_Huene.png/500px-Euskelosaurus_Coelophysis_Huene.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Euskelosaurus_Coelophysis_Huene.png"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Coelophysis_hindlimb_Huene.png/500px-Coelophysis_hindlimb_Huene.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Coelophysis_hindlimb_Huene.png"
+      },
+      {
+        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Coelophysis_Hortalotarsus_Huene.png/500px-Coelophysis_Hortalotarsus_Huene.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+        caption: "Coelophysis_Hortalotarsus_Huene.png"
+      },
     ]
   }
 ];
@@ -929,7 +1009,7 @@ function renderCard(item) {
 
   card.innerHTML = `
     <div class="card-image-wrap" title="Clique para abrir a Wiki do ${item.name}">
-      <img src="${featuredImage}" alt="${item.name}" loading="lazy" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">
+      <img src="${featuredImage}" alt="${item.name}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">
       <span class="card-floating-badge ${badgeClass}">${item.periodName.split(' ')[0]}</span>
       <span class="card-image-hint">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
@@ -1067,7 +1147,7 @@ function renderGalleryThumbnails() {
   currentGallery.forEach((item, index) => {
     const thumb = document.createElement('div');
     thumb.className = `thumb-item ${index === 0 ? 'active' : ''}`;
-    thumb.innerHTML = `<img src="${item.url}" alt="${item.caption}" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">`;
+    thumb.innerHTML = `<img src="${item.url}" alt="${item.caption}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">`;
     
     thumb.addEventListener('click', () => {
       document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
@@ -1118,7 +1198,7 @@ function renderFullGalleryGrid(images) {
     const card = document.createElement('div');
     card.className = 'gallery-card';
     card.innerHTML = `
-      <img src="${item.url}" alt="${item.caption}" loading="lazy" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">
+      <img src="${item.url}" alt="${item.caption}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">
       <div class="gallery-card-caption">${item.caption}</div>
     `;
     card.addEventListener('click', () => openLightbox(index));
