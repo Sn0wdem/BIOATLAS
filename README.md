@@ -14,6 +14,11 @@
 - 🌿 **Filtros por Dieta e Habitat**:
   - Terrestres (Dinossauros), Aéreos (Pterossauros) e Aquáticos (Répteis Marinhos).
   - Carnívoros, Herbívoros e Piscívoros.
+- ⚡ **Ingestão Automática de QUALQUER Espécime Mesozoico**:
+  - Digite qualquer gênero fóssil da Era Mesozoica (*ex: Therizinosaurus, Argentinosaurus, Giganotosaurus, Deinonychus, Quetzalcoatlus, Liopleurodon, Oxalaia*) e o sistema ingere automaticamente os dados da PBDB e da Wikipedia em tempo real.
+  - Botão de **Descoberta Automática na PBDB**: sorteie novos espécimes aleatórios ou descubra novos gêneros do Cretáceo, Jurássico, Triássico, pterossauros e répteis marinhos com um clique.
+- 🎨 **Representações Visuais de Como Eram em Vida (Paleoarte Colorida)**:
+  - Algoritmo que filtra e prioriza reconstituições artísticas anatômicas em vida (*life restorations*), exibindo a pele, escamas, penas, musculatura e ecossistema original dos animais em vez de apenas ossos de museu.
 - 📖 **Wiki Paleontológica Própria (100% no App, Sem Redirecionamentos)**:
   - Ficha técnica biométrica completa (comprimento, altura, massa, velocidade, força de mordida em Newtons/kgf, etimologia e curiosidades).
   - Nunca joga o usuário para páginas externas da Wikipedia.

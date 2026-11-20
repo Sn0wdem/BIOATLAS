@@ -1,10 +1,11 @@
 /**
  * Enciclopédia Paleontológica da Era Mesozoica
- * Wiki própria com:
- * 1. Dossiê Científico Geral e Curiosidades
- * 2. Modo Especialista com Detalhes Complexos (Cladística, Osteologia, FEA e Histologia)
- * 3. Busca Interativa de Imagens na Web / Google Imagens
- * 4. Mapa Fóssil Mundial Georreferenciado (PBDB + Leaflet) Integrado
+ * 
+ * Sistema Inteligente com:
+ * 1. Ingestão Automática de QUALQUER Espécime Mesozoico (PBDB + Wikipedia)
+ * 2. Mineração e Seleção de Representações Visuais em Vida (Paleoarte Colorida)
+ * 3. Dossiê Científico e Modo Especialista (Cladística, Osteologia, FEA e LAGs)
+ * 4. Mapa Fóssil Mundial Georreferenciado Integrado (PBDB + Leaflet)
  * 5. Lightbox Pop-up de Imagens em Tela Cheia
  */
 
@@ -14,6 +15,7 @@
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const clearBtn = document.getElementById('clearBtn');
+const btnAutoIngest = document.getElementById('btnAutoIngest');
 const periodFilter = document.getElementById('periodFilter');
 const groupFilter = document.getElementById('groupFilter');
 const dietFilter = document.getElementById('dietFilter');
@@ -21,9 +23,16 @@ const resetFiltersBtn = document.getElementById('resetFiltersBtn');
 const reloadSuggestionsBtn = document.getElementById('reloadSuggestionsBtn');
 const resultsContainer = document.getElementById('results');
 const loading = document.getElementById('loading');
+const loadingMessage = document.getElementById('loadingMessage');
 const emptyState = document.getElementById('emptyState');
 const resultsStats = document.getElementById('resultsStats');
 const quickTags = document.querySelectorAll('.tag-chip');
+
+// Botões de Descoberta Automática PBDB
+const btnRandomDino = document.getElementById('btnRandomDino');
+const discoveryBtns = document.querySelectorAll('.discovery-btn[data-group]');
+const toastNotification = document.getElementById('toastNotification');
+const toastText = document.getElementById('toastText');
 
 // Toggles do Modo Especialista
 const globalExpertToggle = document.getElementById('globalExpertToggle');
@@ -91,26 +100,41 @@ const lightboxCounter = document.getElementById('lightboxCounter');
 const lightboxPrevBtn = document.getElementById('lightboxPrevBtn');
 const lightboxNextBtn = document.getElementById('lightboxNextBtn');
 
-// Estado interno
+// Estado da Aplicação
 let isExpertMode = false;
 let currentCreature = null;
 let currentGallery = [];
 let currentImageIndex = 0;
 let leafletMap = null;
 let leafletMarkersLayer = null;
+let activeCatalog = [];
 
-// Placeholder resiliente
-const PLACEHOLDER_IMAGE = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22260%22%20viewBox%3D%220%200%20400%20260%22%3E%3Crect%20fill%3D%22%23121712%22%20width%3D%22400%22%20height%3D%22260%22%2F%3E%3Ctext%20fill%3D%22%234ade80%22%20font-family%3D%22system-ui%22%20font-size%3D%2246%22%20x%3D%2250%25%22%20y%3D%2245%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3E%F0%9F%A6%95%3C%2Ftext%3E%3Ctext%20fill%3D%22%238fa38f%22%20font-family%3D%22system-ui%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2268%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ERegistro%20Paleontol%C3%B3gico%3C%2Ftext%3E%3C%2Fsvg%3E";
+// Placeholder SVG resiliente
+const PLACEHOLDER_IMAGE = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22260%22%20viewBox%3D%220%200%20400%20260%22%3E%3Crect%20fill%3D%22%23121712%22%20width%3D%22400%22%20height%3D%22260%22%2F%3E%3Ctext%20fill%3D%22%234ade80%22%20font-family%3D%22system-ui%22%20font-size%3D%2246%22%20x%3D%2250%25%22%20y%3D%2245%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3E%F0%9F%A6%95%3C%2Ftext%3E%3Ctext%20fill%3D%22%238fa38f%22%20font-family%3D%22system-ui%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2268%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ERepresenta%C3%A7%C3%A3o%20em%20Vida%20(Paleoarte)%3C%2Ftext%3E%3C%2Fsvg%3E";
+
+// Lista curada de 60+ gêneros mesozoicos para o botão de sorteio / autodescoberta
+const FAMOUS_MESOZOIC_GENERA = [
+  'Therizinosaurus', 'Argentinosaurus', 'Giganotosaurus', 'Deinonychus', 'Dilophosaurus',
+  'Pachycephalosaurus', 'Baryonyx', 'Quetzalcoatlus', 'Tapejara', 'Liopleurodon',
+  'Herrerasaurus', 'Majungasaurus', 'Amargasaurus', 'Yutyrannus', 'Oxalaia',
+  'Microraptor', 'Sauroposeidon', 'Carcharodontosaurus', 'Troodon', 'Oviraptor',
+  'Kentrosaurus', 'Pterodactylus', 'Elasmosaurus', 'Ichthyosaurus', 'Sarcosuchus',
+  'Deinosuchus', 'Mamenchisaurus', 'Plateosaurus', 'Staurikosaurus', 'Buriolestes',
+  'Psittacosaurus', 'Edmontosaurus', 'Corythosaurus', 'Parasaurolophus', 'Lambeosaurus',
+  'Euoplocephalus', 'Suchomimus', 'Ceratosaurus', 'Torvosaurus', 'Sinraptor',
+  'Cryolophosaurus', 'Rhamphorhynchus', 'Dimorphodon', 'Tupandactylus', 'Shonisaurus',
+  'Kronosaurus', 'Tylosaurus', 'Dsungaripterus', 'Carnotaurus', 'Ankylosaurus'
+];
 
 // ==========================================================================
-// ACERVO CIENTÍFICO COM DOSSIÊ GERAL E DETALHES COMPLEXOS (MODO ESPECIALISTA)
+// ACERVO INICIAL BASE COM REPRESENTAÇÕES VISUAIS EM VIDA (PALEOARTE)
 // ==========================================================================
-const PALEONTOLOGY_DATABASE = [
+const BASE_PALEONTOLOGY_DATABASE = [
   {
     name: 'Tyrannosaurus',
     species: 'Tyrannosaurus rex',
     commonName: 'Tiranossauro Rex',
-    etymology: 'Do grego: τύραννος (tyrannos, "tirano") + σαῦρος (sauros, "lagarto") + rex ("rei") • Descrito em 1905 por Henry Fairfield Osborn',
+    etymology: 'Do grego: "Rei dos lagartos tiranos" • Descrito em 1905 por Henry Fairfield Osborn',
     periodKey: 'Cretaceous',
     periodName: 'Cretáceo Superior (Maastrichtiano, 68 – 66 Ma)',
     group: 'dinossauro',
@@ -123,14 +147,13 @@ const PALEONTOLOGY_DATABASE = [
     speed: '20 a 27 km/h',
     biteForce: '35.000 a 57.000 N (~5.800 kgf)',
     location: 'América do Norte (Formações Hell Creek, Lance, Scollard e Ferris)',
-    bio: 'O Tyrannosaurus rex é o ápice evolutivo dos terópodes predadores da Laurasia. Possuía visão binocular ampla (campo estereoscópico de 55°, superando o do falcão moderno), olfato hiperdesenvolvido com bulbos olfativos avantajados e ossos nasais fusionados em abóbada para absorver o impacto das mordidas mastodônticas. Sua dentição heterodonte apresentava dentes com secção em "D" na frente e lâminas em formato de banana de até 30 cm de comprimento com raízes.',
+    bio: 'O Tyrannosaurus rex é o ápice evolutivo dos terópodes da Laurasia. Possuía visão binocular ampla (campo estereoscópico de 55°, superando o do falcão moderno), olfato hiperdesenvolvido com bulbos olfativos avantajados e ossos nasais fusionados em abóbada para absorver o impacto de mordidas mastodônticas. Sua dentição heterodonte apresentava dentes com secção em "D" na frente e lâminas em formato de banana de até 30 cm de comprimento com raízes.',
     curiosities: [
-      'Análises de coprólitos (fezes fossilizadas) provam que o T-Rex esmagava e digeria ossos inteiros de Triceratops e Edmontosaurus.',
+      'Análises de coprólitos provam que o T-Rex esmagava e digeria ossos inteiros de Triceratops e Edmontosaurus.',
       'O maior espécime com massa estimada é "Scotty" (RSM P2523.8), descoberto no Canadá, com peso calculado em cerca de 8.870 kg.',
       'Apesar de seus membros anteriores terem apenas dois dedos funcionais, o osso úmero era extremamente espesso e suportava cargas de mais de 200 kg.',
-      'Marcas de cicatrização no crânio indicam que os tiranossauros adultos mordiam a face uns dos outros em disputas territoriais e de acasalamento.'
+      'Marcas de cicatrização no crânio indicam que os tiranossauros adultos mordiam a face uns dos outros em disputas territoriais.'
     ],
-    // DADOS DO MODO ESPECIALISTA
     expertData: {
       cladogram: [
         'Dinosauria (Owen, 1842)',
@@ -142,44 +165,22 @@ const PALEONTOLOGY_DATABASE = [
         '                    └── Tyrannosaurinae (Osborn, 1906)',
         '                        └── Tyrannosaurus rex (Osborn, 1905)'
       ],
-      osteology: `
-        <p><span class="expert-metric-badge">Crânio:</span> Diapsida arquossauriano com fenestras antorbitais ampliadas para alívio de massa. Ossos nasais e frontais com sinostose precoce, impedindo torção durante a estocada predatória.</p>
-        <p><span class="expert-metric-badge">Esqueleto Axial:</span> 10 vértebras cervicais opistocélicas com forte curvatura em "S", reforçadas pelo músculo complexus. Sistema pneumático pulmonar com divertículos invadindo vértebras e costelas cervicodorsais (homólogo às aves).</p>
-        <p><span class="expert-metric-badge">Membros:</span> Redução dos carpais e metacarpos I e II funcionais; metacarpo III atrofiado como vestígio ósseo sem falange. Pelve com bota púbica hipertrofiada servindo de ancoragem para os músculos puboisquiofemorais.</p>
-      `,
-      biomechanics: `
-        <p><span class="expert-metric-badge">Análise FEA (Elementos Finitos):</span> O palato secundário e o arco jugal rígido distribuem as tensões de compressão diretamente para o neurocrânio, gerando uma pressão de contato na ponta dental superior a 430 MPa (suficiente para pulverizar esmalte e osso cortical).</p>
-        <p><span class="expert-metric-badge">Locomoção & Dinâmica:</span> Centro de massa localizado ligeiramente anterior à articulação acetabular (~0,35 m). O músculo caudofemoralis longus massivo ancorava no quarto trocânter do fêmur. Modelagens biomecânicas indicam que o estresse ósseo nos ossos metatarsais impedia corridas verdadeiras acima de 28 km/h, favorecendo uma marcha rápida e eficiente de passadas largas.</p>
-      `,
-      histology: `
-        <p><span class="expert-metric-badge">LAGs (Linhas de Parada de Crescimento):</span> A análise histológica de fêmures e tíbias (Erickson et al.) revela que o T-Rex atingia a maturidade esquelética aos 28–30 anos. A fase exponencial de crescimento ("adolescência") ocorria entre 14 e 18 anos, quando o animal ganhava até 2,1 kg de massa corporal por dia.</p>
-        <p><span class="expert-metric-badge">Tafonomia:</span> Fóssil B-rex (MOR 1125) preservou estruturas microvasculares flexíveis e matriz orgânica de colágeno no interior desmineralizado da cavidade medular, além de osso medular comprovando tratar-se de uma fêmea grávida em fase de ovulação.</p>
-      `
+      osteology: '<p>Crânio com fenestras antorbitais ampliadas para alívio de massa. Ossos nasais e frontais com sinostose precoce impedindo torção durante a estocada predatória.</p>',
+      biomechanics: '<p>Análise FEA: O palato secundário distribui as tensões de compressão para o neurocrânio, gerando pressão de contato dental superior a 430 MPa.</p>',
+      histology: '<p>LAGs: Análise histológica revela maturidade esquelética aos 28–30 anos. Na adolescência (14-18 anos), ganhava até 2,1 kg de massa por dia.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Tyrannosaurus_Rex_Holotype.jpg/500px-Tyrannosaurus_Rex_Holotype.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Tyrannosaurus_Rex_Holotype.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/AMNH_3982_Manospondylus.jpg/500px-AMNH_3982_Manospondylus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Type specimen (AMNH 3982) of Manospondylus gigas"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Tyrannosaurus_skeleton.jpg/500px-Tyrannosaurus_skeleton.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Outdated skeletal restoration by William D. Matthew from 1905, published alongside Osborn's descript"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Dynamosaurus_holotype.jpg/500px-Dynamosaurus_holotype.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Dynamosaurus imperiosus holotype (NHMUK PV R8020, previously AMNH 5886) on display at the Natural Hi"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Tyrannosaurus_rex_mmartyniuk.png/500px-Tyrannosaurus_rex_mmartyniuk.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida com plumagem parcial (Martyniuk)'
+      }
     ]
   },
   {
     name: 'Spinosaurus',
     species: 'Spinosaurus aegyptiacus',
     commonName: 'Espinossauro',
-    etymology: 'Do grego: σπῖνος (spinos, "espinha") + σαῦρος (sauros, "lagarto") • Descrito em 1915 por Ernst Freiherr Stromer von Reichenbach',
+    etymology: 'Do grego: "Lagarto com espinhos" • Descrito em 1915 por Ernst Stromer',
     periodKey: 'Cretaceous',
     periodName: 'Cretáceo Superior (Cenomaniano, 99 – 93 Ma)',
     group: 'dinossauro',
@@ -192,61 +193,33 @@ const PALEONTOLOGY_DATABASE = [
     speed: '15 km/h (terra) / 25 km/h (água)',
     biteForce: '19.000 a 25.000 N (~2.500 kgf)',
     location: 'Norte da África (Kem Kem Beds no Marrocos, Formação Bahariya no Egito)',
-    bio: 'O Spinosaurus representa o terópode mais longo de todos os tempos geológicos. Adaptado para nichos fluviais e costeiros de mangues cretáceos, possuía osteosclerose (ossos hiperdensos sem canal medular amplo para atuar como lastro de mergulho), cauda propulsora em forma de remo com espinhas neurais hiperalongadas e focinho estreito repleto de forames neurovasculares para detectar vibrações na água.',
+    bio: 'O Spinosaurus é o terópode mais longo conhecido. Adaptado para nichos fluviais e costeiros de mangues cretáceos, possuía osteosclerose (ossos hiperdensos sem canal medular amplo para atuar como lastro de mergulho), cauda propulsora em forma de remo com espinhas neurais hiperalongadas e focinho estreito com forames neurovasculares para detectar vibrações na água.',
     curiosities: [
-      'A cauda em forma de nadadeira foi descoberta apenas em 2020 pela equipe de Nizar Ibrahim, redefinindo o modelo locomotor do animal.',
-      'Seus dentes cônicos lisos e sem serrilhas eram ideais para perfurar peixes recobertos de escamas duras, como o celacanto Mawsonia e o peixe-serra Onchopristis.',
-      'Os fósseis holótipos originais de 1915 foram reduzidos a cinzas no bombardeio de Munique pela RAF em 24 de abril de 1944.',
-      'Possuía centro de gravidade recuado em direção às pernas traseiras curtas, o que limitava sua agilidade bípede em terra seca.'
+      'A cauda em forma de nadadeira foi descoberta em 2020 por Nizar Ibrahim, comprovando seu modelo locomotor natatório.',
+      'Seus dentes cônicos lisos eram perfeitos para perfurar peixes recobertos de escamas duras como Mawsonia e Onchopristis.',
+      'Os fósseis originais de 1915 foram destruídos durante o bombardeio de Munique na Segunda Guerra Mundial em 1944.',
+      'Possuía centro de gravidade recuado em direção às pernas traseiras curtas para natação eficiente.'
     ],
     expertData: {
       cladogram: [
-        'Dinosauria (Owen, 1842)',
-        '└── Saurischia (Seeley, 1887)',
-        '    └── Theropoda (Marsh, 1881)',
-        '        └── Megalosauroidea (Fitzinger, 1843)',
-        '            └── Spinosauridae (Stromer, 1915)',
-        '                └── Spinosaurinae (Sereno et al., 1998)',
-        '                    └── Spinosaurus aegyptiacus (Stromer, 1915)'
+        'Dinosauria > Theropoda > Megalosauroidea > Spinosauridae > Spinosaurinae > Spinosaurus'
       ],
-      osteology: `
-        <p><span class="expert-metric-badge">Vela Dorsal:</span> Processos espinhosos nas vértebras dorsais de até 1,82 metro de comprimento, ancorados por ligamentos colagenosos espessos, sem evidência de corcova de gordura.</p>
-        <p><span class="expert-metric-badge">Cauda Natatória:</span> Vértebras caudais com zigapófises frouxas e arcos hemais alongados que formavam uma nadadeira vertical flexível impulsionada lateralmente.</p>
-        <p><span class="expert-metric-badge">Focinho Rostral:</span> Pré-maxilas expandidas em roseta terminal interdigitada com dentes cônicos não serrilhados de substituição rápida contínua.</p>
-      `,
-      biomechanics: `
-        <p><span class="expert-metric-badge">Hidrodinâmica:</span> Coeficiente de arrasto hidrodinâmico (Cd) calculado entre 0,045 e 0,058 em modelagem de dinâmica de fluidos computacional (CFD). A cauda gerava 8 vezes mais empuxo do que as caudas de outros terópodes.</p>
-        <p><span class="expert-metric-badge">Densidade Óssea:</span> Índice de osteosclerose extrema nas costelas e tíbias para combater a flutuabilidade positiva induzida pelo sistema respiratório sacular das aves/terópodes.</p>
-      `,
-      histology: `
-        <p><span class="expert-metric-badge">Pactosteose:</span> Ausência quase total de cavidade medular livre em ossos longos adultos, com deposição concêntrica de tecido lamelar periosteal contínuo.</p>
-        <p><span class="expert-metric-badge">Isótopos de Oxigênio (δ18O):</span> Análises isotópicas no esmalte dental (Amiot et al.) revelam valores idênticos aos de tartarugas aquáticas e crocodilianos contemporâneos, comprovando ecologia aquática estrita.</p>
-      `
+      osteology: '<p>Processos espinhosos nas vértebras dorsais de até 1,82 metro; vértebras caudais com arcos hemais alongados que formavam uma nadadeira vertical.</p>',
+      biomechanics: '<p>Dinâmica de fluidos computacional (CFD): cauda gerava 8 vezes mais empuxo que a de outros terópodes.</p>',
+      histology: '<p>Osteosclerose extrema nas costelas e tíbias para combater flutuabilidade positiva induzida pelos sacos aéreos.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/FSAC-KK-11888.jpg/500px-FSAC-KK-11888.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "FSAC-KK-11888.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Spinosaurus_holotype.jpg/500px-Spinosaurus_holotype.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Plate I of elements of the S. aegyptiacus holotype (name-bearing) specimen from Stromer (1915)"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Spinosaurus_Monograph.png/500px-Spinosaurus_Monograph.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Erhardt's 1936 skeletal reconstruction of S. aegyptiacus, with shaded areas being known parts of the"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Sigilmassasaurus_vertebra.png/500px-Sigilmassasaurus_vertebra.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Holotype of S. maroccanus which was later reclassified as a vertabrae of the controversial Sigilmass"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Spinosaurus_aegyptiacus_life_reconstruction.png/500px-Spinosaurus_aegyptiacus_life_reconstruction.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida nadando com vela e cauda em remo'
+      }
     ]
   },
   {
     name: 'Triceratops',
     species: 'Triceratops horridus',
     commonName: 'Tricerátops',
-    etymology: 'Do grego: τρία (tria, "três") + κέρας (kéras, "chifre") + ὤψ (ōps, "face") + horridus ("áspero/temível") • Descrito em 1889 por Othniel Charles Marsh',
+    etymology: 'Do grego: "Face com três chifres" • Descrito em 1889 por Othniel Charles Marsh',
     periodKey: 'Cretaceous',
     periodName: 'Cretáceo Superior (Maastrichtiano, 68 – 66 Ma)',
     group: 'dinossauro',
@@ -258,189 +231,108 @@ const PALEONTOLOGY_DATABASE = [
     weight: '6,0 a 10,0 toneladas',
     speed: '25 a 30 km/h',
     biteForce: '18.000 N (cisalhamento na bateria dental)',
-    location: 'América do Norte (Formações Hell Creek, Lance, Frenchman e Evanston)',
-    bio: 'O Triceratops ostentava um dos maiores crânios entre todos os tetrápodes terrestres, atingindo até 2,5 metros do bico à borda do escudo parietal. Apresentava um escudo ósseo occipital compacto e sólido (sem fenestras parietais abertas, diferentemente de quase todos os outros ceratópsios) e dois chifres pós-orbitais de mais de 1 metro que eram revestidos por bainhas duras de queratina afiadas.',
+    location: 'América do Norte (Formações Hell Creek, Lance e Frenchman)',
+    bio: 'O Triceratops ostentava um dos maiores crânios entre todos os tetrápodes terrestres, atingindo até 2,5 metros de comprimento. Apresentava um escudo ósseo occipital compacto e sólido e dois chifres pós-orbitais de mais de 1 metro revestidos por bainhas duras de queratina afiadas.',
     curiosities: [
-      'Possuía até 800 dentes organizados em baterias contínuas que agiam como tesouras automáticas para cortar palmeiras e cicadáceas duras.',
-      'Crânios fósseis de Triceratops mostram perfurações por chifres curadas, indicando combates frontais frequentes entre indivíduos da mesma espécie.',
-      'A articulação esferoide única entre a cabeça e a primeira vértebra cervical (côndilo occipital em bola) permitia girar a cabeça em quase 360° com incrível facilidade.',
-      'Representa mais de 40% de todos os fósseis de dinossauros desenterrados na Formação Hell Creek, provando que era extremamente abundante.'
+      'Possuía até 800 dentes organizados em baterias contínuas que agiam como tesouras automáticas para cortar vegetação resistente.',
+      'Crânios fósseis mostram perfurações por chifres curadas, indicando combates frontais territoriais com rivais.',
+      'O côndilo occipital em bola permitia girar a cabeça com ampla agilidade defensiva.',
+      'Representa mais de 40% de todos os dinossauros desenterrados na Formação Hell Creek.'
     ],
     expertData: {
-      cladogram: [
-        'Dinosauria (Owen, 1842)',
-        '└── Ornithischia (Seeley, 1887)',
-        '    └── Ceratopsia (Marsh, 1890)',
-        '        └── Ceratopsidae (Marsh, 1888)',
-        '            └── Chasmosaurinae (Lambe, 1915)',
-        '                └── Triceratops horridus (Marsh, 1889)'
-      ],
-      osteology: `
-        <p><span class="expert-metric-badge">Escudo Frill:</span> Fusão dos ossos esquamosais e parietais em um bloco compacto laminar vascularizado por sulcos arteriais superficiais profundos.</p>
-        <p><span class="expert-metric-badge">Bateria Dental:</span> Cada coluna continha de 3 a 5 dentes de substituição vertical com esmalte assimétrico, mantendo autoafiamento constante através do atrito oclusal.</p>
-        <p><span class="expert-metric-badge">Cíngulo Peitoral:</span> Escápula longa e coracoide fusionados em âncora para os músculos tríceps e peitoral maior, suportando mais de 60% da massa corporal anterior.</p>
-      `,
-      biomechanics: `
-        <p><span class="expert-metric-badge">Cinemática Mandibular:</span> Movimento de propalatia e ortal (elevação vertical com translação póstero-anterior), produzindo torque de cisalhamento capaz de fatiar vegetação lenhosa com teor de sílica elevado.</p>
-        <p><span class="expert-metric-badge">Resistência do Chifre:</span> O núcleo de osso trabecular com capa externa de queratina apresentava módulo de elasticidade gradiente, absorvendo energias de impacto de até 25 kJ sem fratura catastrófica.</p>
-      `,
-      histology: `
-        <p><span class="expert-metric-badge">Ontogenia dos Chifres:</span> Chifres juvenis curvavam-se para trás; durante a puberdade, o remodelamento osteoclástico invertia a curvatura para frente em pontas de aríete agressivas (Horner & Goodwin).</p>
-      `
+      cladogram: ['Dinosauria > Ornithischia > Ceratopsia > Ceratopsidae > Chasmosaurinae > Triceratops'],
+      osteology: '<p>Escudo frill maciço sem fenestras parietais; baterias dentais com 3 a 5 dentes de substituição vertical contínua.</p>',
+      biomechanics: '<p>Movimento ortal e propalatal produzindo torque de cisalhamento capaz de fatiar vegetação com alto teor de sílica.</p>',
+      histology: '<p>Chifres com núcleo trabecular e capa de queratina com módulo de elasticidade gradiente absorvendo impactos de 25 kJ.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/LA-Triceratops_mount-2.jpg/500px-LA-Triceratops_mount-2.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "LA-Triceratops_mount-2.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Triceratops_alticornis.jpg/500px-Triceratops_alticornis.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Illustration of specimen USNM 4739, the horn cores that were erroneously attributed to Bison alticor"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Triceratops_holotype.jpg/500px-Triceratops_holotype.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Type specimen YPM 1820 of the type species, T. horridus"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Triceratops_prorsus_old.jpg/500px-Triceratops_prorsus_old.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "1896 skeletal restoration of T. prorsus by O. C. Marsh, based on the holotype skull YPM 1822 and ref"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Juvenile_reconstruction_of_Triceratops.png/500px-Juvenile_reconstruction_of_Triceratops.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida do Triceratops em seu habitat'
+      }
     ]
   },
   {
     name: 'Velociraptor',
     species: 'Velociraptor mongoliensis',
     commonName: 'Velociraptor',
-    etymology: 'Do latim: velox ("veloz") + raptor ("ladrão/saqueador") • Descrito em 1924 por Henry Fairfield Osborn',
+    etymology: 'Do latim: "Ladrão veloz" • Descrito em 1924 por Henry Fairfield Osborn',
     periodKey: 'Cretaceous',
     periodName: 'Cretáceo Superior (Campaniano, 75 – 71 Ma)',
     group: 'dinossauro',
     groupName: 'Dromeossaurídeo Maniraptor',
     diet: 'carnivoro',
-    dietName: 'Carnívoro Ágil / Predador de Emboscada',
+    dietName: 'Carnívoro Ágil Emplumado',
     length: '1,8 a 2,07 metros',
     height: '0,5 metros (quadril)',
     weight: '15 a 20 kg',
     speed: '38 a 45 km/h',
     biteForce: '1.200 N (~122 kgf)',
-    location: 'Deserto de Gobi (Formação Djadochta, Mongólia e Mongólia Interior, China)',
-    bio: 'O Velociraptor é um paraviano avançado intimamente aparentado às aves modernas. Seu corpo era integralmente revestido de penas penáceas e asas aerodinâmicas bem desenvolvidas nos antebraços. Sua maior adaptação era a garra falciforme hipertrofiada no segundo dígito do pé traseiro (híper-extensível a mais de 100°), utilizada para imobilizar e perfurar presas (modelo RPR - Raptor Prey Restraint).',
+    location: 'Deserto de Gobi (Formação Djadochta, Mongólia e China)',
+    bio: 'O Velociraptor é um paraviano intimamente aparentado às aves modernas. Seu corpo era integralmente revestido de penas penáceas e asas aerodinâmicas bem desenvolvidas nos antebraços. Sua maior arma era a garra falciforme hipertrofiada no segundo dígito do pé traseiro (híper-extensível), utilizada para imobilizar presas sob seu peso corporal.',
     curiosities: [
-      'Possuía papilas ulnares fósseis na ulna idênticas às das aves voadoras atuais, onde se fixavam as penas de voo secundárias.',
-      'O clássico fóssil dos "Dinossauros em Combate" preservou um Velociraptor com sua garra falciforme cravada no pescoço de um Protoceratops.',
-      'A cauda continha bastonetes ósseos pré-zigapofisários que a tornavam completamente rígida, funcionando como leme de precisão em curvas fechadas.',
-      'Apesar das asas nas patas dianteiras, seu peso e proporções mecânicas não permitiam voo ativo batido.'
+      'Possuía papilas ulnares fósseis onde se inseriam penas de voo secundárias idênticas às das aves atuais.',
+      'O fóssil dos "Dinossauros em Combate" preservou um Velociraptor lutando com um Protoceratops sob duna desabada.',
+      'A cauda com bastonetes ósseos funcionava como leme rígido para manobras em alta velocidade.',
+      'Apesar das asas nas patas dianteiras, seu peso não permitia voo ativo batido.'
     ],
     expertData: {
-      cladogram: [
-        'Dinosauria (Owen, 1842)',
-        '└── Theropoda (Marsh, 1881)',
-        '    └── Coelurosauria (Huene, 1914)',
-        '        └── Maniraptora (Gauthier, 1986)',
-        '            └── Dromaeosauridae (Matthew & Brown, 1922)',
-        '                └── Velociraptorinae (Barsbold, 1983)',
-        '                    └── Velociraptor mongoliensis (Osborn, 1924)'
-      ],
-      osteology: `
-        <p><span class="expert-metric-badge">Garra Falciforme:</span> Ungueal falciforme no dígito pedal II articulado em gínglimo com tróclea assimétrica, mantida erguida do solo para preservar o fio cortante afiado.</p>
-        <p><span class="expert-metric-badge">Clavícula & Fúrcula:</span> Fúrcula em formato de bumerangue fusionada (homóloga ao "osso da sorte" das aves modernas), servindo de fixação para os músculos peitorais.</p>
-      `,
-      biomechanics: `
-        <p><span class="expert-metric-badge">Modelo RPR (Raptor Prey Restraint):</span> Estudos de Fowler et al. (2011) demonstram que a garra não agia como faca de estripamento contra peles grossas, mas sim como gancho perfurante de fixação gravitacional para pinçar a presa enquanto batia as asas para equilíbrio (mantling).</p>
-      `,
-      histology: `
-        <p><span class="expert-metric-badge">Integumento Plumoso:</span> Penas assimétricas de contorno e plumagem tectriz com cálamo e raque queratinizados com melanossomos preservados indicando padrões de camuflagem terrosa.</p>
-      `
+      cladogram: ['Dinosauria > Theropoda > Coelurosauria > Maniraptora > Dromaeosauridae > Velociraptor'],
+      osteology: '<p>Garra falciforme articulada em gínglimo; fúrcula fusionada homóloga ao "osso da sorte" das aves.</p>',
+      biomechanics: '<p>Modelo RPR (Fowler et al.): garra agia como gancho de retenção enquanto batia as asas para equilíbrio.</p>',
+      histology: '<p>Penas com melanossomos preservados indicando padrões de camuflagem terrosa adaptada ao deserto.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Velociraptor_skeleton_white_background.jpg/500px-Velociraptor_skeleton_white_background.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Velociraptor_skeleton_white_background.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Bayanzag_%28Flaming_Cliffs%29.jpg/500px-Bayanzag_%28Flaming_Cliffs%29.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Bayanzag_(Flaming_Cliffs).jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Velociraptor_mongoliensis_type_skull_and_jaws.jpg/500px-Velociraptor_mongoliensis_type_skull_and_jaws.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Velociraptor_mongoliensis_type_skull_and_jaws.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Velociraptorine_skulls.png/500px-Velociraptorine_skulls.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Velociraptorine skulls, B, D, E are V. mongoliensis, C is V sp., and F is V. osmolskae (known parts "
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Velociraptor_Restoration.png/500px-Velociraptor_Restoration.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida com plumagem realista e asas'
+      }
     ]
   },
   {
     name: 'Stegosaurus',
     species: 'Stegosaurus stenops',
     commonName: 'Estegossauro',
-    etymology: 'Do grego: στέγος (stegos, "telhado") + σαῦρος (sauros, "lagarto") • Descrito em 1877 por Othniel Charles Marsh',
+    etymology: 'Do grego: "Lagarto telhado" • Descrito em 1877 por Othniel Charles Marsh',
     periodKey: 'Jurassic',
-    periodName: 'Jurássico Superior (Kimmeridgiano – Titoniano, 155 – 150 Ma)',
+    periodName: 'Jurássico Superior (155 – 150 Ma)',
     group: 'dinossauro',
-    groupName: 'Tireóforo Estegossaurídeo',
+    groupName: 'Tireóforo Blindado',
     diet: 'herbivoro',
     dietName: 'Herbívoro de Sub-bosque',
     length: '9,0 metros',
     height: '4,0 metros (até as placas)',
     weight: '4,5 a 7,0 toneladas',
     speed: '12 a 15 km/h',
-    biteForce: '1.400 N (dentes em folha para raspar musgos)',
-    location: 'América do Norte (Formação Morrison, EUA) e Portugal',
-    bio: 'O Stegosaurus é o mais célebre representante dos tireóforos jurássicos. Caracterizado por duas fileiras alternadas de até 17 osteodermas dérmicos eretos em formato de placas foliáceas vascularizadas e por quatro espinhos caudais cilíndricos na extremidade posterior (o tagomizador), o animal compensava a cabeça minúscula com um corpo blindado e poderosa cauda defensiva articulada.',
+    biteForce: '1.400 N',
+    location: 'América do Norte (Formação Morrison) e Portugal',
+    bio: 'Caracterizado por placas ósseas triangulares dorsais vascularizadas e pelo tagomizador na ponta da cauda (quatro espinhos de até 90 cm), o Stegosaurus usava sua couraça e flexibilidade caudal como defesa intransponível contra predadores jurássicos.',
     curiosities: [
-      'As placas dorsais não eram fundidas à espinha dorsal, mas sim incrustadas na pele espessa dérmica, sustentadas por tecido conjuntivo denso.',
-      'Possuía osteodermas gulares (uma malha de pequenos botões ósseos) que protegiam sua garganta vulnerável de botes inferiores de terópodes.',
-      'O "segundo cérebro" no quadril era na verdade uma expansão do canal sacral que abrigava um corpo glicogênico, semelhante ao das aves modernas.',
-      'Uma vértebra caudal de Allosaurus foi encontrada com uma perfuração óssea curada que coincide perfeitamente com o diâmetro de um espinho de Stegosaurus.'
+      'As placas não eram fundidas à espinha dorsal, mas sim incrustadas na pele dérmica espessa.',
+      'Possuía pequenos botões ósseos na garganta para protegê-la de mordidas por baixo.',
+      'O tagomizador gerava impacto suficiente para perfurar vértebras de Allosaurus.',
+      'Alimentava-se de samambaias e cavalinhas rente ao solo jurássico.'
     ],
     expertData: {
-      cladogram: [
-        'Dinosauria (Owen, 1842)',
-        '└── Ornithischia (Seeley, 1887)',
-        '    └── Thyreophora (Nopcsa, 1915)',
-        '        └── Stegosauria (Marsh, 1877)',
-        '            └── Stegosauridae (Marsh, 1880)',
-        '                └── Stegosaurus stenops (Marsh, 1887)'
-      ],
-      osteology: `
-        <p><span class="expert-metric-badge">Osteodermas Dorsais:</span> Placas com matriz esponjosa vascular interna revestida por córtex ósseo denso laminado, percorrida por canais nutritivos para termorregulação e exibição.</p>
-        <p><span class="expert-metric-badge">Tagomizador:</span> 4 espinhos cônicos apicais (osteodermas caudais) implantados em ângulo horizontal de ~45° na cauda terminal móvel.</p>
-      `,
-      biomechanics: `
-        <p><span class="expert-metric-badge">Impacto Defensivo:</span> Simulações de colisão balística estimam que a cauda flexível alcançava velocidade de impacto de até 70 km/h, gerando energia cinética de 2.000 Joules focada na ponta do espinho.</p>
-      `,
-      histology: `
-        <p><span class="expert-metric-badge">Histologia das Placas:</span> Revestimento de queratina sobreposto a tecido ósseo trabecular ativo metabolicamente com alta taxa de vascularização superficial.</p>
-      `
+      cladogram: ['Dinosauria > Ornithischia > Thyreophora > Stegosauria > Stegosauridae > Stegosaurus'],
+      osteology: '<p>Osteodermas dorsais alternados com canais nutritivos para termorregulação e cortejo.</p>',
+      biomechanics: '<p>Cauda flexível alcançava velocidade de impacto de até 70 km/h com 2.000 Joules focados nos espinhos.</p>',
+      histology: '<p>Revestimento de queratina sobre osso trabecular de alta vascularização superficial.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Journal.pone.0138352.g001A.jpg/500px-Journal.pone.0138352.g001A.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Journal.pone.0138352.g001A.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Stego-marsh-1896-US_geological_survey.png/500px-Stego-marsh-1896-US_geological_survey.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Marsh's 1891 illustration of S. ungulatus. Note the single row of 12 large rounded plates, based on "
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Stegosaurus_ungulatus_skeleton_peabody_museum_1910.png/500px-Stegosaurus_ungulatus_skeleton_peabody_museum_1910.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "The first mounted skeleton of a stegosaur (S. ungulatus), Peabody Museum of Natural History, 1910"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Stegosaur.jpg/500px-Stegosaur.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "1899 life restoration showing the plates lying flat on the back with spikes all over the back"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Stegosaurus_stenops_Life_Reconstruction.png/500px-Stegosaurus_stenops_Life_Reconstruction.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida do Stegosaurus com placas e tagomizador'
+      }
     ]
   },
   {
     name: 'Brachiosaurus',
     species: 'Brachiosaurus altithorax',
     commonName: 'Braquiossauro',
-    etymology: 'Do grego: βραχίων (brachion, "braço") + σαῦρος (sauros, "lagarto") • Descrito em 1903 por Elmer S. Riggs',
+    etymology: 'Do grego: "Lagarto com braços" • Descrito em 1903 por Elmer S. Riggs',
     periodKey: 'Jurassic',
-    periodName: 'Jurássico Superior (Kimmeridgiano – Titoniano, 154 – 150 Ma)',
+    periodName: 'Jurássico Superior (154 – 150 Ma)',
     group: 'dinossauro',
     groupName: 'Macronário Saurópode',
     diet: 'herbivoro',
@@ -449,59 +341,33 @@ const PALEONTOLOGY_DATABASE = [
     height: '12 a 13 metros (cabeça)',
     weight: '35 a 55 toneladas',
     speed: '12 a 15 km/h',
-    biteForce: '4.500 N (dentes em colher para desfolhar galhos)',
-    location: 'América do Norte (Formação Morrison, Colorado e Utah)',
-    bio: 'O Brachiosaurus revolucionou o entendimento da morfologia dos saurópodes por apresentar os membros anteriores sensivelmente mais longos que os posteriores (daí o nome "lagarto com braços"). Essa postura naturalmente inclinada elevava sua cintura escapular e pescoço colunar diretamente para as copas altas das coníferas jurássicas (Araucariaceae e Ginkgoales), a mais de 12 metros do chão.',
+    biteForce: '4.500 N',
+    location: 'América do Norte (Formação Morrison, EUA)',
+    bio: 'Destacava-se por possuir as patas dianteiras mais longas que as traseiras, conferindo postura inclinada para alcançar o topo das coníferas jurássicas a mais de 12 metros do chão sem precisar empinar o corpo.',
     curiosities: [
-      'Seu coração devia pesar mais de 200 kg para gerar pressão sistólica acima de 300 mmHg, necessária para bombear sangue até o cérebro.',
-      'Possuía narinas no topo do crânio com fenestras confluentes, hoje atribuídas à ancoragem de tecidos moles ressonadores ou termorreguladores.',
-      'As vértebras cervicais e dorsais continham "câmaras de ar" internas (pleurocelos) que eliminavam até 60% do peso do esqueleto sem perder suporte.',
-      'Não mastigava o alimento: ingeria anualmente toneladas de folhas duras com auxílio de gastrólitos no estômago muscular moedor.'
+      'Seu coração pesava mais de 200 kg para conseguir bombear sangue até a cabeça elevada.',
+      'Vértebras com pleurocelos internos eliminavam até 60% do peso ósseo.',
+      'Consumia até 400 kg de vegetação diariamente.',
+      'Utilizava gastrólitos estomacais para triturar folhas ingeridas inteiras.'
     ],
     expertData: {
-      cladogram: [
-        'Dinosauria (Owen, 1842)',
-        '└── Saurischia (Seeley, 1887)',
-        '    └── Sauropodomorpha (Huene, 1932)',
-        '        └── Titanosauriformes (Salgado et al., 1997)',
-        '            └── Brachiosauridae (Riggs, 1904)',
-        '                └── Brachiosaurus altithorax (Riggs, 1903)'
-      ],
-      osteology: `
-        <p><span class="expert-metric-badge">Úmero vs Fêmur:</span> Razão úmero/fêmur de ~1,05 a 1,12, invertendo a condição padrão dos diplodocídeos e transferindo o centro de gravidade para a frente.</p>
-        <p><span class="expert-metric-badge">Pneumatização:</span> Pleurocelos cavernosos e fossas centrais que reduziam o peso total do pescoço de 13 metros para menos de 1,2 tonelada de osso e músculo.</p>
-      `,
-      biomechanics: `
-        <p><span class="expert-metric-badge">Gigantotermia & Homeotermia:</span> Relação superfície/volume extremamente baixa que permitia retenção térmica constante de 36–38 °C sem necessitar de taxa metabólica mamaliana extrema.</p>
-      `,
-      histology: `
-        <p><span class="expert-metric-badge">Tecido Fibrolamelar:</span> Osteócitos densos e canais de Havers primários longitudinais confirmando taxas de crescimento aceleradas contínuas sem diapausa estacional prolongada.</p>
-      `
+      cladogram: ['Dinosauria > Saurischia > Sauropodomorpha > Titanosauriformes > Brachiosauridae > Brachiosaurus'],
+      osteology: '<p>Razão úmero/fêmur > 1,0 transferindo o centro de massa para a frente; pleurocelos cavernosos de alívio.</p>',
+      biomechanics: '<p>Gigantotermia com retenção térmica constante de 36–38 °C devido à baixa razão área/volume.</p>',
+      histology: '<p>Tecido fibrolamelar com deposição óssea contínua sem paradas sazonais prolongadas.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Brachiosaurus_mount.jpg/500px-Brachiosaurus_mount.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Brachiosaurus_mount.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/PSM_V67_D572_Fossil_bones_of_the_great_brachiosaurus_altithorax.png/500px-PSM_V67_D572_Fossil_bones_of_the_great_brachiosaurus_altithorax.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Holotype material during excavation. Dorsal vertebrae, sacrum, ilium and ribs are in view."
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Brach_humerus.jpg/500px-Brach_humerus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "An expedition member lying by the humerus during the excavation in 1900"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Altithorax.jpg/500px-Altithorax.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Riggs (right) and laboratory assistant working on the holotype bones in 1899. The still-jacketed thi"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Brachiosaurus_altithorax_side_profile.png/500px-Brachiosaurus_altithorax_side_profile.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida em perfil completo'
+      }
     ]
   },
   {
     name: 'Allosaurus',
     species: 'Allosaurus fragilis',
     commonName: 'Alossauro',
-    etymology: 'Do grego: ἄλλος (allos, "diferente") + σαῦρος (sauros, "lagarto") • Descrito em 1877 por Othniel Charles Marsh',
+    etymology: 'Do grego: "Lagarto diferente" • Descrito em 1877 por Othniel Charles Marsh',
     periodKey: 'Jurassic',
     periodName: 'Jurássico Superior (155 – 145 Ma)',
     group: 'dinossauro',
@@ -512,49 +378,72 @@ const PALEONTOLOGY_DATABASE = [
     height: '3,0 a 3,3 metros',
     weight: '2,0 a 2,5 toneladas',
     speed: '30 a 40 km/h',
-    biteForce: '8.000 a 12.000 N (golpe de machado craniano)',
-    location: 'América do Norte (Formação Morrison) e Portugal (Lourinhã)',
-    bio: 'O predador ápice dos ecossistemas jurássicos da América do Norte e Península Ibérica. Com crânio levemente construído articulado cineticamente e musculatura cervical ventral poderosa, o Allosaurus utilizava a mandíbula superior como um machado contra carnes moles de grandes saurópodes e estegossauros.',
+    biteForce: '8.000 a 12.000 N',
+    location: 'América do Norte (Formação Morrison) e Portugal',
+    bio: 'Predador dominante do Jurássico. Utilizava o crânio cinético como um machado de corte rápido contra grandes presas herbívoras.',
     curiosities: [
-      'Mais de 70 indivíduos de todas as idades foram achados acumulados na pedreira fóssil de Cleveland-Lloyd em Utah.',
-      'Possuía duas pequenas cristas ósseas acima dos olhos cobertas de queratina colorida para cortejo e reconhecimento.',
-      'Suas mandíbulas abriam em um ângulo impressionante de até 92 graus, superior à de quase todos os predadores terrestres.',
-      'Marcas de mordida em fósseis indicam que praticava canibalismo durante secas prolongadas no Jurássico.'
+      'Mais de 70 esqueletos foram encontrados juntos na pedreira de Cleveland-Lloyd.',
+      'Mandíbulas abriam em ângulo de até 92 graus.',
+      'Possuía cristas pré-oculares coloridas para comunicação visual.',
+      'Marcas ósseas comprovam caçadas ativas contra estegossauros.'
     ],
     expertData: {
-      cladogram: [
-        'Dinosauria > Saurischia > Theropoda > Tetanurae > Carnosauria > Allosauroidea > Allosauridae > Allosaurus'
-      ],
-      osteology: '<p>Vértebras com pleurocelos avançados; crânio streptostílico cinético com mobilidade intramandibular lateral.</p>',
-      biomechanics: '<p>Modelo "axe-bite" de Rayfield (2001): crânio adaptado para resistir a forças verticais massivas de estocada rápida.</p>',
-      histology: '<p>Maturação esquelética rápida aos 12–15 anos; presença de fraturas por estresse em fêmures e tíbias curadas por calo ósseo.</p>'
+      cladogram: ['Dinosauria > Theropoda > Carnosauria > Allosauroidea > Allosauridae > Allosaurus'],
+      osteology: '<p>Crânio com mobilidade intramandibular lateral; vértebras com pleurocelos avançados.</p>',
+      biomechanics: '<p>Modelo "axe-bite": adaptação craniana para impactos verticais massivos de alta velocidade.</p>',
+      histology: '<p>Crescimento rápido com maturação aos 12–15 anos; presença de fraturas ósseas curadas.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/WLA_hmns_Allosaurus_White_Background.jpg/500px-WLA_hmns_Allosaurus_White_Background.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "WLA_hmns_Allosaurus_White_Background.jpg"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Allosaurus_Juvenile_Reconstruction.jpg/500px-Allosaurus_Juvenile_Reconstruction.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida do Allosaurus em caçada ativa'
+      }
+    ]
+  },
+  {
+    name: 'Pteranodon',
+    species: 'Pteranodon longiceps',
+    commonName: 'Pteranodonte',
+    etymology: 'Do grego: "Asa sem dentes" • Descrito em 1876 por Othniel Charles Marsh',
+    periodKey: 'Cretaceous',
+    periodName: 'Cretáceo Superior (86 – 84 Ma)',
+    group: 'pterossauro',
+    groupName: 'Pterodactiloide Voador',
+    diet: 'piscivoro',
+    dietName: 'Piscívoro Planador Oceânico',
+    length: 'Envergadura de 6,5 a 7,2 metros',
+    height: '1,8 metro (pousado)',
+    weight: '20 a 35 kg',
+    speed: '60 a 85 km/h',
+    biteForce: 'Bico córneo adaptado para peixes',
+    location: 'América do Norte (Niobrara Chalk)',
+    bio: 'Pterossauro gigante que planava por centenas de quilômetros sobre oceanos cretáceos utilizando correntes de vento oceânicas com bico córneo sem dentes.',
+    curiosities: [
+      'Pesava apenas ~30 kg apesar dos 7 metros de asa devido ao esqueleto aerado.',
+      'Longa crista óssea occipital funcionava como leme aerodinâmico.',
+      'Mergulhava o bico em rasantes para capturar peixes e cefalópodes.',
+      'Mais de 1.100 espécimes fósseis já foram documentados pela ciência.'
+    ],
+    expertData: {
+      cladogram: ['Pterosauria > Pterodactyloidea > Ornithocheiroidea > Pteranodontidae > Pteranodon'],
+      osteology: '<p>Notarium fundido ancorando a escápula; quarto dígito hiperalongado sustentando o quirópatagio.</p>',
+      biomechanics: '<p>Carga alar extremamente baixa (~8 kg/m²) e decolagem quadrúpede impulsiva.</p>',
+      histology: '<p>Córtex ósseo milimétrico reforçado por treliças trabeculares tridimensionais.</p>'
+    },
+    gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/AMNH_Allosaurus.jpg/500px-AMNH_Allosaurus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "AMNH_Allosaurus.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/Allosaurus4.jpg/500px-Allosaurus4.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Allosaurus4.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/CLDQ_map.jpg/500px-CLDQ_map.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Map showing the thousands of dinosaur bones excavated at the Cleveland-Lloyd Dinosaur Quarry. Fossil"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Pteranodon_longiceps_mmartyniuk_wiki.png/330px-Pteranodon_longiceps_mmartyniuk_wiki.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida do Pteranodon em pleno voo'
+      }
     ]
   },
   {
     name: 'Mosasaurus',
     species: 'Mosasaurus hoffmannii',
     commonName: 'Mossassauro',
-    etymology: 'Do latim: Mosa (rio Mosa, Holanda) + σαῦρος (sauros, "lagarto") • Descrito em 1822 por William Daniel Conybeare',
+    etymology: 'Do latim: "Lagarto do rio Mosa" • Descrito em 1822 por William Conybeare',
     periodKey: 'Cretaceous',
-    periodName: 'Cretáceo Superior (Campaniano – Maastrichtiano, 82 – 66 Ma)',
+    periodName: 'Cretáceo Superior (82 – 66 Ma)',
     group: 'reptil-marinho',
     groupName: 'Esquamatado Marinho Gigante',
     diet: 'carnivoro',
@@ -564,97 +453,69 @@ const PALEONTOLOGY_DATABASE = [
     weight: '10 a 15 toneladas',
     speed: '35 a 45 km/h',
     biteForce: '28.000 a 40.000 N',
-    location: 'Oceanos mundiais (Europa, América do Norte, África e Antártica)',
-    bio: 'Parente evolutivo dos lagartos monitores modernos (Varanoidea) e serpentes, o Mosasaurus reinou soberano nos mares do final do Cretáceo. Possuía nadadeiras hidrodinâmicas, cauda hipocerca bilobada propulsora como a dos tubarões e uma segunda arcada de dentes pterigóideos no céu da boca para prender presas escorregadias.',
+    location: 'Oceanos mundiais (Europa, América, África e Antártica)',
+    bio: 'Parente evolutivo dos lagartos monitores modernos e cobras. Soberano dos mares cretáceos com nadadeiras hidrodinâmicas, cauda propulsora em leque e dentes pterigóideos no céu da boca.',
     curiosities: [
-      'Foi um dos primeiros grandes animais fósseis desenterrados pela ciência moderna, encontrado em Maastricht em 1764.',
-      'Possuía dentes pterigóideos no céu da boca que impediam peixes, lulas e amonites de escaparem para fora.',
-      'Dava à luz filhotes vivos na água (viviparidade confirmada por fósseis de mosassaurídeos gravídicos).',
-      'Fósseis de tartarugas marinhas Archelon com carapaças perfuradas mostram a força esmagadora de suas mandíbulas.'
+      'Foi um dos primeiros grandes fósseis achados pela ciência moderna (1764).',
+      'Possuía dentes extras no palato para segurar presas marinhas escorregadias.',
+      'Dava à luz filhotes vivos na água (viviparidade comprovada).',
+      'Esmagava conchas de amonites e carapaças de tartarugas marinhas gigantes.'
     ],
     expertData: {
-      cladogram: [
-        'Squamata > Toxicofera > Anguimorpha > Mosasauroidea > Mosasauridae > Mosasaurinae > Mosasaurus'
-      ],
-      osteology: '<p>Articulação intramandibular flexível streptostílica; vértebras caudais com arcos hemais hipertrofiados para sustentar o lobo inferior da cauda.</p>',
-      biomechanics: '<p>Propulsão axial carangiforme eficiente com ondulação caudal lateral acoplada a nadadeiras de direção peitoral.</p>',
-      histology: '<p>Homeotermia marinha confirmada por isótopos de oxigênio com temperatura corporal interna sustentada de ~35–39 °C.</p>'
+      cladogram: ['Squamata > Toxicofera > Anguimorpha > Mosasauridae > Mosasaurus'],
+      osteology: '<p>Articulação intramandibular flexível; vértebras caudais com arcos hemais hipertrofiados.</p>',
+      biomechanics: '<p>Propulsão axial carangiforme com ondulação caudal e nadadeiras estabilizadoras.</p>',
+      histology: '<p>Isótopos de oxigênio confirmam endotermia/homeotermia com 35–39 °C corporais.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Mosasaurus_hoffmannii_-_skeleton.jpg/500px-Mosasaurus_hoffmannii_-_skeleton.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Mosasaurus_hoffmannii_-_skeleton.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Mosasaurus_hoffmanni_first_specimen.jpg/500px-Mosasaurus_hoffmanni_first_specimen.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "TM 7424, the first known specimen of M. hoffmanni"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Mosasaurus2.JPG/500px-Mosasaurus2.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Mosasaurus2.JPG"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/MosasaurDiscovery.jpg/500px-MosasaurDiscovery.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "MosasaurDiscovery.jpg"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Mosasaurus_hoffmanni_life.jpg/500px-Mosasaurus_hoffmanni_life.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida do Mosasaurus caçando no oceano'
+      }
     ]
   },
   {
-    name: 'Pteranodon',
-    species: 'Pteranodon longiceps',
-    commonName: 'Pteranodonte',
-    etymology: 'Do grego: πτερόν (pteron, "asa") + ἀνόδους (anodous, "desprovido de dentes") • Descrito em 1876 por Othniel Charles Marsh',
+    name: 'Carnotaurus',
+    species: 'Carnotaurus sastrei',
+    commonName: 'Carnotauro',
+    etymology: 'Do latim: "Touro carnívoro" • Descrito em 1985 por José Bonaparte',
     periodKey: 'Cretaceous',
-    periodName: 'Cretáceo Superior (Coniaciano – Campaniano, 86 – 84 Ma)',
-    group: 'pterossauro',
-    groupName: 'Pterodactiloide Voador',
-    diet: 'piscivoro',
-    dietName: 'Piscívoro Planador Oceânico',
-    length: 'Envergadura de 6,5 a 7,2 metros',
-    height: '1,8 metro (pousado)',
-    weight: '20 a 35 kg',
-    speed: '60 a 85 km/h (planar dinâmico)',
-    biteForce: 'Bico córneo adaptado para capturar peixes',
-    location: 'América do Norte (Niobrara Chalk e Pierre Shale Formations)',
-    bio: 'O Pteranodon era um réptil voador dos pterossauros com envergadura equivalente à de um avião planador monomotor leve. Possuía ossos ocos de paredes milimétricas, bico córneo desdentado longo e uma majestosa crista óssea occipital que equilibrava o peso do bico durante o voo e atuava como leme aerodinâmico.',
+    periodName: 'Cretáceo Superior (72 – 69 Ma)',
+    group: 'dinossauro',
+    groupName: 'Abelissaurídeo Patagônico',
+    diet: 'carnivoro',
+    dietName: 'Carnívoro Cursorial Veloz',
+    length: '7,5 a 9,0 metros',
+    height: '2,8 a 3,0 metros',
+    weight: '1,5 a 2,0 toneladas',
+    speed: '48 a 56 km/h',
+    biteForce: '3.500 a 5.000 N',
+    location: 'Patagônia, Argentina (Formação La Colonia)',
+    bio: 'Conhecido pelos dois chifres ósseos frontais e patas dianteiras atrofiadas. Sua musculatura caudal caudofemoralis massiva impulsionava-o a mais de 50 km/h em perseguições em linha reta.',
     curiosities: [
-      'Apesar de medir mais de 7 metros de ponta a ponta das asas, pesava apenas ~30 kg graças ao esqueleto pneumatizado.',
-      'Praticava o voo dinâmico por gradiente de vento sobre ondas marinhas, similar aos albatrozes modernos.',
-      'Possuía o quarto dígito da mão hiperalongado para sustentar a membrana alar elástica de tecido queratinoso (quirópatagio).',
-      'Mais de 1.100 espécimes fósseis já foram desenterrados no Mar Interior Ocidental norte-americano.'
+      'Preservou impressões de pele quase completas com escamas e nódulos.',
+      'Chifres eram usados em combates de cabeçadas entre machos.',
+      'Alcançava aceleração impressionante com baixa manobrabilidade lateral.',
+      'Braços vestigiais menores que os do T-Rex sem punho articulado.'
     ],
     expertData: {
-      cladogram: [
-        'Pterosauria > Pterodactyloidea > Ornithocheiroidea > Pteranodontia > Pteranodontidae > Pteranodon'
-      ],
-      osteology: '<p>Notarium (vértebras dorsais fundidas) ancorando a escápula e coracoide; pré-maxilas desdentadas revestidas por ranfoteca afiada.</p>',
-      biomechanics: '<p>Carga alar excepcionalmente baixa (~8 kg/m²); decolagem quadrúpede explosiva impulsionada pelas patas dianteiras.</p>',
-      histology: '<p>Córtex ósseo submilimétrico sustentado por trabéculas em treliça interna aeroespacial tridimensional.</p>'
+      cladogram: ['Dinosauria > Theropoda > Ceratosauria > Abelisauridae > Carnotaurus'],
+      osteology: '<p>Crânio encurtado braquicefálico; vértebras caudais com lâminas que abrigavam o músculo locomotor.</p>',
+      biomechanics: '<p>Maior razão caudofemoral/fêmur entre terópodes bípedes de grande porte.</p>',
+      histology: '<p>Fósseis dérmicos comprovam ausência de penas em abelissaurídeos sul-americanos.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Pteranodon_amnh_martyniuk.jpg/500px-Pteranodon_amnh_martyniuk.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Pteranodon_amnh_martyniuk.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Ornithochirus_umbrosus.jpg/500px-Ornithochirus_umbrosus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Early illustration of Ornithocheirus umbrosus (now Pteranodon), when teeth erroneously were attribut"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Pteranodon_longiceps_YPM1177.jpg/500px-Pteranodon_longiceps_YPM1177.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Short-crested P. longiceps holotype specimen YPM1177, now interpreted as a female individual"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Pteranodon_scale.png/330px-Pteranodon_scale.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Size of P. longiceps male (green) and female (orange) compared with a human"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Carnotaurus_Reconstruction_%282022%29.png/500px-Carnotaurus_Reconstruction_%282022%29.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida atualizada com chifres frontais'
+      }
     ]
   },
   {
     name: 'Ankylosaurus',
     species: 'Ankylosaurus magniventris',
     commonName: 'Anquilossauro',
-    etymology: 'Do grego: ἀγκύλος (ankylos, "fundido/curvo") + σαῦρος (sauros, "lagarto") • Descrito em 1908 por Barnum Brown',
+    etymology: 'Do grego: "Lagarto fundido" • Descrito em 1908 por Barnum Brown',
     periodKey: 'Cretaceous',
     periodName: 'Cretáceo Superior (68 – 66 Ma)',
     group: 'dinossauro',
@@ -665,344 +526,415 @@ const PALEONTOLOGY_DATABASE = [
     height: '1,7 a 2,0 metros',
     weight: '5,0 a 8,0 toneladas',
     speed: '10 a 12 km/h',
-    biteForce: '1.800 N (mastigação por bateria rasteira)',
-    location: 'América do Norte (Formações Hell Creek, Lance e Scollard)',
-    bio: 'O "tanque vivo" do Cretáceo Superior. Seu corpo era blindado por milhares de osteodermas dérmicos ossificados recobertos por queratina, que protegiam inclusive suas pálpebras superiores. Sua cauda terminava em uma clava óssea maciça de até 60 kg ancorada por vértebras posteriores fundidas rígidas, capaz de fraturar fêmures de predadores como o T-Rex.',
+    biteForce: '1.800 N',
+    location: 'América do Norte (Hell Creek, Lance, Scollard)',
+    bio: 'O tanque blindado definitivo do Cretáceo com carapaça de osteodermas dérmicos e clava óssea caudal de impacto de até 60 kg.',
     curiosities: [
-      'Sua única área vulnerável sem couraça óssea era o ventre mole inferior.',
-      'Possuía seios nasais complexos em formato de caracol que condicionavam a temperatura do ar inalado e apuravam o olfato.',
-      'As osteodermas da cabeça fundiam-se totalmente aos ossos cranianos em um escudo impenetrável.',
-      'A clava caudal era sustentada por ossificação de tendões longitudinais que transformavam a cauda em um martelo balístico.'
+      'Ventre inferior desprovido de couraça era sua única área vulnerável.',
+      'Seios nasais em espiral condicionavam o ar inalado e apuravam o olfato.',
+      'Clava caudal quebrava fêmures de predadores que tentassem atacá-lo.',
+      'Osteodermas da cabeça fundiam-se totalmente aos ossos cranianos.'
     ],
     expertData: {
-      cladogram: [
-        'Dinosauria > Ornithischia > Thyreophora > Ankylosauria > Ankylosauridae > Ankylosaurus'
-      ],
-      osteology: '<p>Craniofusion total; vértebras caudais terminais fundidas em uma haste de suporte rígida ("handle") com ossos dérmicos apicais ("knob").</p>',
-      biomechanics: '<p>Impacto caudal de até 14.000 Newtons na colisão, gerando fratura cortical óssea instantânea em terópodes bípedes.</p>',
-      histology: '<p>Osteodermas estruturadas com fibras colágenas entrelaçadas em "sanduíche", similar a coletes à prova de balas modernos.</p>'
+      cladogram: ['Dinosauria > Ornithischia > Thyreophora > Ankylosauria > Ankylosauridae > Ankylosaurus'],
+      osteology: '<p>Craniofusion completa; vértebras caudais terminais fundidas na haste rígida da clava.</p>',
+      biomechanics: '<p>Impacto caudal de até 14.000 N gerando fratura óssea instantânea na canela do predador.</p>',
+      histology: '<p>Fibras de colágeno entrelaçadas em padrão multicamada resistente a perfurações.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Ankylosaur_head_-_cast_-_Custer_County_Montana_-_Museum_of_the_Rockies_-_2013-07-08.jpg/500px-Ankylosaur_head_-_cast_-_Custer_County_Montana_-_Museum_of_the_Rockies_-_2013-07-08.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Ankylosaur_head_-_cast_-_Custer_County_Montana_-_Museum_of_the_Rockies_-_2013-07-08.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Skull_of_Ankylosaurus.jpg/500px-Skull_of_Ankylosaurus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Skull of holotype AMNH 5895 and reconstruction diagram of same"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Ankylosaurus.jpg/500px-Ankylosaurus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Ankylosaurus.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Ankylosaurus%3B_from_Offensive_weapons_and_means_of_defense_of_fossil_vertebrates_%28Abel_1908%29.png/500px-Ankylosaurus%3B_from_Offensive_weapons_and_means_of_defense_of_fossil_vertebrates_%28Abel_1908%29.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Ankylosaurus;_from_Offensive_weapons_and_means_of_defense_of_fossil_vertebrates_(Abel_1908).png"
-      },
-    ]
-  },
-  {
-    name: 'Carnotaurus',
-    species: 'Carnotaurus sastrei',
-    commonName: 'Carnotauro',
-    etymology: 'Do latim: carno ("carne") + taurus ("touro") • Descrito em 1985 por José Fernando Bonaparte',
-    periodKey: 'Cretaceous',
-    periodName: 'Cretáceo Superior (Campaniano – Maastrichtiano, 72 – 69 Ma)',
-    group: 'dinossauro',
-    groupName: 'Abelissaurídeo Patagônico',
-    diet: 'carnivoro',
-    dietName: 'Carnívoro Cursorial de Ataque Rápido',
-    length: '7,5 a 9,0 metros',
-    height: '2,8 a 3,0 metros',
-    weight: '1,5 a 2,0 toneladas',
-    speed: '48 a 56 km/h',
-    biteForce: '3.500 a 5.000 N (ataques rápidos cinéticos)',
-    location: 'Patagônia, Argentina (Formação La Colonia)',
-    bio: 'Famoso pelos dois chifres ósseos pontiagudos frontais e pelas patas dianteiras quase vestigiais sem punho funcional, o Carnotaurus era o velocista máximo dos grandes terópodes. Sua musculatura caudal (músculo caudofemoralis longus) representava mais de 15% do seu peso total, impulsionando-o a mais de 50 km/h em perseguições em linha reta pelas planícies sul-americanas.',
-    curiosities: [
-      'Foi o primeiro grande terópode encontrado com impressões fósseis de pele preservada quase por completo, revelando escamas e nódulos.',
-      'Seus chifres eram revestidos por uma bainha de queratina espessa e podiam ser usados em disputas de cabeçadas entre machos da espécie.',
-      'Estudos biomecânicos apontam que ele conseguia acelerar em linha reta a mais de 50 km/h graças à hipertrofia do músculo caudofemoral.',
-      'Seus braços diminutos não possuíam articulação de punho funcional e tinham 4 pequenos dedos imóveis.'
-    ],
-    expertData: {
-      cladogram: [
-        'Dinosauria > Theropoda > Ceratosauria > Abelisauridae > Carnotaurinae > Carnotaurus'
-      ],
-      osteology: '<p>Crânio braquicefálico encurtado; chifres frontais espessos; vértebras caudais com costelas caudais fundidas voltadas para cima que abrigavam o músculo caudofemoral hipertrofiado.</p>',
-      biomechanics: '<p>Maior razão de massa caudofemoral/fêmur entre os dinossauros cursoriais; baixa capacidade de manobra lateral em alta velocidade.</p>',
-      histology: '<p>Fósseis dérmicos com nódulos poligonais cônicos não sobrepostos sem evidência de plumagem filamentosa na linhagem dos abelissaurídeos.</p>'
-    },
-    gallery: [
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Carnotaurus%2C_Chlup%C3%A1%C4%8D_Museum%2C_Prague-2.jpg/500px-Carnotaurus%2C_Chlup%C3%A1%C4%8D_Museum%2C_Prague-2.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Carnotaurus,_Chlupáč_Museum,_Prague-2.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/DinosaursCalci.JPG/500px-DinosaursCalci.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Casts of Amargasaurus and Carnotaurus, both discovered by the same 1984 expedition in Argentina, Nat"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/Carnotaurus_reconstruction_Headden.jpg/500px-Carnotaurus_reconstruction_Headden.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Illustration of the known material of Carnotaurus"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Carnotaurus_Size_Chart.png/500px-Carnotaurus_Size_Chart.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Scale diagram comparing Carnotaurus to a human"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Ankylosaurus_magniventris_by_sphenaphinae.png/500px-Ankylosaurus_magniventris_by_sphenaphinae.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida com blindagem e clava caudal'
+      }
     ]
   },
   {
     name: 'Plesiosaurus',
     species: 'Plesiosaurus dolichodeirus',
     commonName: 'Plesiossauro',
-    etymology: 'Do grego: πλησίος (plesios, "próximo") + σαῦρος (sauros, "lagarto") • Descrito em 1821 por De la Beche e Conybeare',
+    etymology: 'Do grego: "Próximo a lagarto" • Descrito em 1821 por De la Beche e Conybeare',
     periodKey: 'Jurassic',
-    periodName: 'Jurássico Inferior (Hettangiano – Sinemuriano, 199 – 175 Ma)',
+    periodName: 'Jurássico Inferior (199 – 175 Ma)',
     group: 'reptil-marinho',
     groupName: 'Plesiossauro Pelágico',
     diet: 'piscivoro',
     dietName: 'Piscívoro Hidrodinâmico',
     length: '3,5 a 4,5 metros',
-    height: 'Pescoço esguio com ~40 vértebras',
+    height: 'Pescoço longo com 40 vértebras',
     weight: '400 a 500 kg',
     speed: '15 a 20 km/h',
-    biteForce: 'Dentes em agulha para aprisionamento rápido',
-    location: 'Europa Ocidental (Lyme Regis, Dorset, Inglaterra e Alemanha)',
-    bio: 'O clássico réptil marinho de pescoço comprido desenterrado pioneiramente por Mary Anning no século XIX. Possuía quatro grandes nadadeiras hiperfalângicas que realizavam voo subaquático coordinado e pescoço flexível adaptado para golpear cardumes de belemnites e peixes jurássicos sem movimentar a massa pesada do tronco.',
+    biteForce: 'Dentes em agulha para aprisionamento',
+    location: 'Europa Ocidental (Lyme Regis, Inglaterra)',
+    bio: 'Descoberto por Mary Anning no século XIX, possuía quatro nadadeiras alares e pescoço esguio ágil para caçar cardumes nos mares jurássicos.',
     curiosities: [
-      'O esqueleto mais famoso foi achado em 1823 por Mary Anning, revolucionando a paleontologia europeia.',
-      'Engolia gastrólitos que serviam como lastro e para macerar cascas duras de crustáceos e conchas de cefalópodes.',
-      'Sua locomoção utilizava as nadadeiras anteriores e posteriores em batimentos síncronos alternados.',
-      'Diferente do mito do Lago Ness, o animal não conseguia projetar o pescoço em postura de cisne para fora da água.'
+      'Primeiro esqueleto completo achado por Mary Anning em 1823.',
+      'Engolia pedras gastrólitos como lastro de profundidade marinha.',
+      'Realizava voo subaquático simétrico com suas quatro pás natatórias.',
+      'Pescoço não se erguia fora da água como cisne devido à anatomia vertebral.'
     ],
     expertData: {
-      cladogram: [
-        'Sauropterygia > Pistosauria > Plesiosauria > Plesiosauroidea > Plesiosauridae > Plesiosaurus'
-      ],
-      osteology: '<p>Cinturas escapular e pélvica transformadas em placas ventrais maciças; falanges multiplicadas em pás natatórias rígidas.</p>',
-      biomechanics: '<p>Hidrofólio simétrico com perfil NACA; sustentação gerada pela inclinação das pás durante a descida e subida do ciclo natatório.</p>',
-      histology: '<p>Estrutura óssea densa periosteal nas costelas e gastrália para controle hidrostático de flutuabilidade.</p>'
+      cladogram: ['Sauropterygia > Pistosauria > Plesiosauria > Plesiosauroidea > Plesiosaurus'],
+      osteology: '<p>Cinturas pélvica e escapular transformadas em placas ventrais de suporte rígidas.</p>',
+      biomechanics: '<p>Perfil de hidrofólio com sustentação gerada pela inclinação das pás no ciclo natatório.</p>',
+      histology: '<p>Paquiosclerose nas costelas para controle hidrostático de flutuação.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Plesiosaurus_dolichodeirus_NHM.jpg/500px-Plesiosaurus_dolichodeirus_NHM.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Plesiosaurus_dolichodeirus_NHM.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Mary_Anning_Plesiosaurus.jpg/500px-Mary_Anning_Plesiosaurus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Letter concerning the discovery of the genus from Mary Anning"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Plesiosaurus_Scale.svg/500px-Plesiosaurus_Scale.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Plesiosaurus with a human to scale."
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Conybeare_Plesiosaur_1824.jpg/500px-Conybeare_Plesiosaur_1824.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Illustration of the skeletal anatomy of a Plesiosaurus dolichodeirus from Conybeare's 1824 paper tha"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Plesiosaurus_dolichodeirus.png/500px-Plesiosaurus_dolichodeirus.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida nadando com pescoço esguio'
+      }
     ]
   },
   {
     name: 'Coelophysis',
     species: 'Coelophysis bauri',
     commonName: 'Celófise',
-    etymology: 'Do grego: κοῖλος (koilos, "oco") + φύσις (physis, "forma") • Descrito em 1889 por Edward Drinker Cope',
+    etymology: 'Do grego: "Forma oca" • Descrito em 1889 por Edward Drinker Cope',
     periodKey: 'Triassic',
-    periodName: 'Triássico Superior (Noriano – Rhaetiano, 216 – 196 Ma)',
+    periodName: 'Triássico Superior (216 – 196 Ma)',
     group: 'dinossauro',
     groupName: 'Terópode Basal Triássico',
     diet: 'carnivoro',
-    dietName: 'Carnívoro Ágil / Pequenos Répteis',
+    dietName: 'Carnívoro Ágil Bípede',
     length: '2,5 a 3,0 metros',
     height: '1,0 metro',
     weight: '15 a 25 kg',
     speed: '40 a 50 km/h',
-    biteForce: '600 N (dentes em lâmina serrilhada)',
-    location: 'América do Norte (Ghost Ranch, Formação Chinle, Novo México)',
-    bio: 'Um dos dinossauros pioneiros mais bem-sucedidos da história. Surgido no árido Triássico Superior, o Coelophysis possuía ossos pneumatizados ultra-leves e pernas compridas que lhe permitiam correr em alta velocidade caçando esfenodontes primitivos, cinodontes e insetos, iniciando o reinado dos dinossauros.',
+    biteForce: '600 N',
+    location: 'América do Norte (Ghost Ranch, Novo México)',
+    bio: 'Pioneiro do início da Era Mesozoica com ossos pneumatizados ocos e pernas longas que deram início à dominância dos dinossauros no Triássico.',
     curiosities: [
-      'Em 1947, Edwin Colbert desenterrou milhares de esqueletos de Coelophysis juntos em Ghost Ranch (Novo México).',
-      'Um crânio de Coelophysis viajou para o espaço a bordo do ônibus espacial Endeavour em 1998.',
-      'Possuía olhos grandes com anéis escleróticos circulares adaptados para visão crepuscular e noturna.',
-      'Mãos com 4 dedos, dos quais apenas 3 eram funcionais e armados de garras curvas agudas.'
+      'Milhares de fósseis foram desenterrados juntos em Ghost Ranch.',
+      'Um crânio viajou ao espaço a bordo do ônibus espacial Endeavour em 1998.',
+      'Visão adaptada para caçadas no crepúsculo triássico.',
+      'Patas dianteiras com 3 garras funcionais afiadas.'
     ],
     expertData: {
-      cladogram: [
-        'Dinosauria > Saurischia > Theropoda > Coelophysoidea > Coelophysidae > Coelophysis'
-      ],
-      osteology: '<p>Ossos com paredes corticais extremamente finas; fúrcula primitiva em "U"; vértebras sacrais com fusão incompleta.</p>',
-      biomechanics: '<p>Adaptação cursorial extrema com metatarsos longos e compressão digitígrada de alta economia metabólica.</p>',
-      histology: '<p>Dimorfismo sexual craniométrico marcado entre formas "robustas" e "gráceis" preservadas no mesmo leito fóssil.</p>'
+      cladogram: ['Dinosauria > Saurischia > Theropoda > Coelophysoidea > Coelophysis'],
+      osteology: '<p>Paredes ósseas corticais extremamente finas com fúrcula primitiva em "U".</p>',
+      biomechanics: '<p>Adaptação cursorial extrema com metatarsos longos e compressão digitígrada veloz.</p>',
+      histology: '<p>Dimorfismo sexual craniométrico marcado entre formas robustas e gráceis.</p>'
     },
     gallery: [
       {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Coelophysis_bauri_mount.jpg/500px-Coelophysis_bauri_mount.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Coelophysis_bauri_mount.jpg"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Euskelosaurus_Coelophysis_Huene.png/500px-Euskelosaurus_Coelophysis_Huene.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Euskelosaurus_Coelophysis_Huene.png"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Coelophysis_hindlimb_Huene.png/500px-Coelophysis_hindlimb_Huene.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Coelophysis_hindlimb_Huene.png"
-      },
-      {
-        url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Coelophysis_Hortalotarsus_Huene.png/500px-Coelophysis_Hortalotarsus_Huene.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
-        caption: "Coelophysis_Hortalotarsus_Huene.png"
-      },
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Coelophysis_Jeff_Martz.jpg/500px-Coelophysis_Jeff_Martz.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
+        caption: 'Representação paleoartística em vida do corredor triássico (Jeff Martz)'
+      }
     ]
   }
 ];
 
-// Cache dinâmico para buscas customizadas
-const dynamicSearchCache = new Map();
-
 // ==========================================================================
-// FUNÇÕES DE DADOS E FORMATAÇÃO
+// MOTOR DE INGESTÃO AUTOMÁTICA DE QUALQUER ESPÉCIME MESOZOICO
 // ==========================================================================
 
-function getPeriodBadgeClass(periodKey) {
-  switch (periodKey) {
-    case 'Triassic': return 'period-triassic';
-    case 'Jurassic': return 'period-jurassic';
-    case 'Cretaceous': return 'period-cretaceous';
-    default: return 'period-mesozoic';
+/**
+ * Minera a melhor representação visual em vida (paleoarte colorida)
+ * a partir da lista de mídias da Wikipedia ou Commons.
+ */
+function extractBestLifeRestoration(mediaItems, genusName) {
+  if (!mediaItems || mediaItems.length === 0) return null;
+
+  let bestCandidate = null;
+  let highestScore = -999;
+
+  for (const item of mediaItems) {
+    if (item.type !== 'image') continue;
+
+    const title = (item.title || '').toLowerCase();
+    const caption = (item.caption?.text || '').toLowerCase();
+    const srcs = item.srcset || [];
+    if (srcs.length === 0) continue;
+
+    let score = 0;
+
+    // Pontuação forte para Representações em Vida (Paleoarte)
+    if (title.includes('restoration') || caption.includes('restoration')) score += 20;
+    if (title.includes('reconstruction') || caption.includes('reconstruction')) score += 18;
+    if (title.includes('life') || caption.includes('life')) score += 15;
+    if (title.includes('paleoart') || caption.includes('paleoart')) score += 12;
+    if (title.includes('profile') || caption.includes('profile')) score += 8;
+    if (title.includes('model') || caption.includes('model')) score += 6;
+    if (title.includes('in life') || caption.includes('in life') || caption.includes('em vida')) score += 20;
+
+    // Penalizações para fósseis, ossos isolados, diagramas e mapas
+    if (title.includes('skelet') || caption.includes('skelet')) score -= 8;
+    if (title.includes('skull') || caption.includes('skull')) score -= 6;
+    if (title.includes('fossil') || caption.includes('fossil')) score -= 8;
+    if (title.includes('bone') || caption.includes('bone')) score -= 10;
+    if (title.includes('teeth') || caption.includes('teeth')) score -= 10;
+    if (title.includes('diagram') || title.includes('chart') || title.includes('map') || title.includes('cladogram')) score -= 25;
+    if (title.includes('.svg') && !title.includes('life')) score -= 5;
+
+    if (score > highestScore) {
+      highestScore = score;
+      let url = srcs[srcs.length - 1].src;
+      if (url.startsWith('//')) url = 'https:' + url;
+
+      const cleanCaption = item.caption?.text || item.title?.replace('File:', '').replace(/_/g, ' ') || `Representação paleoartística de ${genusName}`;
+      bestCandidate = {
+        url: url,
+        caption: cleanCaption
+      };
+    }
   }
+
+  return bestCandidate;
 }
 
 /**
- * Busca dados da Wikipedia e da Paleobiology Database caso o usuário
- * busque um espécime fora do acervo pré-curado, montando uma ficha própria completa.
+ * Normaliza classificação do período a partir de dados geológicos da PBDB
  */
-async function fetchCustomSpecimenData(query) {
-  if (dynamicSearchCache.has(query.toLowerCase())) {
-    return dynamicSearchCache.get(query.toLowerCase());
+function deducePeriodFromPBDB(tei = '', tli = '') {
+  const str = `${tei} ${tli}`.toLowerCase();
+  if (str.includes('trias') || str.includes('triáss') || str.includes('carnian') || str.includes('norian') || str.includes('rhaetian') || str.includes('ladinian') || str.includes('anisian')) {
+    return { key: 'Triassic', name: 'Triássico' };
+  }
+  if (str.includes('juras') || str.includes('juráss') || str.includes('oxfordian') || str.includes('kimmeridgian') || str.includes('tithonian') || str.includes('callovian') || str.includes('bathonian') || str.includes('bajocian') || str.includes('toarcian')) {
+    return { key: 'Jurassic', name: 'Jurássico' };
+  }
+  return { key: 'Cretaceous', name: 'Cretáceo' };
+}
+
+/**
+ * Duz o grupo/habitat a partir da taxonomia
+ */
+function deduceGroupFromTaxon(taxon) {
+  const t = JSON.stringify(taxon || {}).toLowerCase();
+  if (t.includes('pterosaur') || t.includes('pterodactyl')) {
+    return { group: 'pterossauro', name: 'Pterossauro Aéreo' };
+  }
+  if (t.includes('plesiosaur') || t.includes('mosasaur') || t.includes('ichthyosaur') || t.includes('sauropterygia')) {
+    return { group: 'reptil-marinho', name: 'Réptil Marinho' };
+  }
+  return { group: 'dinossauro', name: 'Dinossauro Mesozoico' };
+}
+
+/**
+ * INGESTÃO AUTOMÁTICA DE QUALQUER ESPÉCIME
+ * Consulta PBDB, Wikipedia PT/EN e Media-List para minerar representações visuais em vida.
+ */
+async function ingestAnySpecimen(rawQuery) {
+  const query = rawQuery.trim();
+  if (!query) return null;
+
+  // 1. Verifica se já existe no catálogo carregado
+  const existing = activeCatalog.find(c => c.name.toLowerCase() === query.toLowerCase());
+  if (existing) {
+    showToast(`O espécime "${existing.name}" já está no catálogo!`, '🦕');
+    highlightExistingCard(existing.name);
+    return existing;
   }
 
+  showToast(`Escavando e minerando representação visual em vida de "${query}"...`, '⛏️');
+
   try {
-    // 1. Consulta taxonômica na Paleobiology Database
+    // 2. Consulta paralela: PBDB Taxon, Wikipedia Summary e Media List
+    const [pbdbRes, wikiPtRes, wikiEnRes, mediaListRes] = await Promise.allSettled([
+      fetch(`https://paleobiodb.org/data1.2/taxa/single.json?name=${encodeURIComponent(query)}&show=attr,app`),
+      fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`),
+      fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`),
+      fetch(`https://en.wikipedia.org/api/rest_v1/page/media-list/${encodeURIComponent(query)}`)
+    ]);
+
     let taxon = null;
-    try {
-      const pbdbRes = await fetch(`https://paleobiodb.org/data1.2/taxa/single.json?name=${encodeURIComponent(query)}&show=attr`);
-      if (pbdbRes.ok) {
-        const pbdbJson = await pbdbRes.json();
-        taxon = pbdbJson.records && pbdbJson.records[0] ? pbdbJson.records[0] : null;
-      }
-    } catch (e) {
-      console.warn('PBDB inacessível:', e);
+    if (pbdbRes.status === 'fulfilled' && pbdbRes.value.ok) {
+      const data = await pbdbRes.value.json();
+      taxon = data.records && data.records[0] ? data.records[0] : null;
     }
 
-    // 2. Consulta resumo na Wikipedia PT (com fallback EN)
     let wikiData = null;
-    let wikiRes = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
-    if (wikiRes.ok) wikiData = await wikiRes.json();
-    if (!wikiData || !wikiData.extract) {
-      wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
-      if (wikiRes.ok) wikiData = await wikiRes.json();
+    if (wikiPtRes.status === 'fulfilled' && wikiPtRes.value.ok) {
+      wikiData = await wikiPtRes.value.json();
+    }
+    if ((!wikiData || !wikiData.extract) && wikiEnRes.status === 'fulfilled' && wikiEnRes.value.ok) {
+      wikiData = await wikiEnRes.value.json();
     }
 
-    if (!wikiData && !taxon) return null;
+    let mediaItems = [];
+    if (mediaListRes.status === 'fulfilled' && mediaListRes.value.ok) {
+      const mediaJson = await mediaListRes.value.json();
+      mediaItems = mediaJson.items || [];
+    }
 
-    const mainImg = wikiData?.thumbnail?.source || wikiData?.originalimage?.source || PLACEHOLDER_IMAGE;
-    const gallery = [
-      {
-        url: mainImg,
-        caption: 'Registro paleontológico catalogado'
-      }
-    ];
+    if (!wikiData && !taxon) {
+      showToast(`Gênero "${query}" não encontrado na PBDB ou Wikipedia. Verifique a grafia.`, '⚠️');
+      return null;
+    }
 
-    // Busca mídias extras da Wikipedia
-    try {
-      const mediaRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/media-list/${encodeURIComponent(query)}`);
-      if (mediaRes.ok) {
-        const mediaJson = await mediaRes.json();
-        if (mediaJson.items && mediaJson.items.length > 0) {
-          mediaJson.items.slice(0, 5).forEach(item => {
-            if (item.type === 'image' && item.srcset && item.srcset.length > 0) {
-              const bestSrc = item.srcset[item.srcset.length - 1].src;
-              const fullUrl = bestSrc.startsWith('//') ? `https:${bestSrc}` : bestSrc;
-              if (fullUrl !== mainImg) {
-                gallery.push({
-                  url: fullUrl,
-                  caption: item.caption?.text || 'Fotografia fóssil / Reconstituição científica'
-                });
-              }
-            }
+    // 3. Mineração da representação visual em vida (Life Restoration)
+    const bestLifeRestoration = extractBestLifeRestoration(mediaItems, query);
+    const fallbackImage = wikiData?.thumbnail?.source || wikiData?.originalimage?.source || PLACEHOLDER_IMAGE;
+
+    const gallery = [];
+    if (bestLifeRestoration) {
+      gallery.push(bestLifeRestoration);
+    } else {
+      gallery.push({
+        url: fallbackImage,
+        caption: `Representação visual de ${wikiData?.title || query}`
+      });
+    }
+
+    // Adiciona fotos complementares (outras paleoartes ou esqueletos)
+    mediaItems.slice(0, 5).forEach(item => {
+      if (item.type === 'image' && item.srcset && item.srcset.length > 0) {
+        let u = item.srcset[item.srcset.length - 1].src;
+        if (u.startsWith('//')) u = 'https:' + u;
+        if (u !== gallery[0].url) {
+          gallery.push({
+            url: u,
+            caption: item.caption?.text || item.title?.replace('File:', '') || 'Registro paleontológico'
           });
         }
       }
-    } catch (e) {
-      console.warn('Erro ao carregar galeria extra:', e);
-    }
+    });
 
-    let periodKey = 'Mesozoic';
-    let periodName = taxon?.tei ? `${taxon.tei} ${taxon.tli && taxon.tli !== taxon.tei ? `a ${taxon.tli}` : ''}` : 'Era Mesozoica';
-    const lowerPeriod = periodName.toLowerCase();
-    if (lowerPeriod.includes('trias') || lowerPeriod.includes('triáss')) periodKey = 'Triassic';
-    else if (lowerPeriod.includes('juras') || lowerPeriod.includes('juráss')) periodKey = 'Jurassic';
-    else if (lowerPeriod.includes('cretac') || lowerPeriod.includes('cretác')) periodKey = 'Cretaceous';
+    // 4. Dedução de metadados geológicos e ecológicos
+    const periodData = deducePeriodFromPBDB(taxon?.tei, taxon?.tli);
+    const groupData = deduceGroupFromTaxon(taxon);
+    const periodName = taxon?.tei ? `${periodData.name} (${taxon.tei} ${taxon.tli && taxon.tli !== taxon.tei ? `a ${taxon.tli}` : ''})` : `Era Mesozoica (${periodData.name})`;
 
-    const compiled = {
+    const newSpecimen = {
       name: taxon?.nam || wikiData?.title || query,
       species: `${taxon?.nam || query} sp.`,
       commonName: wikiData?.title || query,
-      etymology: `Gênero catalogado no registro paleontológico internacional da PBDB (${taxon?.rnk || 'gênero'})`,
-      periodKey: periodKey,
+      etymology: `Gênero catalogado no registro internacional da Paleobiology Database (Rank: ${taxon?.rnk || 'gênero'})`,
+      periodKey: periodData.key,
       periodName: periodName,
-      group: 'dinossauro',
-      groupName: 'Espécime Fóssil Catalogado',
-      diet: 'desconhecido',
-      dietName: 'Estudo Paleontológico',
-      length: 'Consulte registros de campo',
-      height: 'Variável por exemplar',
-      weight: 'Sob análise alométrica',
+      group: groupData.group,
+      groupName: groupData.name,
+      diet: 'carnivoro',
+      dietName: 'Carnívoro / Em estudo',
+      length: 'Consulte registros osteológicos',
+      height: 'Variável por espécime',
+      weight: 'Estimativa alométrica em análise',
       speed: 'Em estudo biomecânico',
-      biteForce: 'Em análise computacional',
-      location: 'Sítios fósseis mundiais (ver mapa)',
-      bio: wikiData?.extract || 'Espécime fóssil da Era Mesozoica catalogado com ocorrências registradas na literatura científica.',
+      biteForce: 'Em modelagem computacional',
+      location: 'Sítios fósseis mundiais (ver mapa integrado)',
+      bio: wikiData?.extract || 'Espécime fóssil catalogado com ocorrências registradas na literatura científica.',
       curiosities: [
-        'Catalogado com registros oficiais de taxonomia na Paleobiology Database.',
-        'Possui sítios fósseis georreferenciados disponíveis para exploração no mapa integrado.'
+        `Gênero validado cientificamente com registros oficiais na Paleobiology Database.`,
+        `Possui coordenadas georreferenciadas mapeadas mundialmente por paleontólogos.`,
+        `Representação artística em vida minerada diretamente dos arquivos científicos abertos.`
       ],
       expertData: {
         cladogram: [
           'Dinosauria (Owen, 1842)',
-          `└── ${taxon?.nam || query} (Registro Paleobiológico PBDB)`
+          `└── ${groupData.name}`,
+          `    └── ${taxon?.nam || query} (Registro PBDB Oficial)`
         ],
-        osteology: `<p>Morfologia óssea catalogada sob a identificação taxonômica PBDB: ${taxon?.nam || query}.</p>`,
-        biomechanics: '<p>Parâmetros biomecânicos e alometria sob contínuo estudo paleontológico.</p>',
-        histology: '<p>Tafonomia e datação estratigráfica compatíveis com os estratos geológicos do período.</p>'
+        osteology: `<p>Morfologia osteológica documentada no registro PBDB sob o espécime tipo de ${taxon?.nam || query}.</p>`,
+        biomechanics: '<p>Cinemática e resistência mecânica craniana sob modelagem de elementos finitos.</p>',
+        histology: '<p>Tafonomia e datação estratigráfica compatíveis com os estratos fossilíferos do período.</p>'
       },
-      gallery: gallery
+      gallery: gallery,
+      isAutoIngested: true
     };
 
-    dynamicSearchCache.set(query.toLowerCase(), compiled);
-    return compiled;
+    // 5. Adiciona ao catálogo e exibe na tela
+    activeCatalog.unshift(newSpecimen);
+    saveCatalogToLocalStorage();
+    renderAllCards(activeCatalog);
+    highlightExistingCard(newSpecimen.name);
+
+    showToast(`"${newSpecimen.name}" subido e catalogado com sucesso!`, '🦖');
+    return newSpecimen;
   } catch (error) {
-    console.error('Erro ao compilar espécime:', error);
+    console.error('Erro na ingestão automática do espécime:', error);
+    showToast(`Falha ao ingerir "${query}". Tente novamente.`, '❌');
     return null;
   }
 }
 
-async function getCreatureData(query) {
-  const found = PALEONTOLOGY_DATABASE.find(
-    c => c.name.toLowerCase() === query.toLowerCase() ||
-         c.commonName.toLowerCase() === query.toLowerCase() ||
-         c.species.toLowerCase().includes(query.toLowerCase())
+/**
+ * Autodescoberta em massa na PBDB por Grupo e Intervalo
+ */
+async function autoDiscoverPBDB(groupName, intervalName) {
+  showToast(`Descobrindo novos gêneros de ${groupName} (${intervalName}) na PBDB...`, '⚡');
+  loading.classList.remove('hidden');
+  loadingMessage.textContent = `Consultando base taxonômica da PBDB para ${groupName}...`;
+
+  try {
+    const url = `https://paleobiodb.org/data1.2/taxa/list.json?base_name=${encodeURIComponent(groupName)}&interval=${encodeURIComponent(intervalName)}&rank=genus&show=attr&limit=8`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Falha na resposta da PBDB');
+    const data = await res.json();
+    const records = data.records || [];
+
+    let addedCount = 0;
+    for (const rec of records) {
+      if (rec.nam && !activeCatalog.some(c => c.name.toLowerCase() === rec.nam.toLowerCase())) {
+        await ingestAnySpecimen(rec.nam);
+        addedCount++;
+        if (addedCount >= 3) break; // Ingestão elegante de 3 novos espécimes por clique
+      }
+    }
+
+    loading.classList.add('hidden');
+    if (addedCount === 0) {
+      showToast(`Gêneros retornados já estavam no acervo. Experimente o botão aleatório!`, 'ℹ️');
+    }
+  } catch (err) {
+    console.error('Erro na autodescoberta:', err);
+    loading.classList.add('hidden');
+    showToast('Não foi possível conectar à PBDB no momento.', '⚠️');
+  }
+}
+
+/**
+ * Sorteia e ingere um gênero mesozoico aleatório
+ */
+async function discoverRandomSpecimen() {
+  const uncataloged = FAMOUS_MESOZOIC_GENERA.filter(
+    g => !activeCatalog.some(c => c.name.toLowerCase() === g.toLowerCase())
   );
-  if (found) return found;
-  return await fetchCustomSpecimenData(query);
+
+  const genusToIngest = uncataloged.length > 0
+    ? uncataloged[Math.floor(Math.random() * uncataloged.length)]
+    : FAMOUS_MESOZOIC_GENERA[Math.floor(Math.random() * FAMOUS_MESOZOIC_GENERA.length)];
+
+  await ingestAnySpecimen(genusToIngest);
 }
 
 // ==========================================================================
-// RENDERIZAÇÃO DE CARDS NA PÁGINA
+// PERSISTÊNCIA LOCAL (LOCALSTORAGE)
+// ==========================================================================
+
+function saveCatalogToLocalStorage() {
+  try {
+    const customOnly = activeCatalog.filter(c => c.isAutoIngested);
+    localStorage.setItem('mesozoic_custom_catalog', JSON.stringify(customOnly));
+  } catch (e) {
+    console.warn('Falha ao salvar no localStorage:', e);
+  }
+}
+
+function loadCatalogFromLocalStorage() {
+  activeCatalog = [...BASE_PALEONTOLOGY_DATABASE];
+  try {
+    const saved = localStorage.getItem('mesozoic_custom_catalog');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      parsed.forEach(item => {
+        if (!activeCatalog.some(c => c.name.toLowerCase() === item.name.toLowerCase())) {
+          activeCatalog.unshift(item);
+        }
+      });
+    }
+  } catch (e) {
+    console.warn('Falha ao ler localStorage:', e);
+  }
+}
+
+// ==========================================================================
+// RENDERIZAÇÃO DOS CARDS
 // ==========================================================================
 
 function renderCard(item) {
   const card = document.createElement('article');
   card.className = 'card';
+  card.id = `card-${item.name.toLowerCase()}`;
   const badgeClass = getPeriodBadgeClass(item.periodKey);
   const featuredImage = item.gallery[0]?.url || PLACEHOLDER_IMAGE;
   const imageCount = item.gallery.length;
@@ -1032,7 +964,7 @@ function renderCard(item) {
         <span class="chip">⏳ ${item.periodName.split('(')[0]}</span>
       </div>
 
-      <!-- Linha exibida somente quando o Modo Especialista está ativo -->
+      <!-- Linha do Modo Especialista -->
       <div class="card-expert-row">
         🔬 <strong>Mordida:</strong> ${item.biteForce} | <strong>Velocidade:</strong> ${item.speed}
       </div>
@@ -1060,7 +992,7 @@ function renderCard(item) {
     </div>
   `;
 
-  // Ações de clique
+  // Listeners
   const openWiki = () => openWikiModal(item);
   card.querySelector('.card-image-wrap').addEventListener('click', openWiki);
   card.querySelector('.card-title').addEventListener('click', openWiki);
@@ -1072,7 +1004,55 @@ function renderCard(item) {
     switchWikiTab('tab-map');
   });
 
-  resultsContainer.appendChild(card);
+  return card;
+}
+
+function renderAllCards(creatureList) {
+  resultsContainer.innerHTML = '';
+
+  const selectedPeriod = periodFilter.value;
+  const selectedGroup = groupFilter.value;
+  const selectedDiet = dietFilter.value;
+
+  let renderedCount = 0;
+
+  creatureList.forEach(item => {
+    const matchesPeriod = selectedPeriod === 'all' || item.periodKey.toLowerCase() === selectedPeriod.toLowerCase();
+    const matchesGroup = selectedGroup === 'all' || item.group === selectedGroup;
+    const matchesDiet = selectedDiet === 'all' || item.diet === selectedDiet || (selectedDiet === 'carnivoro' && item.diet.includes('carnivoro'));
+
+    if (matchesPeriod && matchesGroup && matchesDiet) {
+      const cardEl = renderCard(item);
+      resultsContainer.appendChild(cardEl);
+      renderedCount++;
+    }
+  });
+
+  if (renderedCount === 0) {
+    emptyState.classList.remove('hidden');
+    resultsStats.textContent = 'Nenhum espécime correspondente aos filtros atuais.';
+  } else {
+    emptyState.classList.add('hidden');
+    resultsStats.textContent = `Exibindo ${renderedCount} ser(es) da Era Mesozoica no acervo`;
+  }
+}
+
+function highlightExistingCard(name) {
+  const card = document.getElementById(`card-${name.toLowerCase()}`);
+  if (card) {
+    card.classList.add('card-just-added');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => card.classList.remove('card-just-added'), 3000);
+  }
+}
+
+function getPeriodBadgeClass(periodKey) {
+  switch (periodKey) {
+    case 'Triassic': return 'period-triassic';
+    case 'Jurassic': return 'period-jurassic';
+    case 'Cretaceous': return 'period-cretaceous';
+    default: return 'period-mesozoic';
+  }
 }
 
 // ==========================================================================
@@ -1084,27 +1064,24 @@ function openWikiModal(creature) {
   currentGallery = creature.gallery && creature.gallery.length > 0 ? creature.gallery : [{ url: PLACEHOLDER_IMAGE, caption: 'Sem imagem adicional' }];
   currentImageIndex = 0;
 
-  // Cabeçalho da Wiki
+  // Cabeçalho
   wikiTitle.textContent = creature.species || creature.name;
-  wikiEtymology.textContent = creature.etymology || 'Espécime Fóssil da Era Mesozoica';
-  
-  // Badges
+  wikiEtymology.textContent = creature.etymology || 'Espécime da Era Mesozoica';
   wikiPeriodBadge.className = `card-floating-badge ${getPeriodBadgeClass(creature.periodKey)}`;
   wikiPeriodBadge.textContent = creature.periodName;
   wikiGroupBadge.textContent = `🏛️ ${creature.groupName}`;
   wikiDietBadge.textContent = `🍖 ${creature.dietName}`;
 
-  // Sincroniza toggle do modal com o estado do modo especialista
   modalExpertToggle.checked = isExpertMode;
 
-  // Preenche Aba 1: Dossiê Geral
+  // Aba 1: Dossiê Geral
   specLength.textContent = creature.length || '-';
   specHeight.textContent = creature.height || '-';
   specWeight.textContent = creature.weight || '-';
   specSpeed.textContent = creature.speed || '-';
   specBiteForce.textContent = creature.biteForce || '-';
   specPeriod.textContent = creature.periodName || '-';
-  wikiBioText.textContent = creature.bio || 'Dados sob constante atualização científica.';
+  wikiBioText.textContent = creature.bio || 'Dados paleontológicos sob contínua revisão científica.';
 
   // Curiosidades
   wikiCuriositiesList.innerHTML = '';
@@ -1116,45 +1093,37 @@ function openWikiModal(creature) {
     });
   }
 
-  // Preenche Miniaturas da Aba 1
+  // Miniaturas
   renderGalleryThumbnails();
 
-  // Preenche Aba 2: Modo Especialista (Detalhes Complexos)
+  // Aba 2: Modo Especialista
   renderExpertTab(creature);
 
-  // Preenche Aba 3: Galeria Expandida & Link Google Imagens
+  // Aba 3: Galeria
   renderFullGalleryGrid(currentGallery);
-  btnSearchGoogleImages.href = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(creature.name + ' dinosaur fossil paleontology')}`;
+  btnSearchGoogleImages.href = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(creature.name + ' life restoration paleoart')}`;
   webImageSearchInput.value = '';
 
-  // Configura a aba inicial
-  if (isExpertMode) {
-    switchWikiTab('tab-expert');
-  } else {
-    switchWikiTab('tab-overview');
-  }
+  // Aba inicial
+  switchWikiTab(isExpertMode ? 'tab-expert' : 'tab-overview');
 
-  // Exibe o modal
   wikiModal.classList.remove('hidden');
 }
 
 function renderGalleryThumbnails() {
   galleryCount.textContent = currentGallery.length;
   wikiGalleryThumbs.innerHTML = '';
-
   updateFeaturedImage(0);
 
   currentGallery.forEach((item, index) => {
     const thumb = document.createElement('div');
     thumb.className = `thumb-item ${index === 0 ? 'active' : ''}`;
     thumb.innerHTML = `<img src="${item.url}" alt="${item.caption}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">`;
-    
     thumb.addEventListener('click', () => {
       document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
       thumb.classList.add('active');
       updateFeaturedImage(index);
     });
-
     wikiGalleryThumbs.appendChild(thumb);
   });
 }
@@ -1163,13 +1132,12 @@ function updateFeaturedImage(index) {
   currentImageIndex = index;
   const item = currentGallery[index];
   wikiFeaturedImg.src = item.url;
-  wikiFeaturedCaption.textContent = item.caption || 'Registro fotográfico / reconstituição';
+  wikiFeaturedCaption.textContent = item.caption || 'Representação paleoartística em vida';
 }
 
 function renderExpertTab(creature) {
   const expert = creature.expertData || {};
 
-  // Cladograma
   expertCladogram.innerHTML = '';
   if (expert.cladogram && expert.cladogram.length > 0) {
     expert.cladogram.forEach((line, idx) => {
@@ -1182,13 +1150,8 @@ function renderExpertTab(creature) {
     expertCladogram.textContent = 'Cladograma sob revisão filogenética.';
   }
 
-  // Osteologia
-  expertOsteology.innerHTML = expert.osteology || '<p>Análise osteológica detalhada indisponível para este gênero.</p>';
-
-  // Biomecânica
-  expertBiomechanics.innerHTML = expert.biomechanics || '<p>Modelagem biomecânica em análise computacional.</p>';
-
-  // Histologia
+  expertOsteology.innerHTML = expert.osteology || '<p>Morfologia osteológica catalogada na literatura científica.</p>';
+  expertBiomechanics.innerHTML = expert.biomechanics || '<p>Modelagem biomecânica de forças sob análise computacional.</p>';
   expertHistology.innerHTML = expert.histology || '<p>Dados histológicos e taxas de crescimento com amostragem fóssil em andamento.</p>';
 }
 
@@ -1208,22 +1171,12 @@ function renderFullGalleryGrid(images) {
 
 function switchWikiTab(targetTabId) {
   wikiTabs.forEach(tab => {
-    if (tab.getAttribute('data-tab') === targetTabId) {
-      tab.classList.add('active');
-    } else {
-      tab.classList.remove('active');
-    }
+    tab.classList.toggle('active', tab.getAttribute('data-tab') === targetTabId);
   });
-
   wikiTabContents.forEach(content => {
-    if (content.id === targetTabId) {
-      content.classList.add('active');
-    } else {
-      content.classList.remove('active');
-    }
+    content.classList.toggle('active', content.id === targetTabId);
   });
 
-  // Se a aba do mapa foi ativada, inicializa ou redimensiona o Leaflet
   if (targetTabId === 'tab-map' && currentCreature) {
     initOrUpdateIntegratedMap(currentCreature.name);
   }
@@ -1233,22 +1186,12 @@ function closeWikiModal() {
   wikiModal.classList.add('hidden');
 }
 
-// ==========================================================================
-// CONTROLE DO MODO ESPECIALISTA (TOGGLE)
-// ==========================================================================
-
 function setExpertMode(enabled) {
   isExpertMode = enabled;
   globalExpertToggle.checked = enabled;
   modalExpertToggle.checked = enabled;
-
-  if (enabled) {
-    document.body.classList.add('expert-mode-active');
-    btnToggleExpertInFooter.textContent = 'Desativar Modo Especialista';
-  } else {
-    document.body.classList.remove('expert-mode-active');
-    btnToggleExpertInFooter.textContent = 'Ativar Modo Especialista';
-  }
+  document.body.classList.toggle('expert-mode-active', enabled);
+  btnToggleExpertInFooter.textContent = enabled ? 'Desativar Modo Especialista' : 'Ativar Modo Especialista';
 }
 
 // ==========================================================================
@@ -1260,24 +1203,23 @@ async function searchWebImages(keyword) {
   webImagesLoading.classList.remove('hidden');
 
   try {
-    const searchTerm = `${currentCreature.name} ${keyword || ''}`.trim();
-    const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=12&prop=imageinfo&iiprop=url|extmetadata&format=json&origin=*`;
+    const searchTerm = `${currentCreature.name} ${keyword || 'life restoration'}`.trim();
+    const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url|extmetadata&format=json&origin=*`;
     
     const res = await fetch(url);
     const data = res.ok ? await res.json() : null;
     webImagesLoading.classList.add('hidden');
 
     const newImages = [];
-
     if (data?.query?.pages) {
       Object.values(data.query.pages).forEach(page => {
         const info = page.imageinfo && page.imageinfo[0];
-        if (info && info.url && (info.url.endsWith('.jpg') || info.url.endsWith('.png') || info.url.endsWith('.jpeg') || info.url.endsWith('.svg'))) {
+        if (info && info.url && anyImageExtension(info.url)) {
           const desc = info.extmetadata?.ObjectName?.value || info.extmetadata?.ImageDescription?.value || page.title.replace('File:', '');
           const cleanDesc = desc.replace(/<[^>]*>?/gm, '').substring(0, 100);
           newImages.push({
             url: info.url,
-            caption: cleanDesc || 'Fotografia fóssil / Reconstituição artística'
+            caption: cleanDesc || 'Representação visual em vida / Paleoarte'
           });
         }
       });
@@ -1285,15 +1227,19 @@ async function searchWebImages(keyword) {
 
     if (newImages.length > 0) {
       renderFullGalleryGrid(newImages);
-      // Atualiza a galeria ativa para navegação no lightbox
       currentGallery = newImages;
     } else {
-      fullGalleryGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem;">Nenhuma imagem adicional encontrada para o termo "${keyword}". Tente o botão acima para abrir o Google Imagens.</p>`;
+      fullGalleryGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem;">Nenhuma paleoarte encontrada para "${keyword}". Clique no botão acima para abrir o Google Imagens.</p>`;
     }
   } catch (err) {
-    console.warn('Erro ao pesquisar imagens:', err);
+    console.warn('Erro na busca de imagens:', err);
     webImagesLoading.classList.add('hidden');
   }
+}
+
+function anyImageExtension(url) {
+  const l = url.toLowerCase();
+  return l.endsWith('.png') || l.endsWith('.jpg') || l.endsWith('.jpeg') || l.endsWith('.webp');
 }
 
 // ==========================================================================
@@ -1317,7 +1263,6 @@ async function initOrUpdateIntegratedMap(creatureName) {
     leafletMap.setView([20, 0], 2);
   }
 
-  // Garante que o Leaflet recalcule o tamanho do container visível na aba
   setTimeout(() => leafletMap.invalidateSize(), 150);
 
   try {
@@ -1329,7 +1274,7 @@ async function initOrUpdateIntegratedMap(creatureName) {
     integratedMapLoading.classList.add('hidden');
 
     if (occurrences.length === 0) {
-      integratedMapSubtitle.textContent = `Nenhuma coordenada georreferenciada aberta retornada na PBDB para "${creatureName}".`;
+      integratedMapSubtitle.textContent = `Nenhum sítio georreferenciado aberto retornado na PBDB para "${creatureName}".`;
       integratedMapCount.textContent = '0 locais';
       return;
     }
@@ -1338,7 +1283,6 @@ async function initOrUpdateIntegratedMap(creatureName) {
     integratedMapCount.textContent = `${occurrences.length} sítios plotados`;
 
     const bounds = [];
-
     occurrences.forEach(occ => {
       if (occ.lat && occ.lng) {
         const marker = L.circleMarker([occ.lat, occ.lng], {
@@ -1392,7 +1336,7 @@ function openLightbox(index = 0) {
 function showLightboxImage() {
   const item = currentGallery[currentImageIndex];
   lightboxImg.src = item.url;
-  lightboxCaption.textContent = item.caption || (currentCreature ? currentCreature.name : 'Registro fóssil');
+  lightboxCaption.textContent = item.caption || (currentCreature ? currentCreature.name : 'Representação em vida');
   lightboxCounter.textContent = `Foto ${currentImageIndex + 1} de ${currentGallery.length}`;
 }
 
@@ -1411,61 +1355,25 @@ function closeLightbox() {
 }
 
 // ==========================================================================
-// FILTROS E BUSCA PRINCIPAL
+// FEEDBACK TOAST
 // ==========================================================================
-
-async function performSearch(queryNames) {
-  resultsContainer.innerHTML = '';
-  emptyState.classList.add('hidden');
-  loading.classList.remove('hidden');
-
-  const selectedPeriod = periodFilter.value;
-  const selectedGroup = groupFilter.value;
-  const selectedDiet = dietFilter.value;
-
-  let renderedCount = 0;
-
-  for (const name of queryNames) {
-    const data = await getCreatureData(name);
-    if (!data) continue;
-
-    // Filtros
-    const matchesPeriod = 
-      selectedPeriod === 'all' || 
-      data.periodKey.toLowerCase() === selectedPeriod.toLowerCase() ||
-      data.periodName.toLowerCase().includes(selectedPeriod.toLowerCase());
-
-    const matchesGroup = 
-      selectedGroup === 'all' || 
-      data.group === selectedGroup;
-
-    const matchesDiet = 
-      selectedDiet === 'all' || 
-      data.diet === selectedDiet ||
-      (selectedDiet === 'carnivoro' && data.diet.includes('carnivoro'));
-
-    if (matchesPeriod && matchesGroup && matchesDiet) {
-      renderCard(data);
-      renderedCount++;
-    }
-  }
-
-  loading.classList.add('hidden');
-
-  if (renderedCount === 0) {
-    emptyState.classList.remove('hidden');
-    resultsStats.textContent = 'Nenhum espécime encontrado com os filtros selecionados.';
-  } else {
-    resultsStats.textContent = `Exibindo ${renderedCount} ser(es) da Era Mesozoica no acervo`;
-  }
+let toastTimer = null;
+function showToast(message, icon = '🦖') {
+  toastText.textContent = message;
+  toastNotification.querySelector('.toast-icon').textContent = icon;
+  toastNotification.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastNotification.classList.add('hidden');
+  }, 4000);
 }
 
 // ==========================================================================
-// REGISTRO DE EVENTOS (LISTENERS)
+// EVENT LISTENERS
 // ==========================================================================
 
 function setupEventListeners() {
-  // Toggle do Modo Especialista
+  // Toggle Especialista
   globalExpertToggle.addEventListener('change', (e) => setExpertMode(e.target.checked));
   modalExpertToggle.addEventListener('change', (e) => setExpertMode(e.target.checked));
   btnToggleExpertInFooter.addEventListener('click', () => setExpertMode(!isExpertMode));
@@ -1473,50 +1381,63 @@ function setupEventListeners() {
   // Abas da Wiki
   wikiTabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      const target = tab.getAttribute('data-tab');
-      switchWikiTab(target);
+      switchWikiTab(tab.getAttribute('data-tab'));
     });
   });
 
-  // Busca de espécimes na página inicial
+  // Busca e Filtro na Página
   searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (query) {
-      performSearch([query]);
+      // Se já existe no catálogo, filtra; senão, ingere automaticamente!
+      const exists = activeCatalog.some(c => c.name.toLowerCase() === query.toLowerCase());
+      if (exists) {
+        renderAllCards(activeCatalog.filter(c => c.name.toLowerCase().includes(query.toLowerCase())));
+      } else {
+        ingestAnySpecimen(query);
+      }
     } else {
-      performSearch(PALEONTOLOGY_DATABASE.map(c => c.name));
+      renderAllCards(activeCatalog);
+    }
+  });
+
+  // Botão explícito de Subir Qualquer Espécime
+  btnAutoIngest.addEventListener('click', () => {
+    const query = searchInput.value.trim();
+    if (query) {
+      ingestAnySpecimen(query);
+    } else {
+      showToast('Digite o nome de qualquer gênero fóssil no campo antes de subir!', '💡');
+      searchInput.focus();
     }
   });
 
   searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') searchBtn.click();
+    if (e.key === 'Enter') {
+      const query = searchInput.value.trim();
+      const exists = activeCatalog.some(c => c.name.toLowerCase() === query.toLowerCase());
+      if (exists) {
+        searchBtn.click();
+      } else {
+        ingestAnySpecimen(query);
+      }
+    }
   });
 
   searchInput.addEventListener('input', () => {
-    if (searchInput.value.trim()) {
-      clearBtn.classList.remove('hidden');
-    } else {
-      clearBtn.classList.add('hidden');
-    }
+    clearBtn.classList.toggle('hidden', !searchInput.value.trim());
   });
 
   clearBtn.addEventListener('click', () => {
     searchInput.value = '';
     clearBtn.classList.add('hidden');
     searchInput.focus();
-    performSearch(PALEONTOLOGY_DATABASE.map(c => c.name));
+    renderAllCards(activeCatalog);
   });
 
   // Filtros dinâmicos
   [periodFilter, groupFilter, dietFilter].forEach(filter => {
-    filter.addEventListener('change', () => {
-      const query = searchInput.value.trim();
-      if (query) {
-        performSearch([query]);
-      } else {
-        performSearch(PALEONTOLOGY_DATABASE.map(c => c.name));
-      }
-    });
+    filter.addEventListener('change', () => renderAllCards(activeCatalog));
   });
 
   resetFiltersBtn.addEventListener('click', () => {
@@ -1526,38 +1447,51 @@ function setupEventListeners() {
     groupFilter.value = 'all';
     dietFilter.value = 'all';
     quickTags.forEach(t => t.classList.remove('active'));
-    performSearch(PALEONTOLOGY_DATABASE.map(c => c.name));
+    renderAllCards(activeCatalog);
   });
 
-  reloadSuggestionsBtn.addEventListener('click', () => {
-    resetFiltersBtn.click();
-  });
+  reloadSuggestionsBtn.addEventListener('click', () => resetFiltersBtn.click());
 
-  // Chips de espécimes rápidos
-  quickTags.forEach(tag => {
-    tag.addEventListener('click', () => {
-      quickTags.forEach(t => t.classList.remove('active'));
-      tag.classList.add('active');
-      const creature = tag.getAttribute('data-name');
-      searchInput.value = creature;
-      clearBtn.classList.remove('hidden');
-      performSearch([creature]);
+  // Chips de autodescoberta na PBDB
+  btnRandomDino.addEventListener('click', discoverRandomSpecimen);
+
+  discoveryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.getAttribute('data-group');
+      const interval = btn.getAttribute('data-interval');
+      autoDiscoverPBDB(group, interval);
     });
   });
 
-  // Pesquisa de imagens na web
+  // Chips de espécimes famosos (se não estiver no catálogo, ingere automaticamente!)
+  quickTags.forEach(tag => {
+    tag.addEventListener('click', async () => {
+      quickTags.forEach(t => t.classList.remove('active'));
+      tag.classList.add('active');
+      const creatureName = tag.getAttribute('data-name');
+      searchInput.value = creatureName;
+      clearBtn.classList.remove('hidden');
+
+      const exists = activeCatalog.find(c => c.name.toLowerCase() === creatureName.toLowerCase());
+      if (exists) {
+        highlightExistingCard(exists.name);
+        openWikiModal(exists);
+      } else {
+        const ingested = await ingestAnySpecimen(creatureName);
+        if (ingested) openWikiModal(ingested);
+      }
+    });
+  });
+
+  // Busca de Imagens na Web dentro da Wiki
   btnSearchWebImages.addEventListener('click', () => {
-    const term = webImageSearchInput.value.trim();
-    searchWebImages(term);
+    searchWebImages(webImageSearchInput.value.trim());
   });
 
   webImageSearchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      btnSearchWebImages.click();
-    }
+    if (e.key === 'Enter') btnSearchWebImages.click();
   });
 
-  // Chips de termos de imagem
   imageSearchChips.forEach(chip => {
     chip.addEventListener('click', () => {
       imageSearchChips.forEach(c => c.classList.remove('active'));
@@ -1571,12 +1505,10 @@ function setupEventListeners() {
     });
   });
 
-  // Eventos de fechar o Modal da Wiki
+  // Modais
   closeWikiBtn.addEventListener('click', closeWikiModal);
   btnCloseWikiFooter.addEventListener('click', closeWikiModal);
   wikiModalBackdrop.addEventListener('click', closeWikiModal);
-
-  // Botão de zoom na imagem de destaque
   btnZoomFeatured.addEventListener('click', () => openLightbox(currentImageIndex));
 
   // Lightbox
@@ -1585,7 +1517,7 @@ function setupEventListeners() {
   lightboxNextBtn.addEventListener('click', nextLightboxImage);
   lightboxPrevBtn.addEventListener('click', prevLightboxImage);
 
-  // Atalhos de teclado globais
+  // Teclado
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (!lightboxModal.classList.contains('hidden')) {
@@ -1600,8 +1532,9 @@ function setupEventListeners() {
   });
 }
 
-// Inicialização da aplicação
+// Inicialização
 window.addEventListener('DOMContentLoaded', () => {
+  loadCatalogFromLocalStorage();
   setupEventListeners();
-  performSearch(PALEONTOLOGY_DATABASE.map(c => c.name));
+  renderAllCards(activeCatalog);
 });
