@@ -1831,10 +1831,26 @@ const EMBEDDED_CATALOG = [
   }
 ];
 
-// Base inteligente da API FastAPI
-const API_BASE = (window.location.protocol.startsWith('http') && window.location.port === '8000')
-  ? ''
-  : 'http://localhost:8000';
+// Base inteligente da API FastAPI (compatível com qualquer porta: 8000, 8001, 8080, etc.)
+let API_BASE = window.location.protocol.startsWith('http') ? '' : 'http://localhost:8000';
+
+// Se acessado localmente via file://, detecta automaticamente qual porta do FastAPI está ativa
+if (!window.location.protocol.startsWith('http')) {
+  (async function detectActivePort() {
+    for (const p of [8000, 8001, 8002, 8080, 8888]) {
+      try {
+        const testRes = await fetch(`http://localhost:${p}/api/stats`, { signal: AbortSignal.timeout(600) });
+        if (testRes.ok) {
+          API_BASE = `http://localhost:${p}`;
+          console.log(`[SuperWiki] Conectado à API FastAPI em http://localhost:${p}`);
+          break;
+        }
+      } catch (e) {
+        // tenta próxima porta
+      }
+    }
+  })();
+}
 
 // Estado Global da Aplicação
 const state = {
