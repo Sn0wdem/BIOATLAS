@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Explorador da Era Mesozoica | Fósseis & Criaturas</title>
-  <meta name="description" content="Explore dinossauros, pterossauros e répteis marinhos dos períodos Triássico, Jurássico e Cretáceo com dados científicos da Paleobiology Database e Wikipedia.">
+  <title>Explorador da Era Mesozoica | Wiki Paleontológica Interativa</title>
+  <meta name="description" content="Wiki interativa da Era Mesozoica: explore fichas técnicas completas, anatomia, fósseis e galerias de imagens de dinossauros, pterossauros e répteis marinhos.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,10 +15,10 @@
 <body>
   <header class="hero">
     <div class="hero-content">
-      <div class="logo-tag">PaleoExplorer • 252 a 66 Ma</div>
-      <h1 class="hero-title">Explorador da Era Mesozoica</h1>
+      <div class="logo-tag">Mesozoic Wiki • 252 a 66 Ma</div>
+      <h1 class="hero-title">Enciclopédia da Era Mesozoica</h1>
       <p class="hero-subtitle">
-        Descubra dinossauros, pterossauros e répteis marinhos que dominaram a Terra durante o 
+        Dossiês científicos interativos, anatomia, galerias de imagens e dados fósseis do 
         <strong class="highlight-triassic">Triássico</strong>, 
         <strong class="highlight-jurassic">Jurássico</strong> e 
         <strong class="highlight-cretaceous">Cretáceo</strong>.
@@ -33,7 +33,7 @@
           <input 
             type="text" 
             id="searchInput" 
-            placeholder="Digite o nome (ex: Tyrannosaurus, Velociraptor, Mosasaurus, Stegosaurus)..." 
+            placeholder="Digite o nome (ex: Tyrannosaurus, Velociraptor, Mosasaurus, Spinosaurus)..." 
             autocomplete="off"
           >
           <button id="clearBtn" class="clear-btn hidden" title="Limpar busca">&times;</button>
@@ -71,7 +71,7 @@
           </div>
 
           <button id="searchBtn" class="primary-btn">
-            <span>Explorar</span>
+            <span>Explorar Wiki</span>
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -80,16 +80,17 @@
 
         <!-- Quick Tags -->
         <div class="quick-tags">
-          <span class="quick-label">Sugestões rápidas:</span>
+          <span class="quick-label">Espécimes em Destaque:</span>
           <div class="tags-container">
             <button class="tag-chip" data-name="Tyrannosaurus">T-Rex</button>
-            <button class="tag-chip" data-name="Triceratops">Triceratops</button>
             <button class="tag-chip" data-name="Spinosaurus">Spinosaurus</button>
+            <button class="tag-chip" data-name="Triceratops">Triceratops</button>
             <button class="tag-chip" data-name="Velociraptor">Velociraptor</button>
             <button class="tag-chip" data-name="Stegosaurus">Stegosaurus</button>
             <button class="tag-chip" data-name="Brachiosaurus">Brachiosaurus</button>
             <button class="tag-chip" data-name="Pteranodon">Pteranodon</button>
             <button class="tag-chip" data-name="Mosasaurus">Mosasaurus</button>
+            <button class="tag-chip" data-name="Carnotaurus">Carnotaurus</button>
             <button class="tag-chip" data-name="Ankylosaurus">Ankylosaurus</button>
             <button class="tag-chip" data-name="Plesiosaurus">Plesiosaurus</button>
             <button class="tag-chip" data-name="Coelophysis">Coelophysis</button>
@@ -101,7 +102,7 @@
 
   <main class="container">
     <div class="results-header">
-      <div id="resultsStats" class="results-stats">Exibindo seres mesozoicos catalogados</div>
+      <div id="resultsStats" class="results-stats">Carregando acervo paleontológico...</div>
       <div class="view-actions">
         <button id="resetFiltersBtn" class="secondary-btn">Resetar Filtros</button>
       </div>
@@ -110,7 +111,7 @@
     <!-- Status / Loading -->
     <div id="loading" class="loading-state hidden">
       <div class="fossil-spinner"></div>
-      <p class="loading-text">Escavando registros fósseis na Paleobiology Database & Wikipedia...</p>
+      <p class="loading-text">Consultando arquivos fósseis e galerias anatômicas...</p>
     </div>
 
     <!-- Feedback vazio -->
@@ -118,14 +119,144 @@
       <div class="empty-icon">🦴</div>
       <h3>Nenhum registro fóssil encontrado</h3>
       <p>Tente ajustar os filtros ou pesquisar pelo nome científico do gênero (ex: <em>Allosaurus</em>, <em>Carnotaurus</em>, <em>Diplodocus</em>).</p>
-      <button id="reloadSuggestionsBtn" class="primary-btn mt-3">Recarregar Sugestões</button>
+      <button id="reloadSuggestionsBtn" class="primary-btn mt-3">Recarregar Acervo Principal</button>
     </div>
 
     <!-- Grid de Cards -->
     <section id="results" class="grid-container" aria-live="polite"></section>
   </main>
 
-  <!-- Modal do Mapa de Fósseis -->
+  <!-- =======================================================================
+       MODAL 1: WIKI INTERATIVA / DOSSIÊ DO ESPÉCIME
+       ======================================================================= -->
+  <div id="wikiModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="wikiTitle">
+    <div class="modal-backdrop" id="wikiModalBackdrop"></div>
+    <div class="modal-content wiki-modal-content">
+      <div class="modal-header wiki-modal-header">
+        <div class="wiki-header-info">
+          <div class="wiki-badge-row">
+            <span id="wikiPeriodBadge" class="card-floating-badge period-cretaceous">Cretáceo</span>
+            <span id="wikiGroupBadge" class="chip">Dinossauro</span>
+            <span id="wikiDietBadge" class="chip">Carnívoro</span>
+          </div>
+          <h2 id="wikiTitle" class="wiki-heading">Tyrannosaurus rex</h2>
+          <p id="wikiEtymology" class="wiki-etymology">"Rei dos lagartos tiranos" • Descoberto em 1902 por Barnum Brown</p>
+        </div>
+        <button id="closeWikiBtn" class="close-btn" aria-label="Fechar Wiki">&times;</button>
+      </div>
+
+      <div class="modal-body wiki-modal-body">
+        <!-- Layout em 2 colunas: Galeria à esquerda, Ficha Técnica à direita -->
+        <div class="wiki-grid">
+          <!-- Coluna da Galeria Interativa -->
+          <div class="wiki-gallery-col">
+            <div class="featured-image-wrapper">
+              <img id="wikiFeaturedImg" src="" alt="Destaque do espécime" class="featured-img">
+              <button id="btnZoomFeatured" class="zoom-btn" title="Ampliar imagem em pop-up">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                </svg>
+                <span>Ampliar Foto</span>
+              </button>
+              <div id="wikiFeaturedCaption" class="featured-caption">Reconstituição paleoartística em vida</div>
+            </div>
+
+            <!-- Miniaturas para navegar pelas fotos -->
+            <div class="gallery-thumbs-header">
+              <span>Galeria de Imagens & Fósseis (<span id="galleryCount">0</span>)</span>
+              <span class="gallery-hint">Clique para alternar</span>
+            </div>
+            <div id="wikiGalleryThumbs" class="gallery-thumbs-scroll">
+              <!-- Injetado dinamicamente via JS -->
+            </div>
+          </div>
+
+          <!-- Coluna da Ficha Técnica & Anatomia -->
+          <div class="wiki-specs-col">
+            <h3 class="section-title">📊 Ficha Técnica Paleontológica</h3>
+            <div class="specs-grid">
+              <div class="spec-card">
+                <span class="spec-label">Comprimento</span>
+                <span id="specLength" class="spec-value">-</span>
+              </div>
+              <div class="spec-card">
+                <span class="spec-label">Altura</span>
+                <span id="specHeight" class="spec-value">-</span>
+              </div>
+              <div class="spec-card">
+                <span class="spec-label">Peso Estimado</span>
+                <span id="specWeight" class="spec-value">-</span>
+              </div>
+              <div class="spec-card">
+                <span class="spec-label">Velocidade Máxima</span>
+                <span id="specSpeed" class="spec-value">-</span>
+              </div>
+              <div class="spec-card">
+                <span class="spec-label">Período Geológico</span>
+                <span id="specPeriod" class="spec-value">-</span>
+              </div>
+              <div class="spec-card">
+                <span class="spec-label">Localização Fóssil</span>
+                <span id="specLocation" class="spec-value">-</span>
+              </div>
+            </div>
+
+            <h3 class="section-title mt-4">🦴 Biologia e Anatomia</h3>
+            <div id="wikiBioText" class="wiki-text-block">
+              <!-- Texto detalhado gerado -->
+            </div>
+
+            <h3 class="section-title mt-4">💡 Curiosidades Paleontológicas</h3>
+            <ul id="wikiCuriositiesList" class="curiosities-list">
+              <!-- Lista de curiosidades -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer wiki-modal-footer">
+        <button id="btnOpenMapFromWiki" class="btn-card-map">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+            <line x1="8" y1="2" x2="8" y2="18"></line>
+            <line x1="16" y1="6" x2="16" y2="22"></line>
+          </svg>
+          Mapear Ocorrências Fósseis no Globo
+        </button>
+        <span class="wiki-source-note">Wiki Interativa Própria • Dados de domínio paleontológico aberto</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 2: POP-UP LIGHTBOX DE IMAGENS EM TELA CHEIA
+       ======================================================================= -->
+  <div id="lightboxModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Visualizador de Imagem">
+    <div class="modal-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-container">
+      <button id="closeLightboxBtn" class="lightbox-close" aria-label="Fechar visualizador">&times;</button>
+      
+      <button id="lightboxPrevBtn" class="lightbox-arrow left" aria-label="Imagem anterior">
+        &#10094;
+      </button>
+
+      <div class="lightbox-content">
+        <img id="lightboxImg" src="" alt="Imagem do espécime ampliada">
+        <div class="lightbox-caption-bar">
+          <span id="lightboxCaption">Reconstituição paleoartística</span>
+          <span id="lightboxCounter" class="lightbox-counter">1 de 4</span>
+        </div>
+      </div>
+
+      <button id="lightboxNextBtn" class="lightbox-arrow right" aria-label="Próxima imagem">
+        &#10095;
+      </button>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 3: MAPA LEAFLET DE OCORRÊNCIAS FÓSSEIS
+       ======================================================================= -->
   <div id="mapModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-backdrop" id="modalBackdrop"></div>
     <div class="modal-content">
@@ -153,12 +284,12 @@
   <footer class="footer">
     <div class="footer-content">
       <p>
-        <strong>Explorador da Era Mesozoica</strong> — Projeto Open-Source de Divulgação Científica.
+        <strong>Enciclopédia & Wiki da Era Mesozoica</strong> — Dossiês paleontológicos interativos integrados.
       </p>
       <p class="sources">
-        Consome dados abertos em tempo real da 
-        <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a> e da 
-        <a href="https://www.wikipedia.org/" target="_blank" rel="noopener">Wikipedia REST API</a>.
+        Consome dados científicos abertos da 
+        <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database</a> e do acervo científico livre da 
+        <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>.
       </p>
     </div>
   </footer>

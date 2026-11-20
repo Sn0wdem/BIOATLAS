@@ -16,8 +16,12 @@
   - Carnívoros, Herbívoros e Piscívoros.
 - 🗺️ **Mapa Global de Ocorrências Fósseis (Leaflet.js + PBDB)**:
   - Visualize no mapa mundial os locais exatos onde os fósseis daquele animal foram desenterrados pela ciência, incluindo formação rochosa e país de origem.
-- 📖 **Artigos e Imagens Oficiais**:
-  - Resumos automáticos e fotografias/reconstituições obtidas diretamente da Wikipedia (com suporte a PT e fallback para EN).
+- 📖 **Wiki & Dossiê Paleontológico Interno (100% no App)**:
+  - Ficha técnica completa de cada criatura dentro da própria aplicação (comprimento, altura, peso, velocidade, dieta, etimologia e curiosidades).
+  - Nunca redireciona o usuário para links externos da Wikipedia.
+- 🖼️ **Pop-up Interativo de Múltiplas Imagens (Lightbox)**:
+  - Galeria de cada espécime com reconstituições em vida, montagens de esqueletos fósseis, crânios e comparativo de tamanho com a escala humana.
+  - Pop-up em tela cheia com navegação por setas (anterior / próxima) e atalhos de teclado (`←`, `→`, `ESC`).
 - ⚡ **Zero Dependências Pesadas**:
   - Desenvolvido em HTML5, CSS3 moderno e Vanilla JavaScript, permitindo hospedagem estática 100% gratuita no **GitHub Pages** ou **Vercel**.
 
