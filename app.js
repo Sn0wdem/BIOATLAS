@@ -129,6 +129,95 @@ const FAMOUS_MESOZOIC_GENERA = [
 // ==========================================================================
 // ACERVO INICIAL BASE COM REPRESENTAÇÕES VISUAIS EM VIDA (PALEOARTE)
 // ==========================================================================
+// ==========================================================================
+// RESILIÊNCIA DE IMAGENS & MAPEAMENTO DE GÊNEROS (PORTUGUÊS / SINÔNIMOS)
+// ==========================================================================
+
+// Fallback multi-nível para imagens
+window.handleImageFallback = function(imgEl) {
+  try {
+    const raw = imgEl.getAttribute('data-fallbacks');
+    if (raw) {
+      const fallbacks = JSON.parse(raw);
+      let idx = parseInt(imgEl.getAttribute('data-img-index') || '0', 10);
+      if (idx < fallbacks.length) {
+        imgEl.setAttribute('data-img-index', (idx + 1).toString());
+        imgEl.src = fallbacks[idx];
+        return;
+      }
+    }
+  } catch (e) {}
+  imgEl.onerror = null;
+  imgEl.src = PLACEHOLDER_IMAGE;
+};
+
+// Mapeamento de termos e nomes populares em português para o gênero taxonômico científico
+const GENUS_NAME_MAP = {
+  't-rex': 'Tyrannosaurus',
+  'trex': 'Tyrannosaurus',
+  't rex': 'Tyrannosaurus',
+  'tiranossauro': 'Tyrannosaurus',
+  'tiranossauro rex': 'Tyrannosaurus',
+  'tyranno': 'Tyrannosaurus',
+  'tyrannossauro': 'Tyrannosaurus',
+  'tyrannosaurus rex': 'Tyrannosaurus',
+  'espinossauro': 'Spinosaurus',
+  'spino': 'Spinosaurus',
+  'triceratopo': 'Triceratops',
+  'triceratops': 'Triceratops',
+  'trike': 'Triceratops',
+  'velociraptor': 'Velociraptor',
+  'veloci': 'Velociraptor',
+  'raptor': 'Velociraptor',
+  'estegossauro': 'Stegosaurus',
+  'stego': 'Stegosaurus',
+  'braquiossauro': 'Brachiosaurus',
+  'brachio': 'Brachiosaurus',
+  'alossauro': 'Allosaurus',
+  'allo': 'Allosaurus',
+  'pteranodonte': 'Pteranodon',
+  'pterodactilo': 'Pteranodon',
+  'pterodáctilo': 'Pteranodon',
+  'mosassauro': 'Mosasaurus',
+  'mossassauro': 'Mosasaurus',
+  'carnotauro': 'Carnotaurus',
+  'anquilossauro': 'Ankylosaurus',
+  'anquilosauro': 'Ankylosaurus',
+  'plesiossauro': 'Plesiosaurus',
+  'plesiosauro': 'Plesiosaurus',
+  'celofise': 'Coelophysis',
+  'celófise': 'Coelophysis',
+  'terizinossauro': 'Therizinosaurus',
+  'terizinosauro': 'Therizinosaurus',
+  'argentinossauro': 'Argentinosaurus',
+  'argentinosauro': 'Argentinosaurus',
+  'giganotossauro': 'Giganotosaurus',
+  'giganotosauro': 'Giganotosaurus',
+  'deinonico': 'Deinonychus',
+  'dilofossauro': 'Dilophosaurus',
+  'dilofosauro': 'Dilophosaurus',
+  'paquicefalossauro': 'Pachycephalosaurus',
+  'barionix': 'Baryonyx',
+  'quetzalcoatl': 'Quetzalcoatlus',
+  'quetzalcoatlus': 'Quetzalcoatlus',
+  'tapejara': 'Tapejara',
+  'tupandactilo': 'Tupandactylus',
+  'amargassauro': 'Amargasaurus',
+  'majungassauro': 'Majungasaurus',
+  'sauroposeidon': 'Sauroposeidon',
+  'carcharodontossauro': 'Carcharodontosaurus',
+  'dromeossauro': 'Dromaeosaurus',
+  'iguanodonte': 'Iguanodon',
+  'parassaurolofo': 'Parasaurolophus',
+  'coritossauro': 'Corythosaurus',
+  'edmontossauro': 'Edmontosaurus',
+  'microraptor': 'Microraptor',
+  'liopleurodonte': 'Liopleurodon',
+  'ictiossauro': 'Ichthyosaurus',
+  'sarcosuco': 'Sarcosuchus',
+  'deinossuco': 'Deinosuchus'
+};
+
 const BASE_PALEONTOLOGY_DATABASE = [
   {
     name: 'Tyrannosaurus',
@@ -173,6 +262,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Tyrannosaurus_rex_mmartyniuk.png/500px-Tyrannosaurus_rex_mmartyniuk.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida com plumagem parcial (Martyniuk)'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Tyrannosaurus_Rex%2C_Expo_Dinosaurios_2023_-_A740976.jpg/500px-Tyrannosaurus_Rex%2C_Expo_Dinosaurios_2023_-_A740976.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Tyrannosaurus em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Tyrannosaurus_mcraeensis.png/500px-Tyrannosaurus_mcraeensis.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Tyrannosaurus em vida'
       }
     ]
   },
@@ -212,6 +309,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Spinosaurus_aegyptiacus_life_reconstruction.png/500px-Spinosaurus_aegyptiacus_life_reconstruction.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida nadando com vela e cauda em remo'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Life_reconstruction_of_Spinosaurus_aegyptiacus.png/500px-Life_reconstruction_of_Spinosaurus_aegyptiacus.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Spinosaurus em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Spinosaurus_life_restoration_based_on_fossil_reconstruction.png/500px-Spinosaurus_life_restoration_based_on_fossil_reconstruction.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Spinosaurus em vida'
       }
     ]
   },
@@ -249,6 +354,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Juvenile_reconstruction_of_Triceratops.png/500px-Juvenile_reconstruction_of_Triceratops.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida do Triceratops em seu habitat'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Triceratops_TD.png/500px-Triceratops_TD.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Triceratops em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Triceratops_horridus.png/500px-Triceratops_horridus.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Triceratops em vida'
       }
     ]
   },
@@ -286,6 +399,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Velociraptor_Restoration.png/500px-Velociraptor_Restoration.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida com plumagem realista e asas'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Velociraptor_Restoration.png/500px-Velociraptor_Restoration.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Velociraptor em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Velociraptor_TD.png/500px-Velociraptor_TD.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Velociraptor em vida'
       }
     ]
   },
@@ -323,6 +444,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Stegosaurus_stenops_Life_Reconstruction.png/500px-Stegosaurus_stenops_Life_Reconstruction.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida do Stegosaurus com placas e tagomizador'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Stegosaurus_TD.png/500px-Stegosaurus_TD.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Stegosaurus em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Stegosaurus_stenops.png/500px-Stegosaurus_stenops.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Stegosaurus em vida'
       }
     ]
   },
@@ -360,6 +489,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Brachiosaurus_altithorax_side_profile.png/500px-Brachiosaurus_altithorax_side_profile.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida em perfil completo'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Brachiosaurus_TD.png/500px-Brachiosaurus_TD.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Brachiosaurus em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Brachiosaurus_altithorax_%28d%C3%A9tour%C3%A9%29.png/500px-Brachiosaurus_altithorax_%28d%C3%A9tour%C3%A9%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Brachiosaurus em vida'
       }
     ]
   },
@@ -397,6 +534,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Allosaurus_Juvenile_Reconstruction.jpg/500px-Allosaurus_Juvenile_Reconstruction.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida do Allosaurus em caçada ativa'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Allosaurus_Jaws_Steveoc86.jpg/500px-Allosaurus_Jaws_Steveoc86.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Allosaurus em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Allosaurus_Life_Restoration.jpg/500px-Allosaurus_Life_Restoration.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Allosaurus em vida'
       }
     ]
   },
@@ -434,6 +579,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Pteranodon_longiceps_mmartyniuk_wiki.png/330px-Pteranodon_longiceps_mmartyniuk_wiki.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida do Pteranodon em pleno voo'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Pteranodon_TD.png/500px-Pteranodon_TD.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Pteranodon em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Pteranodon_cranial_anatomy.jpg/500px-Pteranodon_cranial_anatomy.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Pteranodon em vida'
       }
     ]
   },
@@ -471,6 +624,10 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Mosasaurus_hoffmanni_life.jpg/500px-Mosasaurus_hoffmanni_life.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida do Mosasaurus caçando no oceano'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Mosasaurus_hoffmanni_life.jpg/500px-Mosasaurus_hoffmanni_life.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Mosasaurus em vida'
       }
     ]
   },
@@ -508,6 +665,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Carnotaurus_Reconstruction_%282022%29.png/500px-Carnotaurus_Reconstruction_%282022%29.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida atualizada com chifres frontais'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Carnotaurus_Reconstruction_%282022%29.png/500px-Carnotaurus_Reconstruction_%282022%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Carnotaurus em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Carnotaurus_TD.png/500px-Carnotaurus_TD.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Carnotaurus em vida'
       }
     ]
   },
@@ -545,6 +710,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Ankylosaurus_magniventris_by_sphenaphinae.png/500px-Ankylosaurus_magniventris_by_sphenaphinae.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida com blindagem e clava caudal'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/202007_Ankylosaurus_magniventris.svg/500px-202007_Ankylosaurus_magniventris.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Ankylosaurus em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Ankylosaurus_2026.jpg/500px-Ankylosaurus_2026.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Ankylosaurus em vida'
       }
     ]
   },
@@ -582,6 +755,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Plesiosaurus_dolichodeirus.png/500px-Plesiosaurus_dolichodeirus.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida nadando com pescoço esguio'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/In_the_Days_of_the_Sea_Monsters_Plesiosaurus_and_Ichthyosaurus_b1072272_018_tif_9s161666b.tif/lossless-page1-500px-In_the_Days_of_the_Sea_Monsters_Plesiosaurus_and_Ichthyosaurus_b1072272_018_tif_9s161666b.tif.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Plesiosaurus em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Plesiosaurus_dolichodeirus.png/500px-Plesiosaurus_dolichodeirus.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Plesiosaurus em vida'
       }
     ]
   },
@@ -619,6 +800,14 @@ const BASE_PALEONTOLOGY_DATABASE = [
       {
         url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Coelophysis_Jeff_Martz.jpg/500px-Coelophysis_Jeff_Martz.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail',
         caption: 'Representação paleoartística em vida do corredor triássico (Jeff Martz)'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Coelophysis_TD.png/500px-Coelophysis_TD.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Coelophysis em vida'
+      },
+      {
+        url: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Coelophysis_fossilized_position_038.JPG/500px-Coelophysis_fossilized_position_038.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+        caption: 'Reconstrução de Coelophysis em vida'
       }
     ]
   }
@@ -627,6 +816,54 @@ const BASE_PALEONTOLOGY_DATABASE = [
 // ==========================================================================
 // MOTOR DE INGESTÃO AUTOMÁTICA DE QUALQUER ESPÉCIME MESOZOICO
 // ==========================================================================
+
+/**
+ * Minera a melhor representação visual em vida (paleoarte colorida)
+ * a partir da lista de mídias da Wikipedia ou Commons.
+ */
+
+/**
+ * Minera representações visuais em vida diretamente da Wikimedia Commons Action API
+ * usando thumbnail padronizado de 500px (seguro contra 429 e restrições de tamanho).
+ */
+async function fetchCommonsLifeRestorations(genusName) {
+  try {
+    const queries = [
+      `${genusName} life restoration`,
+      `${genusName} paleoart`,
+      `${genusName} reconstruction`
+    ];
+    const results = [];
+    const seen = new Set();
+
+    for (const q of queries) {
+      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=500&format=json&origin=*`;
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      const data = await res.json();
+      const pages = data.query?.pages || {};
+
+      for (const page of Object.values(pages)) {
+        const info = page.imageinfo && page.imageinfo[0];
+        const thumbUrl = info?.thumburl || (info?.responsiveUrls && info.responsiveUrls['2']);
+        if (thumbUrl && !seen.has(thumbUrl)) {
+          seen.add(thumbUrl);
+          const desc = info.extmetadata?.ObjectName?.value || info.extmetadata?.ImageDescription?.value || page.title.replace('File:', '');
+          const cleanDesc = desc.replace(/<[^>]*>?/gm, '').replace(/_/g, ' ').substring(0, 100);
+          results.push({
+            url: thumbUrl,
+            caption: cleanDesc || `Reconstituição paleoartística em vida de ${genusName}`
+          });
+        }
+      }
+      if (results.length >= 3) break;
+    }
+    return results;
+  } catch (err) {
+    console.warn('Erro ao consultar Commons:', err);
+    return [];
+  }
+}
 
 /**
  * Minera a melhor representação visual em vida (paleoarte colorida)
@@ -652,23 +889,24 @@ function extractBestLifeRestoration(mediaItems, genusName) {
     if (title.includes('restoration') || caption.includes('restoration')) score += 20;
     if (title.includes('reconstruction') || caption.includes('reconstruction')) score += 18;
     if (title.includes('life') || caption.includes('life')) score += 15;
-    if (title.includes('paleoart') || caption.includes('paleoart')) score += 12;
+    if (title.includes('paleoart') || caption.includes('paleoart')) score += 15;
     if (title.includes('profile') || caption.includes('profile')) score += 8;
     if (title.includes('model') || caption.includes('model')) score += 6;
     if (title.includes('in life') || caption.includes('in life') || caption.includes('em vida')) score += 20;
 
     // Penalizações para fósseis, ossos isolados, diagramas e mapas
-    if (title.includes('skelet') || caption.includes('skelet')) score -= 8;
-    if (title.includes('skull') || caption.includes('skull')) score -= 6;
-    if (title.includes('fossil') || caption.includes('fossil')) score -= 8;
-    if (title.includes('bone') || caption.includes('bone')) score -= 10;
-    if (title.includes('teeth') || caption.includes('teeth')) score -= 10;
-    if (title.includes('diagram') || title.includes('chart') || title.includes('map') || title.includes('cladogram')) score -= 25;
+    if (title.includes('skelet') || caption.includes('skelet')) score -= 12;
+    if (title.includes('skull') || caption.includes('skull')) score -= 10;
+    if (title.includes('fossil') || caption.includes('fossil')) score -= 12;
+    if (title.includes('bone') || caption.includes('bone')) score -= 14;
+    if (title.includes('teeth') || caption.includes('teeth')) score -= 14;
+    if (title.includes('diagram') || title.includes('chart') || title.includes('map') || title.includes('cladogram')) score -= 30;
     if (title.includes('.svg') && !title.includes('life')) score -= 5;
 
     if (score > highestScore) {
       highestScore = score;
-      let url = srcs[srcs.length - 1].src;
+      let chosenSrc = srcs.find(s => s.src.includes('/500px-') || s.src.includes('/320px-')) || srcs[0];
+      let url = chosenSrc.src;
       if (url.startsWith('//')) url = 'https:' + url;
 
       const cleanCaption = item.caption?.text || item.title?.replace('File:', '').replace(/_/g, ' ') || `Representação paleoartística de ${genusName}`;
@@ -697,7 +935,7 @@ function deducePeriodFromPBDB(tei = '', tli = '') {
 }
 
 /**
- * Duz o grupo/habitat a partir da taxonomia
+ * Deduz o grupo/habitat a partir da taxonomia
  */
 function deduceGroupFromTaxon(taxon) {
   const t = JSON.stringify(taxon || {}).toLowerCase();
@@ -712,25 +950,39 @@ function deduceGroupFromTaxon(taxon) {
 
 /**
  * INGESTÃO AUTOMÁTICA DE QUALQUER ESPÉCIME
- * Consulta PBDB, Wikipedia PT/EN e Media-List para minerar representações visuais em vida.
+ * Consulta Commons Action API, PBDB, Wikipedia PT/EN e Media-List para minerar representações visuais em vida.
  */
 async function ingestAnySpecimen(rawQuery) {
-  const query = rawQuery.trim();
-  if (!query) return null;
+  const inputQuery = rawQuery.trim();
+  if (!inputQuery) return null;
+
+  // Normaliza nome comum em português para o gênero taxonômico científico
+  const query = GENUS_NAME_MAP[inputQuery.toLowerCase()] || inputQuery;
 
   // 1. Verifica se já existe no catálogo carregado
-  const existing = activeCatalog.find(c => c.name.toLowerCase() === query.toLowerCase());
+  const existing = activeCatalog.find(c => 
+    c.name.toLowerCase() === query.toLowerCase() || 
+    c.name.toLowerCase() === inputQuery.toLowerCase() ||
+    (c.commonName && c.commonName.toLowerCase().includes(inputQuery.toLowerCase()))
+  );
   if (existing) {
     showToast(`O espécime "${existing.name}" já está no catálogo!`, '🦕');
+    periodFilter.value = 'all';
+    groupFilter.value = 'all';
+    dietFilter.value = 'all';
+    renderAllCards(activeCatalog.filter(c => c.name.toLowerCase() === existing.name.toLowerCase()));
     highlightExistingCard(existing.name);
     return existing;
   }
 
-  showToast(`Escavando e minerando representação visual em vida de "${query}"...`, '⛏️');
+  showToast(`Escavando e minerando reconstituição em vida de "${query}"...`, '⛏️');
+  loading.classList.remove('hidden');
+  loadingMessage.textContent = `Buscando paleoarte e registros fósseis de ${query}...`;
 
   try {
-    // 2. Consulta paralela: PBDB Taxon, Wikipedia Summary e Media List
-    const [pbdbRes, wikiPtRes, wikiEnRes, mediaListRes] = await Promise.allSettled([
+    // 2. Consulta paralela: Commons Action API (garante foto 500px), PBDB Taxon, Wikipedia PT/EN e Media List
+    const [commonsImgs, pbdbRes, wikiPtRes, wikiEnRes, mediaListRes] = await Promise.allSettled([
+      fetchCommonsLifeRestorations(query),
       fetch(`https://paleobiodb.org/data1.2/taxa/single.json?name=${encodeURIComponent(query)}&show=attr,app`),
       fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`),
       fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`),
@@ -757,38 +1009,50 @@ async function ingestAnySpecimen(rawQuery) {
       mediaItems = mediaJson.items || [];
     }
 
-    if (!wikiData && !taxon) {
-      showToast(`Gênero "${query}" não encontrado na PBDB ou Wikipedia. Verifique a grafia.`, '⚠️');
+    const verifiedCommons = commonsImgs.status === 'fulfilled' ? commonsImgs.value : [];
+
+    if (!wikiData && !taxon && verifiedCommons.length === 0) {
+      loading.classList.add('hidden');
+      showToast(`Gênero "${inputQuery}" não encontrado na PBDB ou enciclopédia. Verifique a grafia.`, '⚠️');
       return null;
     }
 
-    // 3. Mineração da representação visual em vida (Life Restoration)
-    const bestLifeRestoration = extractBestLifeRestoration(mediaItems, query);
-    const fallbackImage = wikiData?.thumbnail?.source || wikiData?.originalimage?.source || PLACEHOLDER_IMAGE;
-
+    // 3. Mineração e ranking da galeria de representações visuais em vida
     const gallery = [];
-    if (bestLifeRestoration) {
-      gallery.push(bestLifeRestoration);
-    } else {
+    const seenUrls = new Set();
+
+    // Prioridade 1: Imagens de Paleoarte mineradas da Commons Action API (garantidas 500px)
+    verifiedCommons.forEach(img => {
+      if (!seenUrls.has(img.url)) {
+        seenUrls.add(img.url);
+        gallery.push(img);
+      }
+    });
+
+    // Prioridade 2: Melhor restauração em vida da Media-List da Wikipedia
+    const bestLifeRestoration = extractBestLifeRestoration(mediaItems, query);
+    if (bestLifeRestoration && !seenUrls.has(bestLifeRestoration.url)) {
+      seenUrls.add(bestLifeRestoration.url);
+      gallery.unshift(bestLifeRestoration);
+    }
+
+    // Prioridade 3: Thumbnail da página da Wikipedia
+    const wikiThumb = wikiData?.thumbnail?.source;
+    if (wikiThumb && !seenUrls.has(wikiThumb)) {
+      seenUrls.add(wikiThumb);
       gallery.push({
-        url: fallbackImage,
+        url: wikiThumb,
         caption: `Representação visual de ${wikiData?.title || query}`
       });
     }
 
-    // Adiciona fotos complementares (outras paleoartes ou esqueletos)
-    mediaItems.slice(0, 5).forEach(item => {
-      if (item.type === 'image' && item.srcset && item.srcset.length > 0) {
-        let u = item.srcset[item.srcset.length - 1].src;
-        if (u.startsWith('//')) u = 'https:' + u;
-        if (u !== gallery[0].url) {
-          gallery.push({
-            url: u,
-            caption: item.caption?.text || item.title?.replace('File:', '') || 'Registro paleontológico'
-          });
-        }
-      }
-    });
+    // Prioridade 4: Se ainda não tiver imagem, adiciona o placeholder resiliente
+    if (gallery.length === 0) {
+      gallery.push({
+        url: PLACEHOLDER_IMAGE,
+        caption: `Representação visual de ${wikiData?.title || query}`
+      });
+    }
 
     // 4. Dedução de metadados geológicos e ecológicos
     const periodData = deducePeriodFromPBDB(taxon?.tei, taxon?.tli);
@@ -835,13 +1099,18 @@ async function ingestAnySpecimen(rawQuery) {
     // 5. Adiciona ao catálogo e exibe na tela
     activeCatalog.unshift(newSpecimen);
     saveCatalogToLocalStorage();
-    renderAllCards(activeCatalog);
+    loading.classList.add('hidden');
+    periodFilter.value = 'all';
+    groupFilter.value = 'all';
+    dietFilter.value = 'all';
+    renderAllCards(activeCatalog.filter(c => c.name.toLowerCase() === newSpecimen.name.toLowerCase()));
     highlightExistingCard(newSpecimen.name);
 
     showToast(`"${newSpecimen.name}" subido e catalogado com sucesso!`, '🦖');
     return newSpecimen;
   } catch (error) {
     console.error('Erro na ingestão automática do espécime:', error);
+    loading.classList.add('hidden');
     showToast(`Falha ao ingerir "${query}". Tente novamente.`, '❌');
     return null;
   }
@@ -867,7 +1136,7 @@ async function autoDiscoverPBDB(groupName, intervalName) {
       if (rec.nam && !activeCatalog.some(c => c.name.toLowerCase() === rec.nam.toLowerCase())) {
         await ingestAnySpecimen(rec.nam);
         addedCount++;
-        if (addedCount >= 3) break; // Ingestão elegante de 3 novos espécimes por clique
+        if (addedCount >= 3) break;
       }
     }
 
@@ -898,13 +1167,78 @@ async function discoverRandomSpecimen() {
 }
 
 // ==========================================================================
+// BUSCA E FILTROS INTELIGENTES NO ACERVO
+// ==========================================================================
+
+/**
+ * Pesquisa no acervo por nome científico, nome popular em português, espécie, grupo ou dieta
+ */
+function searchCatalog(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) return activeCatalog;
+  const mapped = GENUS_NAME_MAP[q] || q;
+
+  return activeCatalog.filter(c => {
+    const n = c.name.toLowerCase();
+    const cn = (c.commonName || '').toLowerCase();
+    const sp = (c.species || '').toLowerCase();
+    const grp = (c.groupName || '').toLowerCase();
+    const grpKey = (c.group || '').toLowerCase();
+    const dt = (c.dietName || '').toLowerCase();
+    const dtKey = (c.diet || '').toLowerCase();
+    const per = (c.periodName || '').toLowerCase();
+    const perKey = (c.periodKey || '').toLowerCase();
+
+    return n.includes(q) || n.includes(mapped.toLowerCase()) ||
+           cn.includes(q) || sp.includes(q) ||
+           grp.includes(q) || grpKey.includes(q) ||
+           dt.includes(q) || dtKey.includes(q) ||
+           per.includes(q) || perKey.includes(q);
+  });
+}
+
+/**
+ * Handler central do buscador principal
+ */
+async function handleMainSearch(forceIngest = false) {
+  const rawQuery = searchInput.value.trim();
+  if (!rawQuery) {
+    renderAllCards(activeCatalog);
+    return;
+  }
+
+  // 1. Procura primeiro no catálogo já carregado
+  const matches = searchCatalog(rawQuery);
+  if (matches.length > 0 && !forceIngest) {
+    periodFilter.value = 'all';
+    groupFilter.value = 'all';
+    dietFilter.value = 'all';
+    renderAllCards(matches);
+    highlightExistingCard(matches[0].name);
+    showToast(`Encontrado: ${matches[0].name} (${matches.length} resultado(s))`, '🔍');
+    return;
+  }
+
+  // 2. Não encontrado ou forçado: Ingerir novo espécime automaticamente!
+  const mapped = GENUS_NAME_MAP[rawQuery.toLowerCase()] || rawQuery;
+  const newSpecimen = await ingestAnySpecimen(mapped);
+  if (newSpecimen) {
+    periodFilter.value = 'all';
+    groupFilter.value = 'all';
+    dietFilter.value = 'all';
+    renderAllCards(activeCatalog.filter(c => c.name.toLowerCase() === newSpecimen.name.toLowerCase()));
+    highlightExistingCard(newSpecimen.name);
+  }
+}
+
+// ==========================================================================
 // PERSISTÊNCIA LOCAL (LOCALSTORAGE)
 // ==========================================================================
 
 function saveCatalogToLocalStorage() {
   try {
     const customOnly = activeCatalog.filter(c => c.isAutoIngested);
-    localStorage.setItem('mesozoic_custom_catalog', JSON.stringify(customOnly));
+    localStorage.setItem('mesozoic_custom_catalog_v2', JSON.stringify(customOnly));
   } catch (e) {
     console.warn('Falha ao salvar no localStorage:', e);
   }
@@ -913,11 +1247,12 @@ function saveCatalogToLocalStorage() {
 function loadCatalogFromLocalStorage() {
   activeCatalog = [...BASE_PALEONTOLOGY_DATABASE];
   try {
-    const saved = localStorage.getItem('mesozoic_custom_catalog');
+    const saved = localStorage.getItem('mesozoic_custom_catalog_v2') || localStorage.getItem('mesozoic_custom_catalog');
     if (saved) {
       const parsed = JSON.parse(saved);
       parsed.forEach(item => {
-        if (!activeCatalog.some(c => c.name.toLowerCase() === item.name.toLowerCase())) {
+        const hasValidImage = item.gallery && item.gallery.length > 0 && item.gallery[0].url && !item.gallery[0].url.startsWith('data:image/svg+xml');
+        if (hasValidImage && !activeCatalog.some(c => c.name.toLowerCase() === item.name.toLowerCase())) {
           activeCatalog.unshift(item);
         }
       });
@@ -928,20 +1263,24 @@ function loadCatalogFromLocalStorage() {
 }
 
 // ==========================================================================
-// RENDERIZAÇÃO DOS CARDS
+// RENDERIZAÇÃO DOS CARDS COM MULTI-FALLBACK DE IMAGENS
 // ==========================================================================
 
 function renderCard(item) {
   const card = document.createElement('article');
   card.className = 'card';
-  card.id = `card-${item.name.toLowerCase()}`;
+  const cleanId = item.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+  card.id = `card-${cleanId}`;
   const badgeClass = getPeriodBadgeClass(item.periodKey);
-  const featuredImage = item.gallery[0]?.url || PLACEHOLDER_IMAGE;
-  const imageCount = item.gallery.length;
+
+  const galleryUrls = (item.gallery || []).map(g => g.url).filter(Boolean);
+  const featuredImage = galleryUrls[0] || PLACEHOLDER_IMAGE;
+  const fallbacksJson = JSON.stringify(galleryUrls.slice(1)).replace(/"/g, '&quot;');
+  const imageCount = galleryUrls.length;
 
   card.innerHTML = `
     <div class="card-image-wrap" title="Clique para abrir a Wiki do ${item.name}">
-      <img src="${featuredImage}" alt="${item.name}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">
+      <img src="${featuredImage}" alt="${item.name}" loading="lazy" referrerpolicy="no-referrer" data-img-index="0" data-fallbacks="${fallbacksJson}" onerror="window.handleImageFallback(this)">
       <span class="card-floating-badge ${badgeClass}">${item.periodName.split(' ')[0]}</span>
       <span class="card-image-hint">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
@@ -1038,7 +1377,8 @@ function renderAllCards(creatureList) {
 }
 
 function highlightExistingCard(name) {
-  const card = document.getElementById(`card-${name.toLowerCase()}`);
+  const cleanId = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+  const card = document.getElementById(`card-${cleanId}`);
   if (card) {
     card.classList.add('card-just-added');
     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1130,8 +1470,9 @@ function renderGalleryThumbnails() {
 
 function updateFeaturedImage(index) {
   currentImageIndex = index;
-  const item = currentGallery[index];
+  const item = currentGallery[index] || { url: PLACEHOLDER_IMAGE, caption: 'Representação em vida' };
   wikiFeaturedImg.src = item.url;
+  wikiFeaturedImg.onerror = () => { wikiFeaturedImg.onerror = null; wikiFeaturedImg.src = PLACEHOLDER_IMAGE; };
   wikiFeaturedCaption.textContent = item.caption || 'Representação paleoartística em vida';
 }
 
@@ -1195,7 +1536,7 @@ function setExpertMode(enabled) {
 }
 
 // ==========================================================================
-// BUSCA INTERATIVA DE IMAGENS NA WEB (COMMONS API & CHIPS)
+// BUSCA INTERATIVA DE IMAGENS NA WEB (COMMONS ACTION API COM IIURLWIDTH=500)
 // ==========================================================================
 
 async function searchWebImages(keyword) {
@@ -1204,7 +1545,7 @@ async function searchWebImages(keyword) {
 
   try {
     const searchTerm = `${currentCreature.name} ${keyword || 'life restoration'}`.trim();
-    const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url|extmetadata&format=json&origin=*`;
+    const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrnamespace=6&gsrlimit=16&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=500&format=json&origin=*`;
     
     const res = await fetch(url);
     const data = res.ok ? await res.json() : null;
@@ -1214,13 +1555,16 @@ async function searchWebImages(keyword) {
     if (data?.query?.pages) {
       Object.values(data.query.pages).forEach(page => {
         const info = page.imageinfo && page.imageinfo[0];
-        if (info && info.url && anyImageExtension(info.url)) {
-          const desc = info.extmetadata?.ObjectName?.value || info.extmetadata?.ImageDescription?.value || page.title.replace('File:', '');
-          const cleanDesc = desc.replace(/<[^>]*>?/gm, '').substring(0, 100);
-          newImages.push({
-            url: info.url,
-            caption: cleanDesc || 'Representação visual em vida / Paleoarte'
-          });
+        if (info) {
+          const safeUrl = info.thumburl || (info.responsiveUrls && info.responsiveUrls['2']) || info.url;
+          if (safeUrl) {
+            const desc = info.extmetadata?.ObjectName?.value || info.extmetadata?.ImageDescription?.value || page.title.replace('File:', '');
+            const cleanDesc = desc.replace(/<[^>]*>?/gm, '').replace(/_/g, ' ').substring(0, 120);
+            newImages.push({
+              url: safeUrl,
+              caption: cleanDesc || `Reconstituição paleoartística de ${currentCreature.name}`
+            });
+          }
         }
       });
     }
@@ -1279,51 +1623,54 @@ async function initOrUpdateIntegratedMap(creatureName) {
       return;
     }
 
-    integratedMapSubtitle.textContent = `Exibindo ${occurrences.length} locais de escavação georreferenciados no registro fóssil`;
-    integratedMapCount.textContent = `${occurrences.length} sítios plotados`;
+    integratedMapSubtitle.textContent = `Sítios fósseis georreferenciados catalogados pela Paleobiology Database:`;
+    integratedMapCount.textContent = `${occurrences.length} ocorrências mapeadas`;
 
     const bounds = [];
+
     occurrences.forEach(occ => {
       if (occ.lat && occ.lng) {
-        const marker = L.circleMarker([occ.lat, occ.lng], {
-          radius: 7,
-          fillColor: '#ea580c',
-          color: '#ffffff',
-          weight: 1.5,
-          opacity: 1,
-          fillOpacity: 0.85
+        const lat = parseFloat(occ.lat);
+        const lng = parseFloat(occ.lng);
+        bounds.push([lat, lng]);
+
+        const markerColor = '#e67e22';
+        const markerHtml = `
+          <div style="background-color: ${markerColor}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 0 8px rgba(0,0,0,0.6);"></div>
+        `;
+
+        const customIcon = L.divIcon({
+          className: 'custom-fossil-pin',
+          html: markerHtml,
+          iconSize: [14, 14],
+          iconAnchor: [7, 7]
         });
 
-        const locationDesc = occ.cc2 ? `País: ${occ.cc2}` : 'Local fóssil';
-        const formation = occ.sfm || occ.gfn ? `<br><strong>Formação:</strong> ${occ.sfm || occ.gfn}` : '';
-        const interval = occ.eag && occ.lag ? `<br><strong>Datação:</strong> ${occ.eag} a ${occ.lag} Ma` : '';
-
+        const marker = L.marker([lat, lng], { icon: customIcon });
         marker.bindPopup(`
-          <div style="font-family: inherit; font-size: 0.85rem;">
-            <strong style="color: #ea580c; font-size: 0.95rem;">${creatureName}</strong><br>
-            <span>${locationDesc}</span>
-            ${formation}
-            ${interval}
+          <div style="font-family: inherit; color: #1a1d1a; padding: 4px; max-width: 240px;">
+            <strong style="color: #2e7d32; font-size: 1.05rem;">⛏️ ${occ.tna || creatureName}</strong><br>
+            <span style="font-size: 0.85rem; color: #555;">📍 <strong>Local:</strong> ${occ.cc || ''} ${occ.stp || ''} (${occ.cny || 'Estrato fóssil'})</span><br>
+            <span style="font-size: 0.85rem; color: #555;">⏳ <strong>Idade Geológica:</strong> ${occ.eag || ''} a ${occ.lag || ''} Ma</span><br>
+            <small style="color: #888;">Registro PBDB # ${occ.oid || 'N/A'}</small>
           </div>
         `);
-
         leafletMarkersLayer.addLayer(marker);
-        bounds.push([occ.lat, occ.lng]);
       }
     });
 
     if (bounds.length > 0) {
-      leafletMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 5 });
+      leafletMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 6 });
     }
   } catch (err) {
-    console.error('Erro no mapa PBDB integrado:', err);
+    console.error('Erro ao plotar mapa na Wiki:', err);
     integratedMapLoading.classList.add('hidden');
-    integratedMapSubtitle.textContent = 'Não foi possível carregar as coordenadas da PBDB no momento.';
+    integratedMapSubtitle.textContent = 'Falha temporária ao conectar com os servidores da PBDB.';
   }
 }
 
 // ==========================================================================
-// LIGHTBOX POP-UP DE IMAGENS EM TELA CHEIA
+// LIGHTBOX MODAL
 // ==========================================================================
 
 function openLightbox(index = 0) {
@@ -1336,8 +1683,9 @@ function openLightbox(index = 0) {
 function showLightboxImage() {
   const item = currentGallery[currentImageIndex];
   lightboxImg.src = item.url;
-  lightboxCaption.textContent = item.caption || (currentCreature ? currentCreature.name : 'Representação em vida');
-  lightboxCounter.textContent = `Foto ${currentImageIndex + 1} de ${currentGallery.length}`;
+  lightboxImg.onerror = () => { lightboxImg.onerror = null; lightboxImg.src = PLACEHOLDER_IMAGE; };
+  lightboxCaption.textContent = item.caption || 'Representação paleoartística em vida';
+  lightboxCounter.textContent = `${currentImageIndex + 1} de ${currentGallery.length}`;
 }
 
 function nextLightboxImage() {
@@ -1355,16 +1703,19 @@ function closeLightbox() {
 }
 
 // ==========================================================================
-// FEEDBACK TOAST
+// TOAST NOTIFICATIONS
 // ==========================================================================
-let toastTimer = null;
+
 function showToast(message, icon = '🦖') {
-  toastText.textContent = message;
-  toastNotification.querySelector('.toast-icon').textContent = icon;
+  if (!toastNotification) return;
+  toastText.textContent = `${icon} ${message}`;
   toastNotification.classList.remove('hidden');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    toastNotification.classList.add('hidden');
+  toastNotification.classList.add('visible');
+
+  clearTimeout(toastNotification._timer);
+  toastNotification._timer = setTimeout(() => {
+    toastNotification.classList.remove('visible');
+    setTimeout(() => toastNotification.classList.add('hidden'), 300);
   }, 4000);
 }
 
@@ -1386,46 +1737,39 @@ function setupEventListeners() {
   });
 
   // Busca e Filtro na Página
-  searchBtn.addEventListener('click', () => {
-    const query = searchInput.value.trim();
-    if (query) {
-      // Se já existe no catálogo, filtra; senão, ingere automaticamente!
-      const exists = activeCatalog.some(c => c.name.toLowerCase() === query.toLowerCase());
-      if (exists) {
-        renderAllCards(activeCatalog.filter(c => c.name.toLowerCase().includes(query.toLowerCase())));
-      } else {
-        ingestAnySpecimen(query);
-      }
-    } else {
-      renderAllCards(activeCatalog);
-    }
-  });
+  searchBtn.addEventListener('click', () => handleMainSearch());
 
   // Botão explícito de Subir Qualquer Espécime
   btnAutoIngest.addEventListener('click', () => {
-    const query = searchInput.value.trim();
-    if (query) {
-      ingestAnySpecimen(query);
-    } else {
+    const val = searchInput.value.trim();
+    if (!val) {
       showToast('Digite o nome de qualquer gênero fóssil no campo antes de subir!', '💡');
       searchInput.focus();
+    } else {
+      handleMainSearch(true);
     }
   });
 
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-      const query = searchInput.value.trim();
-      const exists = activeCatalog.some(c => c.name.toLowerCase() === query.toLowerCase());
-      if (exists) {
-        searchBtn.click();
-      } else {
-        ingestAnySpecimen(query);
-      }
+      e.preventDefault();
+      handleMainSearch();
     }
   });
 
+  // Busca em tempo real ao digitar (2+ caracteres)
   searchInput.addEventListener('input', () => {
-    clearBtn.classList.toggle('hidden', !searchInput.value.trim());
+    const val = searchInput.value.trim();
+    clearBtn.classList.toggle('hidden', !val);
+
+    if (val.length >= 2) {
+      const matches = searchCatalog(val);
+      if (matches.length > 0) {
+        renderAllCards(matches);
+      }
+    } else if (val.length === 0) {
+      renderAllCards(activeCatalog);
+    }
   });
 
   clearBtn.addEventListener('click', () => {
@@ -1437,7 +1781,11 @@ function setupEventListeners() {
 
   // Filtros dinâmicos
   [periodFilter, groupFilter, dietFilter].forEach(filter => {
-    filter.addEventListener('change', () => renderAllCards(activeCatalog));
+    filter.addEventListener('change', () => {
+      const query = searchInput.value.trim();
+      const baseList = query ? searchCatalog(query) : activeCatalog;
+      renderAllCards(baseList);
+    });
   });
 
   resetFiltersBtn.addEventListener('click', () => {
@@ -1463,7 +1811,7 @@ function setupEventListeners() {
     });
   });
 
-  // Chips de espécimes famosos (se não estiver no catálogo, ingere automaticamente!)
+  // Chips de espécimes famosos
   quickTags.forEach(tag => {
     tag.addEventListener('click', async () => {
       quickTags.forEach(t => t.classList.remove('active'));
@@ -1472,12 +1820,17 @@ function setupEventListeners() {
       searchInput.value = creatureName;
       clearBtn.classList.remove('hidden');
 
-      const exists = activeCatalog.find(c => c.name.toLowerCase() === creatureName.toLowerCase());
+      const mapped = GENUS_NAME_MAP[creatureName.toLowerCase()] || creatureName;
+      const exists = activeCatalog.find(c => c.name.toLowerCase() === mapped.toLowerCase() || c.name.toLowerCase() === creatureName.toLowerCase());
       if (exists) {
+        periodFilter.value = 'all';
+        groupFilter.value = 'all';
+        dietFilter.value = 'all';
+        renderAllCards(activeCatalog.filter(c => c.name.toLowerCase() === exists.name.toLowerCase()));
         highlightExistingCard(exists.name);
         openWikiModal(exists);
       } else {
-        const ingested = await ingestAnySpecimen(creatureName);
+        const ingested = await ingestAnySpecimen(mapped);
         if (ingested) openWikiModal(ingested);
       }
     });
