@@ -2319,8 +2319,19 @@ const state = {
   lightboxImages: [],
   lightboxIndex: 0,
   galleryActiveCategory: 'all',
-  leafletMap: null,
-  mapMarkersGroup: null,
+  globeScene: null,
+  globeCamera: null,
+  globeRenderer: null,
+  globeMesh: null,
+  globeAtmosphere: null,
+  globeMarkersGroup: null,
+  globeInteractiveMarkers: [],
+  globeAutoRotate: true,
+  globeAnimId: null,
+  globeIsDragging: false,
+  globeTargetRotationY: 0,
+  globeTargetRotationX: 0,
+  globePrimaryPoint: null,
   isBackendOnline: false
 };
 
@@ -3070,6 +3081,9 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
   wikiModal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
   switchWikiTab(initialTab);
+
+  // Renderiza e atualiza o Globo Terrestre 3D do lado das informações!
+  update3DGlobeForSpecimen(spec);
 }
 
 
@@ -3190,8 +3204,8 @@ function switchWikiTab(tabId) {
     content.classList.toggle('active', content.id === tabId);
   });
 
-  if (tabId === 'tab-map') {
-    renderGlobalMap(state.selectedSpecimen);
+  if (tabId === 'tab-overview' && state.selectedSpecimen) {
+    setTimeout(onGlobeResize, 60);
   }
 }
 
@@ -3199,94 +3213,856 @@ function switchWikiTab(tabId) {
 function closeWikiModal() {
   wikiModal.classList.add('hidden');
   document.body.style.overflow = '';
+  if (state.globeAnimId) {
+    cancelAnimationFrame(state.globeAnimId);
+    state.globeAnimId = null;
+  }
 }
 
 
 // ============================================================================
-// MAPA GLOBAL INTERATIVO (GBIF PARA VIVENTES & PBDB PARA FÓSSEIS)
+// GLOBO TERRESTRE 3D INTERATIVO (THREE.JS) - LOCALIDADES & OCORRÊNCIAS
 // ============================================================================
 
-async function renderGlobalMap(specimen) {
-  if (!specimen) return;
+const SPECIMEN_COORDINATES_MAP = {
+  "baleia-azul": [
+    { lat: -64.8, lng: -63.5, locality: "Península Antártica", country: "Oceano Austral", formation: "Zona Pelágica", age_str: "Vivente (GBIF)" },
+    { lat: 50.2, lng: -128.5, locality: "Ilha de Vancouver", country: "Canadá / Pacífico Norte", formation: "Águas Costeiras", age_str: "Vivente (GBIF)" },
+    { lat: 66.5, lng: -18.2, locality: "Costa da Islândia", country: "Atlântico Norte", formation: "Águas Subpolares", age_str: "Vivente (GBIF)" },
+    { lat: -32.0, lng: 115.0, locality: "Perth Canyon", country: "Austrália Ocidental", formation: "Oceano Índico", age_str: "Vivente (GBIF)" }
+  ],
+  "onca-pintada": [
+    { lat: -16.5, lng: -56.5, locality: "Pantanal Norte (Poconé)", country: "Brasil (Mato Grosso)", formation: "Bioma Pantanal", age_str: "Vivente (GBIF)" },
+    { lat: -3.1, lng: -60.0, locality: "Bacia do Rio Negro", country: "Brasil (Amazonas)", formation: "Floresta Amazônica", age_str: "Vivente (GBIF)" },
+    { lat: -25.6, lng: -54.4, locality: "Parque Nacional do Iguaçu", country: "Brasil (Paraná)", formation: "Mata Atlântica", age_str: "Vivente (GBIF)" },
+    { lat: 18.5, lng: -89.5, locality: "Reserva de Calakmul", country: "México (Campeche)", formation: "Selva Maia", age_str: "Vivente (GBIF)" }
+  ],
+  "polvo-comum": [
+    { lat: 36.5, lng: -6.3, locality: "Golfo de Cádis", country: "Espanha / Mediterrâneo", formation: "Zona Bentônica Costeira", age_str: "Vivente (GBIF)" },
+    { lat: -23.0, lng: -44.3, locality: "Baía de Ilha Grande", country: "Brasil (Rio de Janeiro)", formation: "Recifes e Costões", age_str: "Vivente (GBIF)" },
+    { lat: 34.5, lng: 135.0, locality: "Mar Interior de Seto", country: "Japão", formation: "Substrato Rochoso", age_str: "Vivente (GBIF)" }
+  ],
+  "tubarao-branco": [
+    { lat: -34.6, lng: 19.4, locality: "Gansbaai / Dyer Island", country: "África do Sul", formation: "Águas Costeiras Temperadas", age_str: "Vivente (GBIF)" },
+    { lat: -35.1, lng: 136.1, locality: "Ilhas Neptune", country: "Austrália do Sul", formation: "Plataforma Continental", age_str: "Vivente (GBIF)" },
+    { lat: 37.8, lng: -123.0, locality: "Ilhas Farallon", country: "Estados Unidos (Califórnia)", formation: "Pacífico Oriental", age_str: "Vivente (GBIF)" },
+    { lat: 29.0, lng: -118.3, locality: "Ilha Guadalupe", country: "México (Baja California)", formation: "Águas Oceânicas Claras", age_str: "Vivente (GBIF)" }
+  ],
+  "anomalocaris": [
+    { lat: 51.4, lng: -116.5, locality: "Burgess Shale (Fossil Ridge)", country: "Canadá (Colúmbia Britânica)", formation: "Formação Stephen", age_str: "508 Ma (Cambriano)" },
+    { lat: 39.3, lng: -113.3, locality: "House Range", country: "Estados Unidos (Utah)", formation: "Formação Wheeler", age_str: "505 Ma (Cambriano)" },
+    { lat: 24.8, lng: 102.9, locality: "Biota de Chengjiang", country: "China (Yunnan)", formation: "Folhelho Maotianshan", age_str: "518 Ma (Cambriano)" }
+  ],
+  "arthropleura": [
+    { lat: 55.9, lng: -3.2, locality: "Craigentinny & Edimburgo", country: "Escócia", formation: "Midland Valley Coal", age_str: "315 Ma (Carbonífero)" },
+    { lat: 50.4, lng: 3.8, locality: "Bacia Huller / Nord-Pas-de-Calais", country: "França / Bélgica", formation: "Camadas de Carvão", age_str: "310 Ma (Carbonífero)" },
+    { lat: 41.3, lng: -88.3, locality: "Mazon Creek", country: "Estados Unidos (Illinois)", formation: "Formação Francis Creek", age_str: "307 Ma (Carbonífero)" }
+  ],
+  "basilosaurus": [
+    { lat: 29.3, lng: 30.0, locality: "Wadi Al-Hitan (Vale das Baleias)", country: "Egito (Faiyum)", formation: "Formação Birket Qarun", age_str: "40 - 35 Ma (Eoceno)" },
+    { lat: 31.8, lng: -88.2, locality: "Condado de Choctaw", country: "Estados Unidos (Alabama)", formation: "Formação Jackson", age_str: "38 Ma (Eoceno)" },
+    { lat: 32.3, lng: -90.2, locality: "Bacia do Rio Pearl", country: "Estados Unidos (Mississippi)", formation: "Formação Moodys Branch", age_str: "37 Ma (Eoceno)" }
+  ],
+  "brachiosaurus": [
+    { lat: 39.1, lng: -108.6, locality: "Grand River Valley (Fruita)", country: "Estados Unidos (Colorado)", formation: "Formação Morrison", age_str: "154 - 150 Ma (Jurássico)" },
+    { lat: 40.4, lng: -109.3, locality: "Dinosaur National Monument", country: "Estados Unidos (Utah)", formation: "Formação Morrison", age_str: "152 Ma (Jurássico)" },
+    { lat: 42.8, lng: -106.3, locality: "Como Bluff / Bone Cabin Quarry", country: "Estados Unidos (Wyoming)", formation: "Formação Morrison", age_str: "150 Ma (Jurássico)" }
+  ],
+  "charnia": [
+    { lat: 52.7, lng: -1.3, locality: "Floresta de Charnwood", country: "Inglaterra (Leicestershire)", formation: "Formação Bradgate", age_str: "570 - 560 Ma (Ediacarano)" },
+    { lat: 46.6, lng: -53.2, locality: "Mistaken Point", country: "Canadá (Terra Nova)", formation: "Formação Drook / Conception", age_str: "565 Ma (Ediacarano)" },
+    { lat: 65.5, lng: 39.5, locality: "Costa de Zimnii Bereg (Mar Branco)", country: "Rússia (Arkhangelsk)", formation: "Formação Ust-Pinega", age_str: "555 Ma (Ediacarano)" }
+  ],
+  "dickinsonia": [
+    { lat: -31.4, lng: 138.4, locality: "Ediacara Hills (Nilpena)", country: "Austrália do Sul", formation: "Arenito Pound", age_str: "555 Ma (Ediacarano)" },
+    { lat: 65.6, lng: 40.2, locality: "Península de Onega", country: "Rússia (Mar Branco)", formation: "Formação Erga", age_str: "558 Ma (Ediacarano)" },
+    { lat: 51.2, lng: 27.5, locality: "Podolia", country: "Ucrânia", formation: "Série Mogilev", age_str: "550 Ma (Ediacarano)" }
+  ],
+  "dimetrodon": [
+    { lat: 33.8, lng: -99.4, locality: "Seymour / Red Beds", country: "Estados Unidos (Texas)", formation: "Grupo Clear Fork", age_str: "285 Ma (Permiano)" },
+    { lat: 35.2, lng: -97.5, locality: "Condado de Cleveland", country: "Estados Unidos (Oklahoma)", formation: "Formação Garber", age_str: "280 Ma (Permiano)" },
+    { lat: 50.8, lng: 10.5, locality: "Bromacker Quarry (Floresta da Turíngia)", country: "Alemanha", formation: "Formação Tambach", age_str: "290 Ma (Permiano)" }
+  ],
+  "dunkleosteus": [
+    { lat: 41.5, lng: -81.7, locality: "Cleveland / Rocky River", country: "Estados Unidos (Ohio)", formation: "Folhelho Cleveland", age_str: "360 Ma (Devoniano)" },
+    { lat: 31.2, lng: -4.3, locality: "Tafilalt / Bacia de Draa", country: "Marrocos", formation: "Estratos Kellwasser", age_str: "365 Ma (Devoniano)" },
+    { lat: 50.7, lng: 7.2, locality: "Maciço Renano", country: "Alemanha", formation: "Calcário de Bergisch Gladbach", age_str: "365 Ma (Devoniano)" }
+  ],
+  "gorgonops": [
+    { lat: -32.3, lng: 22.5, locality: "Bacia do Karoo (Beaufort West)", country: "África do Sul", formation: "Grupo Beaufort (Zona Tropidostoma)", age_str: "255 Ma (Permiano)" },
+    { lat: -9.5, lng: 34.0, locality: "Bacia do Rio Ruhuhu", country: "Tanzânia", formation: "Formação Usili", age_str: "256 Ma (Permiano)" },
+    { lat: -13.1, lng: 31.8, locality: "Vale do Rio Luangwa", country: "Zâmbia", formation: "Formação Madumabisa Mudstone", age_str: "255 Ma (Permiano)" }
+  ],
+  "mammuthus": [
+    { lat: 71.0, lng: 149.0, locality: "Península de Yamal / Rio Kolyma", country: "Rússia (Sibéria)", formation: "Permafrost / Pleistoceno", age_str: "40.000 - 4.000 anos" },
+    { lat: 71.2, lng: -179.5, locality: "Ilha de Wrangel", country: "Rússia (Ártico)", formation: "Refúgio Holoceno Tardio", age_str: "4.000 anos (Extinção)" },
+    { lat: 64.0, lng: -139.4, locality: "Dawson City (Klondike)", country: "Canadá (Yukon)", formation: "Camadas de Cascalho Dourado", age_str: "30.000 anos" },
+    { lat: 43.4, lng: -103.5, locality: "Mammoth Site (Hot Springs)", country: "Estados Unidos (Dakota do Sul)", formation: "Depósito de Sinkhole", age_str: "26.000 anos" }
+  ],
+  "meganeura": [
+    { lat: 46.2, lng: 2.9, locality: "Commentry", country: "França (Allier)", formation: "Terreno Carbonífero de Commentry", age_str: "300 Ma (Carbonífero)" },
+    { lat: 53.0, lng: -2.2, locality: "North Staffordshire Coalfield", country: "Inglaterra", formation: "Upper Coal Measures", age_str: "305 Ma (Carbonífero)" }
+  ],
+  "megatherium": [
+    { lat: -19.6, lng: -43.9, locality: "Grutas de Lagoa Santa", country: "Brasil (Minas Gerais)", formation: "Depósito Cársico Pleistocênico", age_str: "12.000 anos" },
+    { lat: -38.0, lng: -57.5, locality: "Mar del Plata / Rio Quequén", country: "Argentina (Pampas)", formation: "Formação Miramar", age_str: "100.000 anos" },
+    { lat: -8.8, lng: -42.5, locality: "Serra da Capivara", country: "Brasil (Piauí)", formation: "Grutas e Abrigamentos", age_str: "15.000 anos" },
+    { lat: -30.0, lng: -51.2, locality: "Uruguaiana / Touro Passo", country: "Brasil (Rio Grande do Sul)", formation: "Formação Touro Passo", age_str: "13.000 anos" }
+  ],
+  "mosasaurus": [
+    { lat: 50.8, lng: 5.7, locality: "Monte São Pedro (Maastricht)", country: "Holanda / Bélgica", formation: "Formação Maastricht", age_str: "66 Ma (Cretáceo)" },
+    { lat: 40.3, lng: -74.2, locality: "Condado de Monmouth", country: "Estados Unidos (Nova Jersey)", formation: "Formação Navesink", age_str: "68 Ma (Cretáceo)" },
+    { lat: 32.2, lng: -7.9, locality: "Bacia de Ganntour (Benguerir)", country: "Marrocos", formation: "Fosfatos Cretáceos", age_str: "67 Ma (Cretáceo)" }
+  ],
+  "opabinia": [
+    { lat: 51.4, lng: -116.5, locality: "Burgess Shale (Walcott Quarry)", country: "Canadá (Colúmbia Britânica)", formation: "Formação Stephen", age_str: "508 Ma (Cambriano)" }
+  ],
+  "megalodon": [
+    { lat: 32.8, lng: -79.9, locality: "Charleston / Cooper River", country: "Estados Unidos (Carolina do Sul)", formation: "Formação Hawthorne", age_str: "15 Ma (Mioceno)" },
+    { lat: 38.5, lng: -76.5, locality: "Calvert Cliffs", country: "Estados Unidos (Maryland)", formation: "Formação Calvert", age_str: "14 Ma (Mioceno)" },
+    { lat: 36.7, lng: -6.0, locality: "Bacia do Guadalquivir", country: "Espanha (Andaluzia)", formation: "Depósitos Neógenos", age_str: "10 Ma (Mioceno)" },
+    { lat: -21.8, lng: 114.1, locality: "Península de North West Cape", country: "Austrália Ocidental", formation: "Calcário Cape Range", age_str: "12 Ma (Mioceno)" },
+    { lat: 35.5, lng: 139.5, locality: "Chiba / Banto River", country: "Japão", formation: "Grupo Miura", age_str: "8 Ma (Mioceno)" }
+  ],
+  "purussaurus": [
+    { lat: -9.9, lng: -67.8, locality: "Rio Acre / Rio Purus", country: "Brasil (Acre)", formation: "Formação Solimões", age_str: "8 Ma (Mioceno Superior)" },
+    { lat: -7.5, lng: -72.7, locality: "Alto Rio Juruá", country: "Brasil (Acre)", formation: "Formação Solimões", age_str: "8 Ma (Mioceno)" },
+    { lat: -3.7, lng: -73.2, locality: "Iquitos / Rio Amazonas", country: "Peru (Loreto)", formation: "Formação Pebas", age_str: "10 Ma (Mioceno)" },
+    { lat: 10.7, lng: -70.7, locality: "Urumaco", country: "Venezuela (Falcón)", formation: "Formação Urumaco", age_str: "9 Ma (Mioceno)" }
+  ],
+  "quetzalcoatlus": [
+    { lat: 29.3, lng: -103.3, locality: "Big Bend National Park", country: "Estados Unidos (Texas)", formation: "Formação Javelina", age_str: "68 Ma (Cretáceo)" },
+    { lat: 30.1, lng: -103.8, locality: "Brewster County", country: "Estados Unidos (Texas)", formation: "Formação Javelina", age_str: "67 Ma (Cretáceo)" }
+  ],
+  "smilodon": [
+    { lat: -19.6, lng: -44.0, locality: "Gruta da Lapinha (Peter Lund)", country: "Brasil (Minas Gerais)", formation: "Depósitos Cársicos de Lagoa Santa", age_str: "10.000 anos" },
+    { lat: -34.6, lng: -58.4, locality: "Rio Luján / Pampas", country: "Argentina (Buenos Aires)", formation: "Formação Luján", age_str: "12.000 anos" },
+    { lat: 34.1, lng: -118.4, locality: "Rancho La Brea Tar Pits", country: "Estados Unidos (Califórnia)", formation: "Poços de Asfalto La Brea", age_str: "15.000 anos" },
+    { lat: -5.0, lng: -39.0, locality: "Quixeramobim / Ceará", country: "Brasil (Ceará)", formation: "Tanques Paleontológicos", age_str: "11.000 anos" }
+  ],
+  "spinosaurus": [
+    { lat: 28.3, lng: 28.9, locality: "Oásis de Bahariya", country: "Egito (Deserto Ocidental)", formation: "Formação Bahariya", age_str: "95 Ma (Cretáceo)" },
+    { lat: 31.0, lng: -3.9, locality: "Leitos Kem Kem (Taouz)", country: "Marrocos (Tafilalt)", formation: "Formação Kem Kem", age_str: "95 Ma (Cretáceo)" },
+    { lat: 33.1, lng: 10.4, locality: "Chenini / Tataouine", country: "Tunísia", formation: "Formação Chenini", age_str: "100 Ma (Cretáceo)" }
+  ],
+  "spriggina": [
+    { lat: -31.4, lng: 138.4, locality: "Ediacara Hills (Flinders Ranges)", country: "Austrália do Sul", formation: "Arenito Pound", age_str: "550 Ma (Ediacarano)" },
+    { lat: 65.5, lng: 39.5, locality: "Rio Zimnaya Zolotitsa", country: "Rússia (Mar Branco)", formation: "Formação Verkhovka", age_str: "555 Ma (Ediacarano)" }
+  ],
+  "tiktaalik": [
+    { lat: 76.8, lng: -83.0, locality: "Ilha Ellesmere (Nunavut)", country: "Canadá (Ártico)", formation: "Formação Fram", age_str: "375 Ma (Devoniano)" }
+  ],
+  "titanoboa": [
+    { lat: 11.1, lng: -72.6, locality: "Mina de Carvão de Cerrejón", country: "Colômbia (La Guajira)", formation: "Formação Cerrejón", age_str: "60 - 58 Ma (Paleoceno)" }
+  ],
+  "triceratops": [
+    { lat: 47.5, lng: -106.2, locality: "Hell Creek (Jordan)", country: "Estados Unidos (Montana)", formation: "Formação Hell Creek", age_str: "68 - 66 Ma (Cretáceo)" },
+    { lat: 43.5, lng: -104.5, locality: "Lance Creek", country: "Estados Unidos (Wyoming)", formation: "Formação Lance", age_str: "67 Ma (Cretáceo)" },
+    { lat: 51.5, lng: -112.7, locality: "Drumheller / Red Deer River", country: "Canadá (Alberta)", formation: "Formação Scollard", age_str: "66 Ma (Cretáceo)" },
+    { lat: 39.7, lng: -105.0, locality: "Denver Basin (Golden)", country: "Estados Unidos (Colorado)", formation: "Formação Denver", age_str: "68 Ma (Cretáceo)" }
+  ],
+  "tyrannosaurus": [
+    { lat: 47.5, lng: -106.2, locality: "Hell Creek (Garfield County)", country: "Estados Unidos (Montana)", formation: "Formação Hell Creek (Holótipo)", age_str: "68 - 66 Ma (Cretáceo)" },
+    { lat: 43.5, lng: -104.5, locality: "Niobrara County (Lance Creek)", country: "Estados Unidos (Wyoming)", formation: "Formação Lance", age_str: "67 Ma (Cretáceo)" },
+    { lat: 45.4, lng: -101.4, locality: "Faith (Sue Holótipo)", country: "Estados Unidos (Dakota do Sul)", formation: "Formação Hell Creek", age_str: "67 Ma (Cretáceo)" },
+    { lat: 49.0, lng: -106.0, locality: "Frenchman River (Scotty)", country: "Canadá (Saskatchewan)", formation: "Formação Frenchman", age_str: "66 Ma (Cretáceo)" }
+  ],
+  "velociraptor": [
+    { lat: 44.1, lng: 103.7, locality: "Flaming Cliffs (Bayn Dzak)", country: "Mongólia (Deserto de Gobi)", formation: "Formação Djadochta", age_str: "75 - 71 Ma (Cretáceo)" },
+    { lat: 43.5, lng: 101.5, locality: "Tugriken Shireh (Fóssil Lutador)", country: "Mongólia (Deserto de Gobi)", formation: "Formação Djadochta", age_str: "73 Ma (Cretáceo)" },
+    { lat: 41.8, lng: 107.0, locality: "Baía Mandahu (Mongólia Interior)", country: "China", formation: "Formação Bayan Mandahu", age_str: "75 Ma (Cretáceo)" }
+  ],
+  "tardigrado": [
+    { lat: -77.8, lng: 166.7, locality: "McMurdo Dry Valleys", country: "Antártica", formation: "Sedimentos Criogênicos Polares", age_str: "Vivente Cosmopolita" },
+    { lat: 28.0, lng: 86.9, locality: "Himalaia (Acima de 6.000m)", country: "Nepal", formation: "Musgos e Liquens Alpinos", age_str: "Vivente Cosmopolita" },
+    { lat: 11.3, lng: 142.2, locality: "Fossa das Marianas (10.000m)", country: "Oceano Pacífico", formation: "Zona Hadal Abissal", age_str: "Vivente Cosmopolita" },
+    { lat: -3.1, lng: -60.0, locality: "Dossel da Amazônia", country: "Brasil", formation: "Biofilmes e Briófitas", age_str: "Vivente Cosmopolita" }
+  ],
+  "estromatolito-cianobacteria": [
+    { lat: -26.1, lng: 114.2, locality: "Shark Bay (Hamelin Pool)", country: "Austrália Ocidental", formation: "Estromatólitos Vivos / Hipersalinos", age_str: "Vivente Contemporâneo" },
+    { lat: -21.3, lng: 119.8, locality: "Cráton de Pilbara (Apex Chert)", country: "Austrália", formation: "Formação Dresser", age_str: "3.480 Ma (Arqueano)" },
+    { lat: 65.1, lng: -50.0, locality: "Cinturão de Rochas Verdes de Isua", country: "Groenlândia", formation: "Formação Isua", age_str: "3.700 Ma (Arqueano)" },
+    { lat: -25.8, lng: 31.0, locality: "Cinturão de Barberton", country: "África do Sul", formation: "Supergrupo Swaziland", age_str: "3.200 Ma (Arqueano)" }
+  ],
+  "paramecium": [
+    { lat: 51.5, lng: -0.1, locality: "Bacias e Lagoas de Água Doce", country: "Inglaterra / Europa", formation: "Ecossistema Límnico", age_str: "Vivente (GBIF)" },
+    { lat: 40.7, lng: -74.0, locality: "Zonas Úmidas Continentais", country: "Estados Unidos", formation: "Sedimento Orgânico", age_str: "Vivente (GBIF)" },
+    { lat: -23.5, lng: -46.6, locality: "Represas e Riachos", country: "Brasil (São Paulo)", formation: "Plâncton de Água Doce", age_str: "Vivente (GBIF)" }
+  ],
+  "ameba-proteus": [
+    { lat: 45.4, lng: 9.2, locality: "Charcos e Sedimentos Límnicos", country: "Itália / Europa", formation: "Biofilme de Detritos Orgânicos", age_str: "Vivente (GBIF)" },
+    { lat: -15.8, lng: -47.9, locality: "Veredas e Lagoas do Cerrado", country: "Brasil (Distrito Federal)", formation: "Vegetação Aquática", age_str: "Vivente (GBIF)" },
+    { lat: 35.7, lng: 139.7, locality: "Lagos e Charcos de Água Doce", country: "Japão", formation: "Substrato Límnico", age_str: "Vivente (GBIF)" }
+  ],
+  "nummulites": [
+    { lat: 29.98, lng: 31.13, locality: "Platô de Gizé (Calcário das Pirâmides)", country: "Egito", formation: "Formação Mokattam", age_str: "45 Ma (Eoceno)" },
+    { lat: 48.85, lng: 2.35, locality: "Bacia de Paris", country: "França", formation: "Calcário Lutetiano Grossier", age_str: "48 Ma (Eoceno)" },
+    { lat: 42.0, lng: 2.0, locality: "Pireneus Catalães (Vic)", country: "Espanha", formation: "Margas e Calcários Eocênicos", age_str: "42 Ma (Eoceno)" }
+  ],
+  "diatomacea": [
+    { lat: -54.8, lng: -68.3, locality: "Canal de Beagle / Antártica", country: "Argentina / Chile", formation: "Fitoplâncton Marinho Frígido", age_str: "Vivente Cosmopolita" },
+    { lat: 37.0, lng: -122.0, locality: "Baía de Monterey", country: "Estados Unidos (Pacífico)", formation: "Depósitos de Diatomita", age_str: "Mioceno ao Vivente" },
+    { lat: -12.0, lng: -77.0, locality: "Ressurgência de Humboldt", country: "Peru", formation: "Sedimentos Biogênicos Sílicos", age_str: "Vivente (GBIF)" }
+  ],
+  "pithovirus": [
+    { lat: 69.5, lng: 161.5, locality: "Bacia do Rio Kolyma (Aneykovsky Yar)", country: "Rússia (Nordeste da Sibéria)", formation: "Permafrost Yedoma (30m de profundidade)", age_str: "30.000 anos (Pleistoceno Superior)" }
+  ]
+};
 
-  const mapContainer = document.getElementById('integratedFossilMap');
-  const countBadge = document.getElementById('integratedMapCount');
-  const loadingIndicator = document.getElementById('integratedMapLoading');
+function init3DGlobe() {
+  const container = document.getElementById('globe3dContainer');
+  const canvas = document.getElementById('globe3dCanvas');
+  if (!container || !canvas) return;
 
-  loadingIndicator.classList.remove('hidden');
-
-  if (!state.leafletMap) {
-    state.leafletMap = L.map('integratedFossilMap', {
-      center: [20, 0],
-      zoom: 2,
-      minZoom: 1,
-      maxZoom: 14
-    });
-
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO &copy; GBIF / PBDB',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(state.leafletMap);
-
-    state.mapMarkersGroup = L.layerGroup().addTo(state.leafletMap);
+  if (typeof THREE === 'undefined') {
+    setTimeout(init3DGlobe, 200);
+    return;
   }
 
-  state.mapMarkersGroup.clearLayers();
+  // Previne inicialização duplicada
+  if (state.globeRenderer) {
+    onGlobeResize();
+    return;
+  }
 
+  const width = container.clientWidth || 380;
+  const height = container.clientHeight || 290;
+
+  // 1. Scene
+  state.globeScene = new THREE.Scene();
+
+  // 2. Camera
+  state.globeCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+  state.globeCamera.position.set(0, 2, 28);
+  state.globeCamera.lookAt(0, 0, 0);
+
+  // 3. Renderer
+  state.globeRenderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    antialias: true,
+    alpha: true
+  });
+  state.globeRenderer.setSize(width, height);
+  state.globeRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  // 4. Procedural Earth Texture Canvas
+  const earthTexture = createProceduralEarthTexture();
+
+  // 5. Earth Sphere Mesh (Radius = 10)
+  const earthGeom = new THREE.SphereGeometry(10, 64, 64);
+  const earthMat = new THREE.MeshPhongMaterial({
+    map: earthTexture,
+    shininess: 18,
+    specular: new THREE.Color(0x1a2e3b)
+  });
+  state.globeMesh = new THREE.Mesh(earthGeom, earthMat);
+  state.globeScene.add(state.globeMesh);
+
+  // Carrega textura externa se disponível (fallback transparente se indisponível)
+  try {
+    const texLoader = new THREE.TextureLoader();
+    texLoader.crossOrigin = 'anonymous';
+    texLoader.load(
+      'https://unpkg.com/three-globe/example/img/earth-dark.jpg',
+      (tex) => {
+        tex.wrapS = THREE.ClampToEdgeWrapping;
+        tex.wrapT = THREE.ClampToEdgeWrapping;
+        earthMat.map = tex;
+        earthMat.needsUpdate = true;
+      },
+      undefined,
+      () => { /* Mantém a textura procedural */ }
+    );
+  } catch (err) {}
+
+  // 6. Atmosfera & Glow
+  const atmosGeom = new THREE.SphereGeometry(10.35, 32, 32);
+  const atmosMat = new THREE.MeshBasicMaterial({
+    color: 0x38bdf8,
+    transparent: true,
+    opacity: 0.14,
+    blending: THREE.AdditiveBlending,
+    side: THREE.BackSide
+  });
+  state.globeAtmosphere = new THREE.Mesh(atmosGeom, atmosMat);
+  state.globeScene.add(state.globeAtmosphere);
+
+  const outerHaloGeom = new THREE.SphereGeometry(10.9, 32, 32);
+  const outerHaloMat = new THREE.MeshBasicMaterial({
+    color: 0x10b981,
+    transparent: true,
+    opacity: 0.05,
+    blending: THREE.AdditiveBlending
+  });
+  state.globeScene.add(new THREE.Mesh(outerHaloGeom, outerHaloMat));
+
+  // 7. Starfield Background
+  const starGeom = new THREE.BufferGeometry();
+  const starCoords = [];
+  for (let i = 0; i < 350; i++) {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = u * 2.0 * Math.PI;
+    const phi = Math.acos(2.0 * v - 1.0);
+    const r = 50 + Math.random() * 80;
+    const x = r * Math.sin(phi) * Math.cos(theta);
+    const y = r * Math.sin(phi) * Math.sin(theta);
+    const z = r * Math.cos(phi);
+    starCoords.push(x, y, z);
+  }
+  starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
+  const starMat = new THREE.PointsMaterial({
+    color: 0x94a3b8,
+    size: 0.8,
+    transparent: true,
+    opacity: 0.7
+  });
+  state.globeScene.add(new THREE.Points(starGeom, starMat));
+
+  // 8. Iluminação
+  const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+  state.globeScene.add(ambLight);
+
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.65);
+  dirLight.position.set(25, 20, 35);
+  state.globeScene.add(dirLight);
+
+  // 9. Grupo de Marcadores 3D (filho do globo para girar sincronizado)
+  state.globeMarkersGroup = new THREE.Group();
+  state.globeMesh.add(state.globeMarkersGroup);
+
+  // 10. Eventos de Interação no Viewport
+  setupGlobeInteractions(container);
+
+  // 11. Loop de Animação
+  startGlobeAnimation();
+
+  // 12. Resize Observer
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => onGlobeResize());
+    ro.observe(container);
+  }
+}
+
+function createProceduralEarthTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 2048;
+  canvas.height = 1024;
+  const ctx = canvas.getContext('2d');
+
+  // Gradiente do Oceano (Azul escuro cósmico)
+  const grad = ctx.createLinearGradient(0, 0, 0, 1024);
+  grad.addColorStop(0, '#040b15');
+  grad.addColorStop(0.5, '#071526');
+  grad.addColorStop(1, '#040b15');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 2048, 1024);
+
+  // Grade de Coordenadas (Paralelos e Meridianos)
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(148, 163, 184, 0.12)';
+
+  // Meridianos a cada 30 graus
+  for (let x = 0; x <= 2048; x += 2048 / 12) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 1024);
+    ctx.stroke();
+  }
+
+  // Paralelos a cada 30 graus
+  for (let y = 0; y <= 1024; y += 1024 / 6) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(2048, y);
+    ctx.stroke();
+  }
+
+  // Linha do Equador e Meridiano de Greenwich destacados
+  ctx.strokeStyle = 'rgba(52, 211, 153, 0.35)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, 512);
+  ctx.lineTo(2048, 512);
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+  ctx.beginPath();
+  ctx.moveTo(1024, 0);
+  ctx.lineTo(1024, 1024);
+  ctx.stroke();
+
+  // Desenhar Continentes Estilizados em Alta Definição
+  const toCanvasX = (lng) => ((lng + 180) / 360) * 2048;
+  const toCanvasY = (lat) => ((90 - lat) / 180) * 1024;
+
+  const continents = [
+    // América do Sul
+    [ [12, -72], [10, -62], [5, -52], [-5, -35], [-23, -42], [-35, -57], [-55, -68], [-53, -73], [-40, -73], [-18, -71], [-5, -81], [5, -77], [9, -79] ],
+    // América do Norte
+    [ [10, -75], [16, -95], [25, -97], [29, -95], [29, -83], [25, -80], [35, -75], [45, -66], [47, -53], [60, -64], [70, -70], [72, -95], [72, -125], [70, -140], [65, -168], [60, -165], [58, -140], [50, -125], [38, -123], [30, -115], [23, -110], [18, -105], [15, -93] ],
+    // África
+    [ [37, 10], [36, 1], [32, -9], [28, -13], [21, -17], [15, -17], [5, -10], [4, 9], [-5, 12], [-15, 12], [-23, 14], [-34, 18], [-34, 26], [-28, 32], [-15, 40], [-10, 40], [5, 48], [12, 51], [12, 43], [22, 37], [31, 32], [32, 25], [36, 12] ],
+    // Eurásia
+    [ [36, -6], [43, -9], [48, -4], [55, 8], [58, 5], [62, 5], [71, 28], [70, 60], [75, 100], [77, 140], [70, 180], [65, 170], [60, 160], [52, 142], [43, 132], [38, 120], [30, 122], [22, 114], [22, 108], [10, 105], [1, 104], [16, 96], [22, 89], [13, 80], [8, 77], [20, 70], [25, 62], [25, 56], [30, 48], [30, 35], [36, 36], [41, 28], [40, 20], [37, 15], [43, 10], [43, 3], [36, -6] ],
+    // Austrália
+    [ [-11, 142], [-15, 145], [-24, 153], [-34, 151], [-38, 145], [-35, 137], [-32, 132], [-35, 117], [-22, 114], [-17, 122], [-12, 132], [-12, 137] ],
+    // Antártica
+    [ [-65, -60], [-70, 0], [-70, 90], [-75, 180], [-82, 180], [-82, -180], [-75, -180], [-80, -90] ],
+    // Groenlândia
+    [ [60, -44], [65, -40], [75, -20], [83, -30], [82, -50], [76, -70], [68, -55], [60, -45] ],
+    // Madagascar
+    [ [-12, 49], [-16, 50], [-25, 47], [-25, 44], [-16, 44] ],
+    // Ilhas Britânicas
+    [ [50, -5], [58, -3], [58, -6], [55, -5], [50, -1] ],
+    // Japão
+    [ [31, 131], [35, 136], [44, 145], [45, 141], [36, 138] ]
+  ];
+
+  ctx.fillStyle = '#10241b';
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 2.5;
+  ctx.shadowColor = '#10b981';
+  ctx.shadowBlur = 8;
+
+  continents.forEach(poly => {
+    ctx.beginPath();
+    poly.forEach((pt, idx) => {
+      const cx = toCanvasX(pt[1]);
+      const cy = toCanvasY(pt[0]);
+      if (idx === 0) ctx.moveTo(cx, cy);
+      else ctx.lineTo(cx, cy);
+    });
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  });
+
+  ctx.shadowBlur = 0;
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.ClampToEdgeWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  return tex;
+}
+
+function latLngToVector3(lat, lng, radius) {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
+  
+  const x = -(radius * Math.sin(phi) * Math.cos(theta));
+  const z = (radius * Math.sin(phi) * Math.sin(theta));
+  const y = (radius * Math.cos(phi));
+  
+  return new THREE.Vector3(x, y, z);
+}
+
+function setupGlobeInteractions(container) {
+  let isPointerDown = false;
+  let startX = 0;
+  let startY = 0;
+  let startRotX = 0;
+  let startRotY = 0;
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  const tooltip = document.getElementById('globe3dTooltip');
+  const hudCoords = document.getElementById('globeHudCoords');
+
+  container.addEventListener('pointerdown', (e) => {
+    isPointerDown = true;
+    state.globeIsDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    if (state.globeMesh) {
+      startRotX = state.globeMesh.rotation.x;
+      startRotY = state.globeMesh.rotation.y;
+    }
+    try { container.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+
+  container.addEventListener('pointermove', (e) => {
+    const rect = container.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (isPointerDown && state.globeMesh) {
+      const dx = (e.clientX - startX) * 0.006;
+      const dy = (e.clientY - startY) * 0.006;
+      state.globeMesh.rotation.y = startRotY + dx;
+      state.globeMesh.rotation.x = Math.max(-1.1, Math.min(1.1, startRotX + dy));
+      state.globeTargetRotationY = state.globeMesh.rotation.y;
+      state.globeTargetRotationX = state.globeMesh.rotation.x;
+    }
+
+    // Raycast para Tooltip dos Marcadores 3D
+    mouse.x = (x / container.clientWidth) * 2 - 1;
+    mouse.y = -(y / container.clientHeight) * 2 + 1;
+
+    if (state.globeCamera && state.globeInteractiveMarkers && state.globeInteractiveMarkers.length > 0) {
+      raycaster.setFromCamera(mouse, state.globeCamera);
+      const intersects = raycaster.intersectObjects(state.globeInteractiveMarkers);
+
+      if (intersects.length > 0) {
+        const hit = intersects[0].object;
+        const d = hit.userData;
+        container.style.cursor = 'pointer';
+
+        if (tooltip && d) {
+          tooltip.innerHTML = `
+            <strong>${d.specimenName || 'Espécime'}</strong>
+            <span>📍 ${d.locality || 'Localidade'}</span><br>
+            <span style="color: #94a3b8;">${d.country || ''} • ${d.lat.toFixed(2)}°, ${d.lng.toFixed(2)}°</span><br>
+            <small style="color: #fbbf24;">${d.age || ''}</small>
+          `;
+          tooltip.style.left = `${x}px`;
+          tooltip.style.top = `${y}px`;
+          tooltip.classList.remove('hidden');
+        }
+
+        if (hudCoords && d) {
+          hudCoords.textContent = `Lat: ${d.lat.toFixed(2)}° | Lng: ${d.lng.toFixed(2)}°`;
+        }
+        return;
+      }
+    }
+
+    container.style.cursor = isPointerDown ? 'grabbing' : 'grab';
+    if (tooltip) tooltip.classList.add('hidden');
+  });
+
+  const endDrag = (e) => {
+    isPointerDown = false;
+    state.globeIsDragging = false;
+    try { container.releasePointerCapture(e.pointerId); } catch (err) {}
+  };
+
+  container.addEventListener('pointerup', endDrag);
+  container.addEventListener('pointercancel', endDrag);
+
+  // Click / Tap para selecionar marcador e voar até ele
+  container.addEventListener('click', (e) => {
+    const rect = container.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+
+    if (state.globeCamera && state.globeInteractiveMarkers.length > 0) {
+      raycaster.setFromCamera(mouse, state.globeCamera);
+      const intersects = raycaster.intersectObjects(state.globeInteractiveMarkers);
+      if (intersects.length > 0) {
+        const d = intersects[0].object.userData;
+        if (d && typeof d.lat === 'number') {
+          flyToGlobeCoordinate(d.lat, d.lng);
+        }
+      }
+    }
+  });
+
+  // Wheel para Zoom da Câmera
+  container.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (!state.globeCamera) return;
+    const zoomDelta = e.deltaY * 0.02;
+    state.globeCamera.position.z = Math.max(16, Math.min(42, state.globeCamera.position.z + zoomDelta));
+  }, { passive: false });
+
+  // Botões de Controle do Header 3D
+  const btnToggle = document.getElementById('btnToggleGlobeRotate');
+  if (btnToggle) {
+    btnToggle.addEventListener('click', () => {
+      state.globeAutoRotate = !state.globeAutoRotate;
+      btnToggle.textContent = state.globeAutoRotate ? '⏸️' : '▶️';
+      btnToggle.title = state.globeAutoRotate ? 'Pausar Rotação' : 'Continuar Rotação';
+    });
+  }
+
+  const btnFocus = document.getElementById('btnFocusGlobeSpecimen');
+  if (btnFocus) {
+    btnFocus.addEventListener('click', () => {
+      if (state.globePrimaryPoint) {
+        flyToGlobeCoordinate(state.globePrimaryPoint.lat, state.globePrimaryPoint.lng);
+      }
+    });
+  }
+
+  const btnReset = document.getElementById('btnResetGlobe');
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      state.globeTargetRotationX = 0;
+      state.globeTargetRotationY = 0;
+      if (state.globeCamera) state.globeCamera.position.set(0, 2, 28);
+    });
+  }
+}
+
+function flyToGlobeCoordinate(lat, lng) {
+  const targetY = (-90 - lng) * (Math.PI / 180);
+  const targetX = Math.max(-0.9, Math.min(0.9, (lat) * (Math.PI / 180)));
+  
+  if (state.globeMesh) {
+    const curY = state.globeMesh.rotation.y;
+    const diff = (targetY - curY) % (Math.PI * 2);
+    const shortestDiff = ((diff + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+    state.globeTargetRotationY = curY + shortestDiff;
+    state.globeTargetRotationX = targetX;
+  }
+
+  const hudCoords = document.getElementById('globeHudCoords');
+  if (hudCoords) {
+    hudCoords.textContent = `Lat: ${lat.toFixed(2)}° | Lng: ${lng.toFixed(2)}°`;
+  }
+}
+
+function startGlobeAnimation() {
+  if (state.globeAnimId) cancelAnimationFrame(state.globeAnimId);
+
+  let pulseTime = 0;
+
+  function animate() {
+    state.globeAnimId = requestAnimationFrame(animate);
+
+    if (state.globeMesh) {
+      if (!state.globeIsDragging) {
+        if (state.globeTargetRotationY !== undefined) {
+          const dy = state.globeTargetRotationY - state.globeMesh.rotation.y;
+          const dx = state.globeTargetRotationX - state.globeMesh.rotation.x;
+          
+          if (Math.abs(dy) > 0.001 || Math.abs(dx) > 0.001) {
+            state.globeMesh.rotation.y += dy * 0.08;
+            state.globeMesh.rotation.x += dx * 0.08;
+          } else if (state.globeAutoRotate) {
+            state.globeMesh.rotation.y += 0.002;
+            state.globeTargetRotationY = state.globeMesh.rotation.y;
+          }
+        } else if (state.globeAutoRotate) {
+          state.globeMesh.rotation.y += 0.002;
+        }
+      }
+    }
+
+    // Radar pulse nos anéis dos marcadores
+    pulseTime += 0.04;
+    const pulseScale = 1 + (Math.sin(pulseTime) + 1) * 0.35;
+    const pulseOpacity = Math.max(0.1, 0.8 - (Math.sin(pulseTime) + 1) * 0.35);
+
+    if (state.globeMarkersGroup) {
+      state.globeMarkersGroup.traverse(child => {
+        if (child.isPulseRing) {
+          child.scale.set(pulseScale, pulseScale, pulseScale);
+          if (child.material) child.material.opacity = pulseOpacity;
+        }
+      });
+    }
+
+    if (state.globeRenderer && state.globeScene && state.globeCamera) {
+      state.globeRenderer.render(state.globeScene, state.globeCamera);
+    }
+  }
+
+  animate();
+}
+
+function onGlobeResize() {
+  const container = document.getElementById('globe3dContainer');
+  if (!container || !state.globeRenderer || !state.globeCamera) return;
+
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  if (width === 0 || height === 0) return;
+
+  state.globeCamera.aspect = width / height;
+  state.globeCamera.updateProjectionMatrix();
+  state.globeRenderer.setSize(width, height);
+}
+
+async function update3DGlobeForSpecimen(specimen) {
+  if (!specimen) return;
+
+  // Garante que Three.js e o Globo estejam inicializados
+  init3DGlobe();
+
+  const loadingOverlay = document.getElementById('globe3dLoading');
+  const localityElem = document.getElementById('globeSpecLocality');
+  const countBadge = document.getElementById('globeOccurrencesBadge');
+  const datasetBadge = document.getElementById('globeDatasetBadge');
+  const pointsList = document.getElementById('globePointsList');
+
+  if (localityElem) {
+    localityElem.textContent = specimen.fossil_locations || 'Distribuição Biogeográfica Global';
+  }
+
+  const isMicro = specimen.skeletal_type === 'microbiologico';
+  const isContemporary = specimen.is_contemporary;
+
+  if (datasetBadge) {
+    if (isMicro) {
+      datasetBadge.textContent = '🔬 Microbiologia';
+      datasetBadge.className = 'globe-source-badge micro';
+    } else if (isContemporary) {
+      datasetBadge.textContent = '🌿 Vivente GBIF';
+      datasetBadge.className = 'globe-source-badge';
+    } else {
+      datasetBadge.textContent = '🦴 Fóssil PBDB';
+      datasetBadge.className = 'globe-source-badge fossil';
+    }
+  }
+
+  if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+  if (pointsList) pointsList.innerHTML = '';
+
+  let occurrences = [];
+
+  // 1. Tenta buscar ocorrências reais da API
   if (state.isBackendOnline) {
     try {
       const res = await fetch(`${API_BASE}/api/occurrences/${encodeURIComponent(specimen.scientific_name || specimen.genus || specimen.name)}`);
-      const occurrences = await res.json();
-      loadingIndicator.classList.add('hidden');
-
-      if (occurrences && occurrences.length > 0) {
-        const isContemporary = specimen.is_contemporary;
-        countBadge.textContent = `${occurrences.length} pontos globais (${isContemporary ? 'Observações GBIF' : 'Fósseis PBDB'})`;
-
-        const bounds = [];
-        occurrences.forEach(occ => {
-          if (typeof occ.lat === 'number' && typeof occ.lng === 'number') {
-            const markerColor = isContemporary ? '#10b981' : '#ea580c';
-            
-            const marker = L.circleMarker([occ.lat, occ.lng], {
-              radius: 7,
-              fillColor: markerColor,
-              color: '#ffffff',
-              weight: 1.5,
-              opacity: 1,
-              fillOpacity: 0.85
-            });
-
-            marker.bindPopup(`
-              <div style="font-family: sans-serif; color: #111;">
-                <strong style="font-size: 14px; color: ${markerColor};">${specimen.name}</strong><br>
-                <span style="font-size: 12px;"><strong>País:</strong> ${occ.country || 'Global'}</span><br>
-                <span style="font-size: 12px;"><strong>Local:</strong> ${occ.formation || 'Habitat natural'}</span><br>
-                <span style="font-size: 11px; color: #666;">${isContemporary ? 'Registro Contemporâneo (GBIF)' : `Idade fóssil: ${occ.early_age || ''} - ${occ.late_age || ''} Ma`}</span>
-              </div>
-            `);
-
-            state.mapMarkersGroup.addLayer(marker);
-            bounds.push([occ.lat, occ.lng]);
-          }
-        });
-
-        setTimeout(() => {
-          state.leafletMap.invalidateSize();
-          if (bounds.length > 0) {
-            state.leafletMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 6 });
-          }
-        }, 200);
-        return;
+      if (res.ok) {
+        occurrences = await res.json();
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Erro ao buscar ocorrências da API:', e);
+    }
   }
 
-  // Coordenadas simuladas de fallback conforme localidade
-  loadingIndicator.classList.add('hidden');
-  countBadge.textContent = `Distribuição global: ${specimen.fossil_locations || 'Registros catalogados'}`;
-  state.leafletMap.setView([20, 0], 2);
+  // 2. Se a API retornou vazio ou estiver offline, usa os dados georreferenciados embutidos
+  if (!occurrences || occurrences.length === 0) {
+    const specId = specimen.id;
+    if (SPECIMEN_COORDINATES_MAP[specId]) {
+      occurrences = SPECIMEN_COORDINATES_MAP[specId];
+    } else {
+      occurrences = generateFallbackOccurrences(specimen);
+    }
+  }
+
+  if (loadingOverlay) loadingOverlay.classList.add('hidden');
+
+  // Limpa marcadores 3D anteriores
+  if (state.globeMarkersGroup) {
+    while (state.globeMarkersGroup.children.length > 0) {
+      const obj = state.globeMarkersGroup.children[0];
+      state.globeMarkersGroup.remove(obj);
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) obj.material.dispose();
+    }
+  }
+  state.globeInteractiveMarkers = [];
+
+  if (countBadge) {
+    countBadge.textContent = `${occurrences.length} pontos mapeados`;
+  }
+
+  if (occurrences.length === 0) return;
+
+  const pinColor = isMicro ? 0x38bdf8 : (isContemporary ? 0x10b981 : 0xf97316);
+
+  state.globePrimaryPoint = occurrences[0];
+
+  occurrences.forEach((occ, idx) => {
+    if (typeof occ.lat !== 'number' || typeof occ.lng !== 'number') return;
+
+    const surfacePos = latLngToVector3(occ.lat, occ.lng, 10);
+    const normal = surfacePos.clone().normalize();
+
+    const markerGroup = new THREE.Group();
+
+    // Haste do Pin
+    const stemGeom = new THREE.CylinderGeometry(0.08, 0.08, 1.2, 8);
+    const stemMat = new THREE.MeshBasicMaterial({ color: pinColor });
+    const stemMesh = new THREE.Mesh(stemGeom, stemMat);
+    stemMesh.position.copy(normal.clone().multiplyScalar(0.6));
+    stemMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), normal);
+
+    // Cabeça do Pin
+    const headGeom = new THREE.SphereGeometry(0.35, 16, 16);
+    const headMat = new THREE.MeshBasicMaterial({ color: pinColor });
+    const headMesh = new THREE.Mesh(headGeom, headMat);
+    headMesh.position.copy(normal.clone().multiplyScalar(1.2));
+
+    headMesh.userData = {
+      specimenName: specimen.name,
+      lat: occ.lat,
+      lng: occ.lng,
+      locality: occ.locality || occ.formation || specimen.fossil_locations,
+      country: occ.country || 'Global',
+      age: occ.age_str || (occ.early_age ? `${occ.early_age} Ma` : (isContemporary ? 'Vivente' : specimen.period))
+    };
+    state.globeInteractiveMarkers.push(headMesh);
+
+    // Anel de Pulso Tangente na Superfície
+    const ringGeom = new THREE.RingGeometry(0.2, 0.55, 20);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: pinColor,
+      transparent: true,
+      opacity: 0.6,
+      side: THREE.DoubleSide
+    });
+    const ringMesh = new THREE.Mesh(ringGeom, ringMat);
+    ringMesh.position.copy(normal.clone().multiplyScalar(0.05));
+    ringMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal);
+    ringMesh.isPulseRing = true;
+
+    markerGroup.position.copy(surfacePos);
+    markerGroup.add(stemMesh);
+    markerGroup.add(headMesh);
+    markerGroup.add(ringMesh);
+
+    state.globeMarkersGroup.add(markerGroup);
+
+    // Tag interativa na lista do painel
+    if (pointsList && idx < 12) {
+      const tag = document.createElement('span');
+      tag.className = `globe-point-tag ${idx === 0 ? 'active' : ''}`;
+      const locLabel = occ.locality || occ.formation || occ.country || `Ponto ${idx + 1}`;
+      tag.innerHTML = `📍 ${locLabel}`;
+      tag.title = `${occ.country || 'Global'} (${occ.lat.toFixed(2)}°, ${occ.lng.toFixed(2)}°)`;
+      
+      tag.addEventListener('click', () => {
+        document.querySelectorAll('.globe-point-tag').forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+        flyToGlobeCoordinate(occ.lat, occ.lng);
+      });
+      pointsList.appendChild(tag);
+    }
+  });
+
+  // Voa suavemente para a primeira coordenada
+  setTimeout(() => {
+    flyToGlobeCoordinate(state.globePrimaryPoint.lat, state.globePrimaryPoint.lng);
+  }, 100);
+}
+
+function generateFallbackOccurrences(specimen) {
+  const text = (specimen.fossil_locations || '') + ' ' + (specimen.bio || '');
+  const list = [];
+
+  if (/brasil|brazil|amazônia|pantanal|acre|minas gerais/i.test(text)) {
+    list.push({ lat: -14.2, lng: -51.9, locality: 'América do Sul', country: 'Brasil', formation: specimen.fossil_locations });
+  }
+  if (/estados unidos|eua|montana|wyoming|texas|califórnia|north america/i.test(text)) {
+    list.push({ lat: 45.5, lng: -105.0, locality: 'América do Norte', country: 'Estados Unidos', formation: specimen.fossil_locations });
+  }
+  if (/canadá|canada|alberta|burgess/i.test(text)) {
+    list.push({ lat: 51.5, lng: -115.0, locality: 'América do Norte', country: 'Canadá', formation: specimen.fossil_locations });
+  }
+  if (/egito|marrocos|áfrica|africa|tanzânia/i.test(text)) {
+    list.push({ lat: 25.0, lng: 20.0, locality: 'Continente Africano', country: 'África', formation: specimen.fossil_locations });
+  }
+  if (/china|mongólia|ásia|japão/i.test(text)) {
+    list.push({ lat: 42.0, lng: 105.0, locality: 'Ásia Central', country: 'Ásia', formation: specimen.fossil_locations });
+  }
+  if (/europa|alemanha|frança|inglaterra|holanda/i.test(text)) {
+    list.push({ lat: 50.0, lng: 10.0, locality: 'Europa Ocidental', country: 'Europa', formation: specimen.fossil_locations });
+  }
+  if (/austrália|australia/i.test(text)) {
+    list.push({ lat: -25.0, lng: 135.0, locality: 'Oceania', country: 'Austrália', formation: specimen.fossil_locations });
+  }
+  if (/rússia|sibéria/i.test(text)) {
+    list.push({ lat: 65.0, lng: 120.0, locality: 'Norte da Eurásia', country: 'Rússia (Sibéria)', formation: specimen.fossil_locations });
+  }
+
+  if (list.length === 0) {
+    list.push({ lat: 20.0, lng: 0.0, locality: specimen.fossil_locations || 'Registro Global', country: 'Global' });
+  }
+  return list;
 }
 
 

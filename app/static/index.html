@@ -9,10 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <!-- Leaflet CSS para o mapa global de distribuição e fósseis -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
-  <link rel="stylesheet" href="style.css?v=7.0">
+  <link rel="stylesheet" href="style.css?v=8.0">
 </head>
 <body>
   <header class="hero">
@@ -337,15 +335,6 @@
           </svg>
           Galeria & Múltiplas Visões
         </button>
-
-        <button class="wiki-tab-btn" data-tab="tab-map" id="tabBtnMap">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-            <line x1="8" y1="2" x2="8" y2="18"></line>
-            <line x1="16" y1="6" x2="16" y2="22"></line>
-          </svg>
-          Mapa Global (GBIF & PBDB)
-        </button>
       </nav>
 
       <!-- Conteúdo das Abas -->
@@ -427,6 +416,56 @@
               <h3 class="section-title mt-4">💡 Curiosidades Biológicas</h3>
               <ul id="wikiCuriositiesList" class="curiosities-list"></ul>
             </div>
+
+            <!-- Coluna 3: GLOBO 3D DA TERRA • DISTRIBUIÇÃO & LOCALIDADES -->
+            <div class="wiki-globe-col">
+              <div class="globe-3d-card">
+                <div class="globe-3d-header">
+                  <div class="globe-header-title">
+                    <span class="globe-pulse-dot"></span>
+                    <strong>Globo Terrestre 3D</strong>
+                    <span id="globeDatasetBadge" class="globe-source-badge">Fóssil PBDB</span>
+                  </div>
+                  <div class="globe-3d-controls">
+                    <button id="btnToggleGlobeRotate" class="globe-ctrl-btn" title="Pausar / Retomar Rotação Automática">⏸️</button>
+                    <button id="btnFocusGlobeSpecimen" class="globe-ctrl-btn" title="Centralizar Câmera no Espécime">🎯</button>
+                    <button id="btnResetGlobe" class="globe-ctrl-btn" title="Resetar Ângulo Orbital">🔄</button>
+                  </div>
+                </div>
+
+                <!-- Viewport 3D Three.js -->
+                <div class="globe-3d-viewport" id="globe3dContainer">
+                  <canvas id="globe3dCanvas"></canvas>
+                  <div id="globe3dLoading" class="globe-loading-overlay hidden">
+                    <div class="fossil-spinner small"></div>
+                    <span>Mapeando coordenadas 3D...</span>
+                  </div>
+                  <div id="globe3dTooltip" class="globe-tooltip hidden"></div>
+                  <div class="globe-hud-overlay">
+                    <span id="globeHudCoords" class="globe-coords-hud">Coord: 0.00°, 0.00°</span>
+                    <span class="globe-interaction-hint">Arraste para girar • Scroll para zoom</span>
+                  </div>
+                </div>
+
+                <!-- Informações de Localidade do Espécime -->
+                <div class="globe-locality-panel">
+                  <div class="globe-locality-header">
+                    <span class="globe-loc-icon">📍</span>
+                    <div class="globe-loc-details">
+                      <span class="globe-loc-label">Localidade & Estrato Geológico</span>
+                      <p id="globeSpecLocality" class="globe-loc-text">-</p>
+                    </div>
+                  </div>
+                  <div class="globe-stats-bar">
+                    <span class="globe-stats-title">Registros Mapeados:</span>
+                    <span id="globeOccurrencesBadge" class="globe-badge-count">0 pontos</span>
+                  </div>
+                  <!-- Lista interativa de ocorrências com fly-to 3D -->
+                  <div id="globePointsList" class="globe-points-scroll"></div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -505,26 +544,6 @@
           <div id="fullGalleryGrid" class="full-gallery-grid"></div>
         </div>
 
-        <!-- ABA 5: MAPA GLOBAL (GBIF & PBDB) -->
-        <div id="tab-map" class="wiki-tab-content">
-          <div class="integrated-map-header">
-            <div>
-              <h3>Distribuição Geográfica Global</h3>
-              <p id="integratedMapSubtitle">Mapeando coordenadas da Global Biodiversity Information Facility (GBIF) e PBDB...</p>
-            </div>
-            <div class="map-stats-badge">
-              <span id="integratedMapCount">0 ocorrências mapeadas</span>
-            </div>
-          </div>
-
-          <div id="integratedMapLoading" class="map-loading hidden">
-            <div class="fossil-spinner small"></div>
-            <span>Plotando pontos no globo terrestre...</span>
-          </div>
-
-          <div id="integratedFossilMap" style="height: 480px; width: 100%; border-radius: 8px;"></div>
-        </div>
-
       </div>
 
       <!-- Rodapé do Modal da Wiki -->
@@ -581,8 +600,8 @@
     </div>
   </footer>
 
-  <!-- Leaflet JS para mapeamento georreferenciado -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="app.js?v=7.0"></script>
+  <!-- Three.js CDN para o Globo Terrestre 3D Interativo -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="app.js?v=8.0"></script>
 </body>
 </html>
