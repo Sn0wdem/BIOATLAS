@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>BioAtlas — Atlas Vivo de Biodiversidade e Paleontologia</title>
+  <meta name="description" content="Explore toda a vida da Terra dos oceanos profundos à era dos dinossauros. Plataforma integrada com GBIF, PBDB e Wikimedia Commons, globo 3D paleocontinental e comparador biométrico.">
+  <meta property="og:title" content="BioAtlas — Atlas Vivo de Biodiversidade e Paleontologia">
+  <meta property="og:description" content="Explore toda a vida da Terra dos oceanos profundos à era dos dinossauros. Plataforma integrada com GBIF, PBDB e Wikimedia Commons, globo 3D paleocontinental e comparador biométrico.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b1220%22/><circle cx=%2250%22 cy=%2250%22 r=%2230%22 fill=%22none%22 stroke=%22%2338bdf8%22 stroke-width=%228%22/><path d=%22M35 55 Q50 30 68 48%22 fill=%22none%22 stroke=%22%2322c55e%22 stroke-width=%227%22 stroke-linecap=%22round%22/></svg>">
+  <link rel="stylesheet" href="style.css?v=14.0">
+</head>
+<body data-theme-habitat="all" data-audience-mode="explorer">
+
+  <!-- =======================================================================
+       TOP BAR — CONTRATO LIMPO DE 3 ZONAS
+       ======================================================================= -->
+  <nav class="topbar" aria-label="Navegação principal">
+    <div class="topbar-inner">
+      <!-- Zona 1: Wordmark limpa em linha única -->
+      <a href="#top" class="brand-wordmark" id="brandHomeLink">BioAtlas</a>
+
+      <!-- Zona 2: Links de navegação tipográficos limpos (1 linha) -->
+      <div class="topbar-nav">
+        <a href="#catalogo" class="topbar-link" id="navExploreLink">Explorar</a>
+        <a href="#linha-do-tempo" class="topbar-link" id="navTimelineLink">Linha do Tempo</a>
+        <a href="#arvore-da-vida" class="topbar-link" id="navTreeLink">Árvore da Vida</a>
+        <button type="button" id="btnOpenQuiz" class="topbar-link topbar-link-btn">Quiz</button>
+        <button type="button" id="btnFavoritesFilter" class="topbar-link topbar-link-btn">
+          Favoritos <span class="topbar-count" id="favoritesCountBadge">0</span>
+        </button>
+        <button type="button" id="btnOpenCollections" class="topbar-link topbar-link-btn">
+          Coleções <span class="topbar-count" id="collectionsCountBadge">0</span>
+        </button>
+      </div>
+
+      <!-- Zona 3: 1 ação primária (Autenticação Google) -->
+      <div class="topbar-action" id="authControls">
+        <button type="button" id="btnGoogleSignIn" class="btn-topbar-primary">
+          <svg viewBox="0 0 48 48" width="16" height="16" aria-hidden="true">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l7.98-6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span>Entrar com Google</span>
+        </button>
+
+        <div id="authUserPill" class="auth-user-menu hidden">
+          <img id="authUserAvatar" class="auth-user-avatar" src="" alt="Avatar da conta" referrerpolicy="no-referrer">
+          <span id="authUserName" class="auth-user-name">Explorador</span>
+          <button type="button" id="btnGoogleSignOut" class="auth-signout-link">Sair</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- =======================================================================
+       HERO ATMOSFÉRICO SENSÍVEL AO HABITAT
+       ======================================================================= -->
+  <header class="hero" id="top">
+    <div class="hero-ambient-layer" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-intro">
+        <p class="hero-kicker">Atlas Global de Biodiversidade e Paleontologia · GBIF, PBDB &amp; Wikimedia</p>
+        <h1 class="hero-title">Descubra toda a vida da Terra, dos oceanos profundos à era dos dinossauros.</h1>
+        <p class="hero-subtitle">
+          Feito para despertar a curiosidade de jovens exploradores e oferecer precisão taxonômica, osteologia, cladogramas e paleogeografia 3D para biólogos e pesquisadores.
+        </p>
+      </div>
+
+      <!-- Barra de Comando Única (Foco Visual Principal) -->
+      <div class="command-search-bar">
+        <div class="command-input-wrap">
+          <svg class="command-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Busque qualquer ser vivo ou fóssil (ex.: Baleia-Azul, Tubarão-Branco, Onça-Pintada, T-Rex, Tardígrado)..."
+            autocomplete="off"
+            aria-autocomplete="list"
+            aria-controls="searchAutocomplete"
+          >
+          <button type="button" id="clearBtn" class="clear-btn hidden" title="Limpar busca" aria-label="Limpar busca">&times;</button>
+          <div id="searchAutocomplete" class="search-autocomplete hidden" role="listbox" aria-label="Sugestões de espécies"></div>
+        </div>
+        <div class="command-actions">
+          <button type="button" id="searchBtn" class="btn-primary">Buscar</button>
+          <button type="button" id="btnAutoIngest" class="btn-secondary" title="Catalogar automaticamente qualquer espécie do planeta via APIs científicas">
+            Catalogar via API
+          </button>
+        </div>
+      </div>
+
+      <!-- Sugestões Rápidas Limpas (Texto Interativo Discreto) -->
+      <div class="quick-explore-row">
+        <span class="quick-explore-label">Destaques rápidos:</span>
+        <div class="quick-explore-list">
+          <button type="button" class="quick-link-btn" data-name="Balaenoptera musculus">Baleia-Azul</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Carcharodon carcharias">Tubarão-Branco</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Panthera onca">Onça-Pintada</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Tyrannosaurus">T-Rex</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Mosasaurus">Mosasaurus</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Quetzalcoatlus">Quetzalcoatlus</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Milnesium tardigradum">Tardígrado</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Octopus vulgaris">Polvo-Comum</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Smilodon">Smilodon</button>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <button type="button" class="quick-link-btn" data-name="Anomalocaris">Anomalocaris</button>
+        </div>
+        <button type="button" id="btnRandomDino" class="btn-ghost-inline">Surpreenda-me</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =======================================================================
+       PORTAL DE HABITATS / BIOMAS (TEMA VISUAL DINÂMICO POR HABITAT)
+       ======================================================================= -->
+  <section class="habitat-portal-section" aria-label="Explorar por habitat e bioma">
+    <div class="page-shell">
+      <div class="habitat-portal-header">
+        <div>
+          <h2 class="section-heading-sm">Explore por Habitat</h2>
+          <p class="section-subcopy" id="habitatContextDescription">
+            Cada criatura herda a atmosfera visual do seu ambiente natural — selecione um bioma para transformar a experiência.
+          </p>
+        </div>
+
+        <!-- Seletor de Perfil de Leitura: Explorador (Jovem/Visual) vs Pesquisador (Técnico/Científico) -->
+        <div class="audience-switcher" role="group" aria-label="Modo de leitura">
+          <button type="button" class="audience-btn active" id="btnModeExplorer" data-mode="explorer">
+            Modo Explorador
+          </button>
+          <button type="button" class="audience-btn" id="btnModeResearcher" data-mode="researcher">
+            Modo Pesquisador
+          </button>
+        </div>
+      </div>
+
+      <div class="habitat-tabs-grid" id="habitatPortalBar" role="tablist" aria-label="Filtro de habitats">
+        <button type="button" class="habitat-card-tab active" data-habitat="all" role="tab" aria-selected="true">
+          <span class="habitat-swatch swatch-all" aria-hidden="true"></span>
+          <span class="habitat-tab-texts">
+            <strong>Todos os Biomas</strong>
+            <small>Acervo completo</small>
+          </span>
+        </button>
+
+        <button type="button" class="habitat-card-tab" data-habitat="aquatico" role="tab" aria-selected="false">
+          <span class="habitat-swatch swatch-aquatico" aria-hidden="true"></span>
+          <span class="habitat-tab-texts">
+            <strong>Aquáticos &amp; Oceanos</strong>
+            <small>Mares, recifes e rios</small>
+          </span>
+        </button>
+
+        <button type="button" class="habitat-card-tab" data-habitat="terrestre" role="tab" aria-selected="false">
+          <span class="habitat-swatch swatch-terrestre" aria-hidden="true"></span>
+          <span class="habitat-tab-texts">
+            <strong>Florestas &amp; Savanas</strong>
+            <small>Continentes e matas</small>
+          </span>
+        </button>
+
+        <button type="button" class="habitat-card-tab" data-habitat="aereo" role="tab" aria-selected="false">
+          <span class="habitat-swatch swatch-aereo" aria-hidden="true"></span>
+          <span class="habitat-tab-texts">
+            <strong>Céus &amp; Aéreos</strong>
+            <small>Planadores e predadores</small>
+          </span>
+        </button>
+
+        <button type="button" class="habitat-card-tab" data-habitat="anfibio" role="tab" aria-selected="false">
+          <span class="habitat-swatch swatch-anfibio" aria-hidden="true"></span>
+          <span class="habitat-tab-texts">
+            <strong>Anfíbios &amp; Costas</strong>
+            <small>Transição água e terra</small>
+          </span>
+        </button>
+
+        <button type="button" class="habitat-card-tab" data-habitat="bentonico" role="tab" aria-selected="false">
+          <span class="habitat-swatch swatch-bentonico" aria-hidden="true"></span>
+          <span class="habitat-tab-texts">
+            <strong>Abissal &amp; Primordial</strong>
+            <small>Leito marinho antigo</small>
+          </span>
+        </button>
+
+        <button type="button" class="habitat-card-tab" data-habitat="microbiologico" role="tab" aria-selected="false">
+          <span class="habitat-swatch swatch-microbiologico" aria-hidden="true"></span>
+          <span class="habitat-tab-texts">
+            <strong>Mundo Microscópico</strong>
+            <small>Células e extremófilos</small>
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================================
+       WORKSPACE PRINCIPAL: ERAS, FILTROS & CATÁLOGO
+       ======================================================================= -->
+  <main class="page-shell main-workspace" id="catalogo">
+
+    <!-- Barra de Ferramentas de Eras e Filtros Avançados -->
+    <div class="workspace-toolbar">
+      <div class="era-segmented-bar" id="eraTabsContainer" role="tablist" aria-label="Filtrar por era geológica">
+        <button type="button" class="era-tab-btn active" data-era="all">Todas as Eras</button>
+        <button type="button" class="era-tab-btn" data-era="contemporaneo">Contemporâneo</button>
+        <button type="button" class="era-tab-btn" data-era="cenozoico">Cenozoico</button>
+        <button type="button" class="era-tab-btn" data-era="mesozoico">Mesozoico</button>
+        <button type="button" class="era-tab-btn" data-era="paleozoico">Paleozoico</button>
+        <button type="button" class="era-tab-btn" data-era="precambriano">Pré-Cambriano</button>
+        <button type="button" class="era-tab-btn" data-era="microbiologico">Microbiológico</button>
+      </div>
+
+      <div class="workspace-toolbar-right">
+        <button type="button" id="btnToggleFiltersDrawer" class="btn-outline-sm" aria-expanded="false" aria-controls="advancedFiltersPanel">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="7" y1="12" x2="17" y2="12"></line>
+            <line x1="10" y1="18" x2="14" y2="18"></line>
+          </svg>
+          <span>Filtros</span>
+        </button>
+        <button type="button" id="resetFiltersBtn" class="btn-ghost-sm">Limpar filtros</button>
+      </div>
+    </div>
+
+    <!-- Painel Retrátil de Filtros Avançados (Limpo e Compacto) -->
+    <div id="advancedFiltersPanel" class="advanced-filters-panel hidden">
+      <div class="filters-grid-clean">
+        <div class="filter-field">
+          <label for="skeletalFilter">Estrutura Corporal</label>
+          <select id="skeletalFilter">
+            <option value="all">Todas as estruturas</option>
+            <option value="vertebrado">Vertebrados</option>
+            <option value="invertebrado">Invertebrados</option>
+            <option value="microbiologico">Microbiológicos</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="groupFilter">Grupo Taxonômico</label>
+          <select id="groupFilter">
+            <option value="all">Todos os grupos</option>
+            <option value="dinossauro">Dinossauros</option>
+            <option value="mamifero-megafauna">Mamíferos &amp; Megafauna</option>
+            <option value="reptil-marinho">Fauna Marinha &amp; Répteis</option>
+            <option value="pterossauro">Pterossauros &amp; Aves</option>
+            <option value="sinapsideo">Sinapsídeos &amp; Pelicossauros</option>
+            <option value="artropode-invertebrado">Artrópodes &amp; Invertebrados</option>
+            <option value="micro-animal">Micro-Animais Extremófilos</option>
+            <option value="protozoario-protista">Protozoários &amp; Protistas</option>
+            <option value="bacteria-cianobacteria">Bactérias &amp; Cianobactérias</option>
+            <option value="virus-gigante">Vírus Gigantes</option>
+            <option value="ediacarano">Biota Ediacarana</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="periodFilter">Período Geológico</label>
+          <select id="periodFilter">
+            <option value="all">Todos os períodos</option>
+            <option value="Holoceno">Holoceno (Atualidade)</option>
+            <option value="Pleistoceno">Pleistoceno</option>
+            <option value="Eoceno">Eoceno</option>
+            <option value="Cretáceo">Cretáceo (145 – 66 Ma)</option>
+            <option value="Jurássico">Jurássico (201 – 145 Ma)</option>
+            <option value="Triássico">Triássico (252 – 201 Ma)</option>
+            <option value="Permiano">Permiano (299 – 252 Ma)</option>
+            <option value="Devoniano">Devoniano (419 – 359 Ma)</option>
+            <option value="Cambriano">Cambriano (541 – 485 Ma)</option>
+            <option value="Ediacarano">Ediacarano (635 – 541 Ma)</option>
+            <option value="Arqueano">Arqueano (3.500 Ma)</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="dietFilter">Dieta / Nutrição</label>
+          <select id="dietFilter">
+            <option value="all">Todas as dietas</option>
+            <option value="carnivoro">Carnívoros</option>
+            <option value="herbivoro">Herbívoros</option>
+            <option value="piscivoro">Piscívoros</option>
+            <option value="filtrador">Filtradores / Autotróficos</option>
+            <option value="onivoro">Onívoros / Microbívoros</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="discovery-inline-bar">
+        <span class="discovery-inline-label">Sorteio por era:</span>
+        <button type="button" class="discovery-btn" data-era="contemporaneo">Contemporâneo</button>
+        <button type="button" class="discovery-btn" data-era="cenozoico">Cenozoico</button>
+        <button type="button" class="discovery-btn" data-era="mesozoico">Mesozoico</button>
+        <button type="button" class="discovery-btn" data-era="paleozoico">Paleozoico</button>
+        <button type="button" class="discovery-btn" data-era="precambriano">Pré-Cambriano</button>
+        <button type="button" class="discovery-btn" data-era="microbiologico">Microbiológico</button>
+      </div>
+    </div>
+
+    <!-- Cabeçalho de Resultados e Filtros Especiais Ativos -->
+    <div class="results-meta-bar">
+      <div class="results-stats-wrap">
+        <p id="resultsStats" class="results-count-text">Carregando acervo...</p>
+        <div id="activeSpecialFilters" class="active-special-filters"></div>
+      </div>
+      <div class="results-meta-actions">
+        <button type="button" id="refreshCatalogBtn" class="btn-ghost-sm">Atualizar</button>
+      </div>
+    </div>
+
+    <!-- Loading & Progresso SSE em 4 Etapas -->
+    <div id="loading" class="loading-state hidden" role="status" aria-live="polite">
+      <div class="fossil-spinner"></div>
+      <p id="loadingMessage" class="loading-text">Consultando bases científicas...</p>
+      <div id="ingestStepper" class="ingest-stepper hidden">
+        <div class="ingest-step" data-step="1">
+          <span class="step-dot">1</span>
+          <span class="step-name">Wikipédia</span>
+        </div>
+        <div class="ingest-step-line"></div>
+        <div class="ingest-step" data-step="2">
+          <span class="step-dot">2</span>
+          <span class="step-name">GBIF</span>
+        </div>
+        <div class="ingest-step-line"></div>
+        <div class="ingest-step" data-step="3">
+          <span class="step-dot">3</span>
+          <span class="step-name">PBDB</span>
+        </div>
+        <div class="ingest-step-line"></div>
+        <div class="ingest-step" data-step="4">
+          <span class="step-dot">4</span>
+          <span class="step-name">Wikimedia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado Vazio -->
+    <div id="emptyState" class="empty-state hidden">
+      <h3 id="emptyTitle">Nenhum espécime encontrado para este recorte</h3>
+      <p id="emptyDesc">
+        Você pode catalogar qualquer animal vivo ou extinto digitando o nome na barra de busca acima e clicando em <strong>Catalogar via API</strong>.
+      </p>
+      <button type="button" id="reloadSuggestionsBtn" class="btn-primary">Ver acervo completo</button>
+    </div>
+
+    <!-- =====================================================================
+         BANCADA CIENTÍFICA DO MODO PESQUISADOR (VISÍVEL NO MODO PESQUISADOR)
+         ===================================================================== -->
+    <section id="researcherWorkbench" class="researcher-workbench" aria-label="Bancada Científica do Pesquisador">
+      <div class="rw-header">
+        <div>
+          <span class="rw-kicker">Bancada Analítica · Recorte Ativo do Acervo</span>
+          <h3 class="rw-title">Laboratório Morfométrico, Alométrico &amp; Cladístico</h3>
+        </div>
+        <div class="rw-toolbar">
+          <div class="rw-segmented" role="tablist" aria-label="Ferramentas da Bancada">
+            <button type="button" class="rw-seg-btn active" data-rw-panel="allometry" role="tab" aria-selected="true">Alometria Log-Log</button>
+            <button type="button" class="rw-seg-btn" data-rw-panel="matrix" role="tab" aria-selected="false">Matriz Era × Habitat</button>
+            <button type="button" class="rw-seg-btn" data-rw-panel="mrca" role="tab" aria-selected="false">Parentesco (MRCA)</button>
+          </div>
+          <div class="rw-view-controls">
+            <div class="rw-segmented" role="group" aria-label="Formato do catálogo">
+              <button type="button" class="rw-seg-btn active" id="btnCatalogViewCards" data-catalog-view="cards">Grade</button>
+              <button type="button" class="rw-seg-btn" id="btnCatalogViewTable" data-catalog-view="table">Tabela Morfométrica</button>
+            </div>
+            <button type="button" class="btn-outline-sm" id="btnRwExportCsv" title="Baixar recorte atual em CSV">CSV</button>
+            <button type="button" class="btn-outline-sm" id="btnRwCopyTsv" title="Copiar matriz TSV para Excel, R ou Python">Copiar TSV</button>
+            <button type="button" class="btn-outline-sm" id="btnRwExportJson" title="Baixar recorte atual em JSON">JSON</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPIs Estatísticos Reais do Recorte Atual -->
+      <div class="rw-kpi-strip" id="rwKpiStrip"></div>
+
+      <!-- Painel 1: Alometria Log-Log (Comprimento × Massa) -->
+      <div class="rw-panel active" id="rwPanelAllometry">
+        <div class="rw-panel-split">
+          <div class="rw-chart-stage">
+            <div class="rw-panel-head">
+              <div>
+                <h4>Regressão Alométrica Log₁₀(Comprimento) × Log₁₀(Massa)</h4>
+                <p id="rwRegressionFormula" class="rw-formula-line tabular-num">Calculando ajuste de mínimos quadrados...</p>
+              </div>
+              <div class="rw-legend-inline">
+                <span class="rw-leg-item"><i style="background:#38bdf8"></i>Contemporâneo</span>
+                <span class="rw-leg-item"><i style="background:#f59e0b"></i>Mesozoico</span>
+                <span class="rw-leg-item"><i style="background:#a78bfa"></i>Cenozoico</span>
+                <span class="rw-leg-item"><i style="background:#34d399"></i>Paleozoico/Outros</span>
+              </div>
+            </div>
+            <div id="rwAllometrySvgWrap" class="rw-svg-wrap"></div>
+          </div>
+          <aside class="rw-inspector-side" id="rwAllometryInspector">
+            <h4>Inspetor do Ponto &amp; Extremos</h4>
+            <p class="rw-side-hint">Passe o cursor ou clique em qualquer táxon no gráfico para abrir o dossiê científico.</p>
+            <div id="rwAllometryExtremes" class="rw-extremes-list"></div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- Painel 2: Matriz Era × Habitat (Heatmap Clicável) -->
+      <div class="rw-panel" id="rwPanelMatrix">
+        <div class="rw-panel-head">
+          <div>
+            <h4>Matriz de Distribuição Empírica (Era Geológica × Habitat)</h4>
+            <p class="rw-formula-line">Clique em qualquer célula com registros para filtrar instantaneamente o catálogo naquela combinação.</p>
+          </div>
+          <button type="button" class="btn-ghost-sm" id="btnRwResetMatrixFilter">Limpar filtro da matriz</button>
+        </div>
+        <div id="rwHeatmapWrap" class="rw-heatmap-wrap"></div>
+      </div>
+
+      <!-- Painel 3: Calculadora de Parentesco Evolutivo (MRCA) -->
+      <div class="rw-panel" id="rwPanelMrca">
+        <div class="rw-panel-head">
+          <div>
+            <h4>Calculadora de Parentesco Cladístico &amp; Razão Morfométrica (MRCA)</h4>
+            <p class="rw-formula-line">Compare quaisquer dois táxons do acervo para identificar o Ancestral Comum Mais Recente e a distância evolutiva.</p>
+          </div>
+        </div>
+        <div class="rw-mrca-controls">
+          <div class="filter-field">
+            <label for="rwMrcaSelectA">Táxon A</label>
+            <select id="rwMrcaSelectA"></select>
+          </div>
+          <div class="filter-field">
+            <label for="rwMrcaSelectB">Táxon B</label>
+            <select id="rwMrcaSelectB"></select>
+          </div>
+          <button type="button" class="btn-primary-sm" id="btnRwRunMrca">Analisar parentesco</button>
+        </div>
+        <div id="rwMrcaOutput" class="rw-mrca-output"></div>
+      </div>
+    </section>
+
+    <!-- Tabela Morfométrica Ordenável (Alternativa à Grade no Modo Pesquisador) -->
+    <section id="researcherDataTableWrap" class="rw-table-section hidden" aria-label="Tabela Morfométrica do Acervo">
+      <div class="rw-table-scroll">
+        <table class="rw-data-table" id="researcherDataTable">
+          <thead>
+            <tr>
+              <th><button type="button" class="rw-sort-btn" data-sort-col="name">Táxon / Binômio</button></th>
+              <th><button type="button" class="rw-sort-btn" data-sort-col="era">Era / Período</button></th>
+              <th><button type="button" class="rw-sort-btn" data-sort-col="habitat">Habitat</button></th>
+              <th class="num-col"><button type="button" class="rw-sort-btn" data-sort-col="length">Compr. (m)</button></th>
+              <th class="num-col"><button type="button" class="rw-sort-btn" data-sort-col="height">Altura (m)</button></th>
+              <th class="num-col"><button type="button" class="rw-sort-btn" data-sort-col="weight">Massa (kg)</button></th>
+              <th class="num-col"><button type="button" class="rw-sort-btn" data-sort-col="speed">Veloc. (km/h)</button></th>
+              <th class="num-col"><button type="button" class="rw-sort-btn" data-sort-col="bite">Mordida (N)</button></th>
+              <th class="num-col"><button type="button" class="rw-sort-btn" data-sort-col="occurrences">Ocorrências</button></th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="researcherDataTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Grade de Cards com Temas por Habitat -->
+    <section id="results" class="specimen-grid" aria-live="polite"></section>
+
+    <!-- =====================================================================
+         SEÇÃO: LINHA DO TEMPO GEOLÓGICA INTERATIVA & 5 EXTINÇÕES EM MASSA
+         ===================================================================== -->
+    <section class="timeline-section" id="linha-do-tempo" aria-label="Linha do Tempo Geológica">
+      <div class="timeline-section-header">
+        <div>
+          <h2 class="section-heading">Linha do Tempo Geológica</h2>
+          <p class="section-subcopy">
+            Arraste o controle para filtrar organismos por época geológica ou investigue as 5 grandes extinções em massa.
+          </p>
+        </div>
+        <div class="timeline-readout-group">
+          <span id="timelineCurrentReadout" class="timeline-readout-text">Todas as Eras (3.800 Ma – Presente)</span>
+          <button type="button" id="btnClearTimeline" class="btn-ghost-sm hidden">Mostrar todas</button>
+        </div>
+      </div>
+
+      <div class="timeline-card">
+        <div class="timeline-era-bar" aria-hidden="true">
+          <span class="tl-seg tl-precambrian">Pré-Cambriano</span>
+          <span class="tl-seg tl-paleozoic">Paleozoico</span>
+          <span class="tl-seg tl-mesozoic">Mesozoico</span>
+          <span class="tl-seg tl-cenozoic">Cenozoico</span>
+          <span class="tl-seg tl-modern">Hoje</span>
+        </div>
+
+        <input
+          type="range"
+          id="geologicalTimelineSlider"
+          class="timeline-slider"
+          min="0"
+          max="100"
+          step="1"
+          value="100"
+          aria-label="Viajar pela linha do tempo geológica de 3.800 milhões de anos até o presente"
+        >
+
+        <div class="timeline-scale-ticks" aria-hidden="true">
+          <span>3.800 Ma</span>
+          <span>541 Ma</span>
+          <span>252 Ma</span>
+          <span>66 Ma</span>
+          <span>Presente</span>
+        </div>
+
+        <div class="extinctions-strip" id="extinctionsRow">
+          <span class="extinctions-label">Extinções em massa:</span>
+          <button type="button" class="extinction-btn" data-extinction="ordovician">
+            <span class="tabular-num">444 Ma</span> Ordoviciano
+          </button>
+          <button type="button" class="extinction-btn" data-extinction="devonian">
+            <span class="tabular-num">372 Ma</span> Devoniano
+          </button>
+          <button type="button" class="extinction-btn" data-extinction="permian">
+            <span class="tabular-num">252 Ma</span> Permiano-Triássico
+          </button>
+          <button type="button" class="extinction-btn" data-extinction="triassic">
+            <span class="tabular-num">201 Ma</span> Triássico-Jurássico
+          </button>
+          <button type="button" class="extinction-btn" data-extinction="kpg">
+            <span class="tabular-num">66 Ma</span> Cretáceo-Paleógeno (K-Pg)
+          </button>
+        </div>
+
+        <div id="extinctionInfoBanner" class="extinction-summary-box hidden">
+          <div id="extinctionInfoText"></div>
+          <button type="button" id="btnCloseExtinctionBanner" class="icon-close-sm" aria-label="Fechar resumo">&times;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SEÇÃO: ÁRVORE DA VIDA INTERATIVA (FILOGENIA PANORÂMICA)
+         ===================================================================== -->
+    <section class="tree-section" id="arvore-da-vida" aria-label="Árvore da Vida Interativa">
+      <div class="timeline-section-header">
+        <div>
+          <h2 class="section-heading">Árvore da Vida Interativa</h2>
+          <p class="section-subcopy">
+            Navegue pelos grandes ramos evolutivos do acervo — clique em qualquer clado para expandir ou em uma espécie para abrir seu dossiê completo.
+          </p>
+        </div>
+        <div class="tree-toolbar-actions">
+          <button type="button" id="btnExpandAllTree" class="btn-outline-sm">Expandir ramos</button>
+          <button type="button" id="btnCollapseAllTree" class="btn-ghost-sm">Recolher</button>
+        </div>
+      </div>
+
+      <div id="treeOfLifeContainer" class="tree-of-life-card"></div>
+    </section>
+  </main>
+
+  <!-- Notificação Toast Limpa -->
+  <div id="toastNotification" class="toast hidden" role="status" aria-live="polite">
+    <span class="toast-icon" aria-hidden="true"></span>
+    <span class="toast-text" id="toastText">Atualização concluída.</span>
+  </div>
+
+  <!-- Dock Flutuante do Comparador Científico (até 3 espécimes) -->
+  <aside id="compareDock" class="compare-dock hidden" aria-label="Comparador de espécimes">
+    <div class="compare-dock-inner">
+      <div class="compare-dock-left">
+        <span class="compare-dock-title">Comparador (<span id="compareDockCount" class="tabular-num">0</span>/3)</span>
+        <div id="compareDockChips" class="compare-dock-chips"></div>
+      </div>
+      <div class="compare-dock-actions">
+        <button type="button" id="btnClearCompare" class="btn-ghost-sm">Limpar</button>
+        <button type="button" id="btnOpenCompareModal" class="btn-primary-sm" disabled>Comparar lado a lado</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =======================================================================
+       MODAL: DOSSIÊ INTERATIVO ADAPTADO AO HABITAT DO ESPÉCIME
+       ======================================================================= -->
+  <div id="wikiModal" class="modal hidden" data-habitat="terrestre" role="dialog" aria-modal="true" aria-labelledby="wikiTitle">
+    <div class="modal-backdrop" id="wikiModalBackdrop"></div>
+    <div class="modal-content wiki-modal-content">
+
+      <!-- Cabeçalho com Atmosfera do Habitat -->
+      <div class="modal-header wiki-modal-header">
+        <div class="wiki-header-info">
+          <div class="wiki-meta-line" id="wikiMetaLine">
+            <span id="wikiHabitatLabel" class="wiki-habitat-kicker">Habitat Terrestre</span>
+            <span class="meta-sep" aria-hidden="true">·</span>
+            <span id="wikiEraBadge">Contemporâneo</span>
+            <span class="meta-sep" aria-hidden="true">·</span>
+            <span id="wikiSkeletalBadge">Vertebrado</span>
+            <span class="meta-sep" aria-hidden="true">·</span>
+            <span id="wikiPeriodBadge">Holoceno</span>
+          </div>
+          <h2 id="wikiTitle" class="wiki-heading">Panthera onca</h2>
+          <p id="wikiEtymology" class="wiki-etymology">Classificação científica e anatômica</p>
+          <p class="wiki-submeta">
+            <span id="wikiGroupBadge">Mamífero</span>
+            <span class="meta-sep" aria-hidden="true">·</span>
+            <span id="wikiDietBadge">Carnívoro</span>
+          </p>
+        </div>
+
+        <div class="wiki-header-controls">
+          <div class="wiki-quick-tools">
+            <button type="button" id="btnModalFavorite" class="btn-outline-sm">Favoritar</button>
+            <button type="button" id="btnModalAddCollection" class="btn-outline-sm">Coleção</button>
+            <button type="button" id="btnModalCompare" class="btn-outline-sm">Comparar</button>
+            <button type="button" id="btnModalShareLink" class="btn-outline-sm" title="Copiar link direto deste espécime">Link</button>
+            <button type="button" id="btnModalExport" class="btn-outline-sm" title="Exportar dossiê, PDF e citações científicas">Exportar</button>
+          </div>
+          <button type="button" id="closeWikiBtn" class="close-btn" aria-label="Fechar dossiê">&times;</button>
+        </div>
+      </div>
+
+      <!-- Barra de Abas do Dossiê + Alternador de Modo -->
+      <div class="wiki-tabs-bar-wrap">
+        <nav class="wiki-tabs-bar" aria-label="Seções do dossiê">
+          <button type="button" class="wiki-tab-btn active" data-tab="tab-overview">Dossiê Geral</button>
+          <button type="button" class="wiki-tab-btn" data-tab="tab-skeleton" id="tabBtnSkeleton">Esqueleto &amp; Estrutura</button>
+          <button type="button" class="wiki-tab-btn" data-tab="tab-expert" id="tabBtnExpert">Taxonomia &amp; Cladística</button>
+          <button type="button" class="wiki-tab-btn" data-tab="tab-images">Galeria Completa</button>
+          <button type="button" class="wiki-tab-btn" data-tab="tab-notes" id="tabBtnNotes">Caderno de Campo</button>
+        </nav>
+
+        <div class="modal-mode-toggle">
+          <label class="inline-switch">
+            <input type="checkbox" id="modalExpertToggle">
+            <span class="inline-switch-track"></span>
+            <span class="inline-switch-label">Modo Pesquisador</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Conteúdo das Abas -->
+      <div class="modal-body wiki-modal-body">
+
+        <!-- ABA 1: DOSSIÊ GERAL -->
+        <div id="tab-overview" class="wiki-tab-content active">
+          <div class="wiki-grid">
+            <!-- Coluna 1: Fotografia e Galeria -->
+            <div class="wiki-gallery-col">
+              <div class="featured-image-wrapper">
+                <img id="wikiFeaturedImg" src="" alt="Destaque do espécime" class="featured-img" referrerpolicy="no-referrer">
+                <button type="button" id="btnZoomFeatured" class="zoom-btn" title="Ampliar imagem em tela cheia">
+                  Ampliar
+                </button>
+                <div id="wikiFeaturedCaption" class="featured-caption">Representação visual do espécime</div>
+              </div>
+
+              <div class="gallery-thumbs-header">
+                <span>Vistas disponíveis (<span id="galleryCount" class="tabular-num">0</span>)</span>
+                <span class="gallery-hint">Clique para alternar</span>
+              </div>
+              <div id="wikiGalleryThumbs" class="gallery-thumbs-scroll"></div>
+
+              <button type="button" id="btnOpenFullGalleryPopup" class="btn-open-gallery-popup hidden">
+                <div class="popup-btn-texts">
+                  <strong id="popupBtnTitle">Abrir galeria completa (<span id="popupBtnCount">0</span> fotos)</strong>
+                  <small>Filtradas por vida, esqueleto, crânio e fósseis</small>
+                </div>
+                <span class="popup-open-arrow" aria-hidden="true">↗</span>
+              </button>
+
+              <!-- Bioacústica Real (exibido apenas quando há gravação da natureza) -->
+              <div id="bioacousticsBox" class="bioacoustics-box hidden">
+                <div class="bioacoustics-header">
+                  <span class="bioacoustics-kicker">Bioacústica · Som Real da Natureza</span>
+                  <small id="bioacousticsLicense" class="bioacoustics-license">CC / Commons</small>
+                </div>
+                <p id="bioacousticsTitle" class="bioacoustics-title">Gravação de campo</p>
+                <audio id="bioacousticsAudio" class="bioacoustics-audio" controls preload="none"></audio>
+                <small id="bioacousticsAuthor" class="bioacoustics-author">Wikimedia Commons</small>
+              </div>
+
+              <!-- Comparador Visual de Escala em Silhueta + Guia Rápido -->
+              <div id="explorerQuickScaleBox" class="explorer-callout-box">
+                <span class="explorer-callout-kicker">Comparador Visual de Escala &amp; Habitat</span>
+                <div id="visualScaleStage" class="visual-scale-stage"></div>
+                <p id="explorerQuickScaleText"></p>
+              </div>
+            </div>
+
+            <!-- Coluna 2: Biometria, Biologia & Curiosidades -->
+            <div class="wiki-specs-col">
+              <div class="structural-spec-box">
+                <div class="structural-spec-row">
+                  <span class="structural-spec-label">Ambiente / Habitat</span>
+                  <span id="specHabitatDetail" class="structural-spec-val">-</span>
+                </div>
+                <div class="structural-spec-row">
+                  <span class="structural-spec-label">Classificação Esquelética</span>
+                  <span id="specSkeletalType" class="structural-spec-val">Vertebrado</span>
+                </div>
+                <div class="structural-spec-row">
+                  <span class="structural-spec-label">Composição Estrutural</span>
+                  <span id="specSkeletalComp" class="structural-spec-val">-</span>
+                </div>
+                <div class="structural-spec-row">
+                  <span class="structural-spec-label">Status Biológico / IUCN</span>
+                  <span id="specConservationStatus" class="structural-spec-val">-</span>
+                </div>
+              </div>
+
+              <h3 class="section-title">Ficha Biométrica</h3>
+              <div class="specs-grid">
+                <div class="spec-card">
+                  <span class="spec-label">Comprimento</span>
+                  <span id="specLength" class="spec-value tabular-num">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Altura</span>
+                  <span id="specHeight" class="spec-value tabular-num">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Massa Estimada</span>
+                  <span id="specWeight" class="spec-value tabular-num">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Velocidade Máxima</span>
+                  <span id="specSpeed" class="spec-value tabular-num">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Força de Mordida</span>
+                  <span id="specBiteForce" class="spec-value tabular-num">-</span>
+                </div>
+                <div class="spec-card">
+                  <span class="spec-label">Época / Período</span>
+                  <span id="specPeriod" class="spec-value tabular-num">-</span>
+                </div>
+              </div>
+
+              <h3 class="section-title mt-4">Biologia &amp; Paleobiologia</h3>
+              <div id="wikiBioText" class="wiki-text-block"></div>
+
+              <h3 class="section-title mt-4">Você sabia?</h3>
+              <ul id="wikiCuriositiesList" class="curiosities-list"></ul>
+            </div>
+
+            <!-- Coluna 3: Globo 3D Paleogeográfico -->
+            <div class="wiki-globe-col">
+              <div class="globe-3d-card">
+                <div class="globe-3d-header">
+                  <div class="globe-header-title">
+                    <strong>Globo 3D Paleogeográfico</strong>
+                    <span id="globeDatasetBadge" class="globe-source-text">PBDB</span>
+                  </div>
+                  <div class="globe-3d-controls">
+                    <button type="button" id="btnToggleGlobeRotate" class="globe-ctrl-btn" title="Pausar / retomar rotação">⏸</button>
+                    <button type="button" id="btnFocusGlobeSpecimen" class="globe-ctrl-btn" title="Centralizar no espécime">◎</button>
+                    <button type="button" id="btnResetGlobe" class="globe-ctrl-btn" title="Resetar câmera">↺</button>
+                  </div>
+                </div>
+
+                <div class="globe-paleo-bar">
+                  <div id="globePaleoSwitcher" class="globe-paleo-switcher" role="group" aria-label="Mapa Paleocontinental">
+                    <button type="button" class="paleo-mode-btn active" data-paleo-mode="modern">Atual</button>
+                    <button type="button" class="paleo-mode-btn" data-paleo-mode="mesozoic">Mesozoico</button>
+                    <button type="button" class="paleo-mode-btn" data-paleo-mode="pangaea">Pangeia</button>
+                    <button type="button" class="paleo-mode-btn" data-paleo-mode="paleozoic">Paleozoico</button>
+                  </div>
+                  <small id="globePaleoCaption" class="globe-paleo-caption">Configuração Continental Moderna (0 Ma)</small>
+                </div>
+
+                <div class="globe-3d-viewport" id="globe3dContainer">
+                  <canvas id="globe3dCanvas"></canvas>
+                  <div id="globe3dLoading" class="globe-loading-overlay hidden">
+                    <div class="fossil-spinner small"></div>
+                    <span>Carregando Globo 3D...</span>
+                  </div>
+                  <div id="globe3dTooltip" class="globe-tooltip hidden"></div>
+                  <div class="globe-hud-overlay">
+                    <span id="globeHudCoords" class="globe-coords-hud tabular-num">0.00°, 0.00°</span>
+                    <span class="globe-interaction-hint">Arraste para girar · Scroll para zoom</span>
+                  </div>
+                </div>
+
+                <div class="globe-locality-panel">
+                  <div class="globe-locality-header">
+                    <span class="globe-loc-label">Localidade &amp; Estrato Geológico</span>
+                    <p id="globeSpecLocality" class="globe-loc-text">-</p>
+                  </div>
+                  <div class="globe-stats-bar">
+                    <span class="globe-stats-title">Registros mapeados</span>
+                    <span id="globeOccurrencesBadge" class="globe-badge-count tabular-num">0 pontos</span>
+                  </div>
+                  <div id="globePointsList" class="globe-points-scroll"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 2: ESQUELETO, OSSOS, CARTILAGEM OU CITOLOGIA -->
+        <div id="tab-skeleton" class="wiki-tab-content">
+          <div class="dossier-info-strip">
+            <h4>Análise Osteológica e Estrutural</h4>
+            <p id="skeletonExplanationText"></p>
+          </div>
+          <div id="skeletonImagesGrid" class="full-gallery-grid"></div>
+        </div>
+
+        <!-- ABA 3: TAXONOMIA, CLADÍSTICA & PESQUISA AVANÇADA -->
+        <div id="tab-expert" class="wiki-tab-content">
+          <div class="dossier-info-strip expert-strip-flex">
+            <div>
+              <h4>Dossiê Científico Avançado · Taxonomia, Biofísica &amp; Literatura</h4>
+              <p>Análise filogenética, modelagem alométrica (Lei de Kleiber e Lei Quadrado-Cubo), registros reais GBIF/PBDB e artigos científicos revisados por pares.</p>
+            </div>
+            <div class="expert-quick-cite-bar">
+              <button type="button" class="btn-outline-sm" id="btnExpertCopyAbnt">Copiar ABNT</button>
+              <button type="button" class="btn-outline-sm" id="btnExpertCopyApa">Copiar APA</button>
+              <button type="button" class="btn-outline-sm" id="btnExpertCopyBibtex">Copiar BibTeX</button>
+            </div>
+          </div>
+
+          <!-- 1. Matriz Taxonômica Completa & Bases Oficiais -->
+          <div class="expert-section-card expert-full-card">
+            <div class="expert-card-head-row">
+              <h4 class="expert-card-title">Hierarquia Taxonômica &amp; Repositórios Externos</h4>
+              <div id="expertExternalDbLinks" class="expert-db-links"></div>
+            </div>
+            <div id="expertTaxonomyMatrix" class="expert-taxonomy-matrix"></div>
+          </div>
+
+          <!-- 2. Perfil Morfométrico (Radar SVG) + Biofísica & Simulador Quadrado-Cubo -->
+          <div class="expert-grid expert-grid-spaced">
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">Perfil Morfométrico Comparado (Radar)</h4>
+              <p class="expert-card-sub">Percentil relativo do espécime frente à mediana do acervo BioAtlas em 5 eixos biomecânicos.</p>
+              <div id="expertRadarWrap" class="expert-radar-wrap"></div>
+            </div>
+
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">Biofísica Alométrica &amp; Simulador Quadrado-Cubo</h4>
+              <div id="expertBiophysicsGrid" class="expert-biophysics-grid"></div>
+              <div class="expert-scale-sim" id="expertScaleSimBox">
+                <div class="expert-scale-sim-head">
+                  <label for="expertScaleSlider">Simulador de Escala Isométrica (L × k)</label>
+                  <strong id="expertScaleFactorLabel" class="tabular-num">1,00× (100%)</strong>
+                </div>
+                <input type="range" id="expertScaleSlider" min="50" max="200" step="5" value="100" class="expert-scale-slider">
+                <div id="expertScaleSimResults" class="expert-scale-sim-results tabular-num"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Cladograma Interativo + Osteologia, Biomecânica, Histologia -->
+          <div class="expert-grid expert-grid-spaced">
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">Cladograma Filogenético Interativo</h4>
+              <div id="expertCladogram" class="cladogram-tree"></div>
+              <div id="cladeRelativesBox" class="clade-relatives-box hidden"></div>
+            </div>
+
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">Osteologia &amp; Morfometria</h4>
+              <div id="expertOsteology" class="expert-info-text"></div>
+              <div id="expertEcologySummary" class="expert-ecology-summary"></div>
+            </div>
+
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">Biomecânica &amp; Biofísica Funcional</h4>
+              <div id="expertBiomechanics" class="expert-info-text"></div>
+            </div>
+
+            <div class="expert-section-card">
+              <h4 class="expert-card-title">Histologia &amp; Tecidos Corporais</h4>
+              <div id="expertHistology" class="expert-info-text"></div>
+            </div>
+          </div>
+
+          <!-- 4. Registro Estratigráfico & Tabela Real de Ocorrências (GBIF / PBDB) -->
+          <div class="expert-section-card expert-full-card expert-grid-spaced">
+            <div class="expert-card-head-row">
+              <div>
+                <h4 class="expert-card-title">Registros Geográficos &amp; Estratigráficos (GBIF / PBDB)</h4>
+                <p id="expertOccurrencesMeta" class="expert-card-sub tabular-num">Carregando ocorrências georreferenciadas...</p>
+              </div>
+              <div class="expert-card-actions">
+                <button type="button" class="btn-outline-sm" id="btnExportOccCsv">Exportar CSV</button>
+                <button type="button" class="btn-outline-sm" id="btnExportOccGeoJson">Exportar GeoJSON</button>
+              </div>
+            </div>
+            <div id="expertLatitudinalSummary" class="expert-lat-strip"></div>
+            <div id="expertOccurrencesTableWrap" class="expert-occ-table-wrap"></div>
+          </div>
+
+          <!-- 5. Literatura Científica Revisada por Pares (OpenAlex & Crossref) -->
+          <div class="expert-section-card expert-full-card expert-grid-spaced">
+            <div class="expert-card-head-row">
+              <div>
+                <h4 class="expert-card-title">Literatura Científica Revisada por Pares (OpenAlex / Crossref)</h4>
+                <p id="expertPapersMeta" class="expert-card-sub">Consultando publicações indexadas com DOI oficial...</p>
+              </div>
+              <div class="rw-segmented" role="group" aria-label="Ordenar artigos científicos">
+                <button type="button" class="rw-seg-btn active" id="btnPapersSortCited" data-paper-sort="cited">Mais Citados</button>
+                <button type="button" class="rw-seg-btn" id="btnPapersSortRecent" data-paper-sort="recent">Mais Recentes</button>
+              </div>
+            </div>
+            <div id="expertPapersList" class="expert-papers-list"></div>
+          </div>
+        </div>
+
+        <!-- ABA 4: GALERIA COMPLETA -->
+        <div id="tab-images" class="wiki-tab-content">
+          <div class="web-images-header">
+            <div>
+              <h3>Galeria Científica &amp; Múltiplas Visões</h3>
+              <p>Perspectivas fotográficas em vida, esqueleto, anatomia e diagramas de escala.</p>
+            </div>
+            <a id="btnSearchGoogleImages" href="#" target="_blank" rel="noopener noreferrer" class="btn-outline-sm">
+              Buscar no Google Imagens ↗
+            </a>
+          </div>
+
+          <div class="gallery-category-chips" id="galleryCategoryChips">
+            <button type="button" class="gallery-cat-chip active" data-cat="all">Todas</button>
+            <button type="button" class="gallery-cat-chip" data-cat="life_view">Em Vida</button>
+            <button type="button" class="gallery-cat-chip" data-cat="skeletal_view">Esqueleto &amp; Ossos</button>
+            <button type="button" class="gallery-cat-chip" data-cat="anatomy_view">Anatomia</button>
+          </div>
+
+          <div id="fullGalleryGrid" class="full-gallery-grid"></div>
+        </div>
+
+        <!-- ABA 5: CADERNO DE CAMPO & NOTAS DO ESPÉCIME -->
+        <div id="tab-notes" class="wiki-tab-content">
+          <div class="dossier-info-strip">
+            <h4>Caderno de Campo &amp; Anotações de Pesquisa</h4>
+            <p id="fieldNotesSyncHint">Registre observações morfológicas, referências bibliográficas ou roteiros de aula para este espécime. Suas notas são incluídas na exportação do dossiê.</p>
+          </div>
+          <div class="field-notes-editor">
+            <label for="fieldNoteTextarea" class="field-notes-label">Anotações para <strong id="fieldNoteSpecimenName">-</strong></label>
+            <textarea
+              id="fieldNoteTextarea"
+              class="field-notes-textarea"
+              rows="8"
+              maxlength="3000"
+              placeholder="Escreva observações de campo, características osteológicas, curiosidades para aula ou links de artigos científicos..."
+            ></textarea>
+            <div class="field-notes-footer">
+              <span id="fieldNoteCharCount" class="field-notes-counter tabular-num">0 / 3000</span>
+              <div class="field-notes-actions">
+                <button type="button" id="btnDeleteFieldNote" class="btn-ghost-sm">Limpar nota</button>
+                <button type="button" id="btnSaveFieldNote" class="btn-primary-sm">Salvar anotação</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé do Dossiê -->
+      <div class="modal-footer wiki-modal-footer">
+        <span class="wiki-source-note">Fontes científicas abertas · GBIF, Paleobiology Database &amp; Wikimedia Commons</span>
+        <div class="footer-right-actions">
+          <button type="button" id="btnToggleExpertInFooter" class="btn-outline-sm">Alternar Modo Pesquisador</button>
+          <button type="button" id="btnCloseWikiFooter" class="btn-primary-sm">Fechar Dossiê</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL: COMPARADOR CIENTÍFICO LADO A LADO
+       ======================================================================= -->
+  <div id="compareModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="compareModalTitle">
+    <div class="modal-backdrop" id="compareBackdrop"></div>
+    <div class="modal-content compare-modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">Análise Comparativa Biométrica</span>
+          <h2 id="compareModalTitle" class="wiki-heading">Comparador Científico</h2>
+        </div>
+        <button type="button" id="closeCompareBtn" class="close-btn" aria-label="Fechar comparador">&times;</button>
+      </div>
+      <div class="modal-body compare-modal-body" id="compareModalBody"></div>
+      <div class="modal-footer">
+        <span class="wiki-source-note">Escala proporcional baseada em silhueta humana adulta de referência (1,75 m).</span>
+        <button type="button" id="btnCloseCompareFooter" class="btn-primary-sm">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL: COLEÇÕES PERSONALIZADAS & FAVORITOS
+       ======================================================================= -->
+  <div id="collectionsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="collectionsModalTitle">
+    <div class="modal-backdrop" id="collectionsBackdrop"></div>
+    <div class="modal-content collections-modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">Acervo Pessoal</span>
+          <h2 id="collectionsModalTitle" class="wiki-heading">Coleções &amp; Favoritos</h2>
+        </div>
+        <button type="button" id="closeCollectionsBtn" class="close-btn" aria-label="Fechar coleções">&times;</button>
+      </div>
+      <div class="modal-body collections-modal-body">
+        <div id="collectionsSyncBanner" class="collections-sync-banner"></div>
+        <div id="collectionAssignContext" class="collection-assign-context hidden"></div>
+
+        <form id="createCollectionForm" class="create-collection-form">
+          <input type="text" id="newCollectionName" maxlength="80" placeholder="Nome da nova coleção (ex.: Gigantes dos Oceanos, Predadores do Cretáceo)..." required>
+          <input type="text" id="newCollectionDesc" maxlength="200" placeholder="Descrição breve (opcional)...">
+          <button type="submit" class="btn-primary-sm">Criar Coleção</button>
+        </form>
+
+        <div id="collectionsListContainer" class="collections-list-container"></div>
+      </div>
+      <div class="modal-footer">
+        <span class="wiki-source-note">Sincronizado automaticamente quando conectado com sua conta Google.</span>
+        <button type="button" id="btnCloseCollectionsFooter" class="btn-outline-sm">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL: GALERIA INTERATIVA EM TELA CHEIA (LIGHTBOX)
+       ======================================================================= -->
+  <div id="lightboxModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Visualizador interativo de imagem">
+    <div class="modal-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-container interactive-gallery-popup">
+      <div class="lightbox-header-bar">
+        <div class="lightbox-title-wrap">
+          <h3 id="lightboxSpecimenTitle" class="lightbox-specimen-title">Espécime</h3>
+        </div>
+
+        <div class="lightbox-category-nav" id="lightboxCategoryNav">
+          <button type="button" class="lightbox-cat-btn active" data-cat="all">Todas (<span id="lbCatAllCount">0</span>)</button>
+          <button type="button" class="lightbox-cat-btn" data-cat="life_view">Em Vida (<span id="lbCatLifeCount">0</span>)</button>
+          <button type="button" class="lightbox-cat-btn" data-cat="skeletal_view">Esqueleto (<span id="lbCatSkelCount">0</span>)</button>
+          <button type="button" class="lightbox-cat-btn" data-cat="skull_view">Crânio (<span id="lbCatSkullCount">0</span>)</button>
+          <button type="button" class="lightbox-cat-btn" data-cat="fossil_view">Fósseis (<span id="lbCatFossilCount">0</span>)</button>
+        </div>
+
+        <button type="button" id="closeLightboxBtn" class="lightbox-close" aria-label="Fechar visualizador">&times;</button>
+      </div>
+
+      <div class="lightbox-main-stage">
+        <button type="button" id="lightboxPrevBtn" class="lightbox-arrow left" aria-label="Imagem anterior">&#10094;</button>
+
+        <div class="lightbox-content">
+          <div class="lightbox-image-box">
+            <img id="lightboxImg" src="" alt="Imagem ampliada" referrerpolicy="no-referrer">
+            <span id="lightboxCategoryBadge" class="lightbox-category-badge">Em Vida</span>
+          </div>
+          <div class="lightbox-caption-bar">
+            <span id="lightboxCaption">Representação do espécime</span>
+            <span id="lightboxCounter" class="lightbox-counter tabular-num">1 de 12</span>
+          </div>
+        </div>
+
+        <button type="button" id="lightboxNextBtn" class="lightbox-arrow right" aria-label="Próxima imagem">&#10095;</button>
+      </div>
+
+      <div class="lightbox-filmstrip-wrap">
+        <div id="lightboxFilmstrip" class="lightbox-filmstrip"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL: MODO QUIZ / DESAFIO DO EXPLORADOR
+       ======================================================================= -->
+  <div id="quizModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quizModalTitle">
+    <div class="modal-backdrop" id="quizBackdrop"></div>
+    <div class="modal-content quiz-modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker" id="quizModalKicker">Campanha Progressiva · 50 Níveis &amp; 10 Rankings</span>
+          <h2 id="quizModalTitle" class="wiki-heading">Desafio do Explorador</h2>
+        </div>
+        <button type="button" id="closeQuizBtn" class="close-btn" aria-label="Fechar quiz">&times;</button>
+      </div>
+      <div class="modal-body quiz-modal-body" id="quizModalBody"></div>
+      <div class="modal-footer">
+        <span id="quizStatsFooterText" class="wiki-source-note tabular-num">Nível 1/50 · Conquistas: 0/16</span>
+        <div class="footer-right-actions">
+          <button type="button" id="btnRestartQuiz" class="btn-outline-sm">Mapa de Níveis</button>
+          <button type="button" id="btnCloseQuizFooter" class="btn-primary-sm">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL: EXPORTAÇÃO CIENTÍFICA & CITAÇÕES (PDF, ABNT, BibTeX, JSON, CSV)
+       ======================================================================= -->
+  <div id="exportModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
+    <div class="modal-backdrop" id="exportBackdrop"></div>
+    <div class="modal-content export-modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">Produtividade Científica &amp; Referências</span>
+          <h2 id="exportModalTitle" class="wiki-heading">Exportar Dossiê &amp; Citações</h2>
+        </div>
+        <button type="button" id="closeExportBtn" class="close-btn" aria-label="Fechar exportação">&times;</button>
+      </div>
+      <div class="modal-body export-modal-body" id="exportModalBody"></div>
+      <div class="modal-footer">
+        <span class="wiki-source-note">Formato compatível com artigos, relatórios acadêmicos e planos de aula.</span>
+        <button type="button" id="btnCloseExportFooter" class="btn-outline-sm">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé Editorial Limpo -->
+  <footer class="footer">
+    <div class="page-shell footer-inner">
+      <p class="footer-brand"><strong>BioAtlas</strong> — Atlas Global de Biodiversidade e Paleontologia</p>
+      <p class="footer-sources">
+        Dados abertos de
+        <a href="https://www.gbif.org/" target="_blank" rel="noopener">GBIF</a>,
+        <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a> e
+        <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bundle Firebase (Auth + Firestore), Globo 3D (lazy-load Three.js) e Aplicação Modular -->
+  <script src="firebase-bundle.js?v=12.0"></script>
+  <script src="globe3d.js?v=12.0"></script>
+  <script src="app.js?v=12.0"></script>
+</body>
+</html>

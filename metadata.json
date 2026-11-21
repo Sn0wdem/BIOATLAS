@@ -1,0 +1,5 @@
+{
+  "name": "BioAtlas",
+  "description": "Plataforma Global de Biodiversidade e Paleontologia integrada com GBIF, PBDB e Wikimedia Commons, com globo 3D interativo e galeria multivisões.",
+  "requestFramePermissions": []
+}

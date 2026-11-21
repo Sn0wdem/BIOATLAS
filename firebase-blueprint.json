@@ -1,0 +1,435 @@
+{
+  "entities": {
+    "CustomSpecimen": {
+      "title": "CustomSpecimen",
+      "description": "An animal or fossil specimen dynamically ingested via BioAtlas APIs and persisted for the global catalog.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Unique slug identifier for the specimen."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "Common or display name of the specimen."
+        },
+        "genus": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Taxonomic genus."
+        },
+        "scientific_name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Formal scientific binomial name."
+        },
+        "era": {
+          "type": "string",
+          "enum": ["contemporaneo", "cenozoico", "mesozoico", "paleozoico", "precambriano", "microbiologico"],
+          "description": "Geological or contemporary era key."
+        },
+        "era_display": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Localized display name of the era."
+        },
+        "period": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Geological period or epoch."
+        },
+        "epoch": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Sub-period or epoch label."
+        },
+        "geological_range": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Temporal span description."
+        },
+        "group": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Taxonomic group slug."
+        },
+        "group_display": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "Taxonomic group display name."
+        },
+        "diet": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Diet category key."
+        },
+        "diet_display": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "Diet display label."
+        },
+        "habitat": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Primary habitat."
+        },
+        "skeletal_type": {
+          "type": "string",
+          "enum": ["vertebrado", "invertebrado", "microbiologico"],
+          "description": "Body structure classification."
+        },
+        "skeletal_composition": {
+          "type": "string",
+          "maxLength": 240,
+          "description": "Structural skeletal or cellular composition."
+        },
+        "is_contemporary": {
+          "type": "boolean",
+          "description": "Whether the species is currently extant."
+        },
+        "conservation_status": {
+          "type": "string",
+          "maxLength": 160,
+          "description": "IUCN or fossil extinction status."
+        },
+        "length": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Estimated length."
+        },
+        "height": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Estimated height."
+        },
+        "weight": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Estimated weight."
+        },
+        "speed": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Estimated top speed."
+        },
+        "bite_force": {
+          "type": "string",
+          "maxLength": 160,
+          "description": "Estimated bite force."
+        },
+        "image_url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "Primary specimen image URL."
+        },
+        "image_caption": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Caption for the primary image."
+        },
+        "gallery": {
+          "type": "array",
+          "description": "Up to 12 gallery image items."
+        },
+        "etymology": {
+          "type": "string",
+          "maxLength": 600,
+          "description": "Name etymology."
+        },
+        "bio": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "Biological and paleobiological overview."
+        },
+        "curiosities": {
+          "type": "array",
+          "description": "Up to 10 biological curiosities."
+        },
+        "expert": {
+          "type": "object",
+          "description": "Cladogram, osteology, biomechanics, and histology."
+        },
+        "occurrences_count": {
+          "type": "number",
+          "description": "Number of known occurrences."
+        },
+        "fossil_locations": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Geographic distribution or fossil formations."
+        },
+        "is_custom_ingested": {
+          "type": "boolean",
+          "description": "Always true for ingested specimens."
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public"],
+          "description": "Catalog visibility marker used by list security rules."
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "UID of the verified user who persisted this specimen."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "genus",
+        "era",
+        "era_display",
+        "period",
+        "geological_range",
+        "group",
+        "group_display",
+        "diet",
+        "diet_display",
+        "habitat",
+        "skeletal_type",
+        "is_contemporary",
+        "image_url",
+        "is_custom_ingested",
+        "visibility",
+        "ownerId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UserFavorite": {
+      "title": "UserFavorite",
+      "description": "A bookmarked specimen saved by an authenticated user.",
+      "type": "object",
+      "properties": {
+        "specimenId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "ID of the favorited specimen."
+        },
+        "specimenName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "Display name of the favorited specimen."
+        },
+        "era": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Era key for quick filtering."
+        },
+        "imageUrl": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Thumbnail URL."
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Owner user UID."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when favorited."
+        }
+      },
+      "required": ["specimenId", "specimenName", "era", "ownerId", "createdAt"]
+    },
+    "UserCollection": {
+      "title": "UserCollection",
+      "description": "A user-curated collection of specimens (e.g., Predadores do Cretáceo).",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Collection title."
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Optional short description."
+        },
+        "specimenIds": {
+          "type": "array",
+          "description": "Bounded list of up to 50 specimen IDs."
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Owner user UID."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when updated."
+        }
+      },
+      "required": ["name", "specimenIds", "ownerId", "createdAt", "updatedAt"]
+    },
+    "UserFieldNote": {
+      "title": "UserFieldNote",
+      "description": "Personal field research or study notes attached to a BioAtlas specimen.",
+      "type": "object",
+      "properties": {
+        "specimenId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Specimen identifier."
+        },
+        "specimenName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "Display name of the specimen."
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 3000,
+          "description": "Field note body text."
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Owner user UID."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when updated."
+        }
+      },
+      "required": ["specimenId", "specimenName", "content", "ownerId", "createdAt", "updatedAt"]
+    },
+    "UserQuizStats": {
+      "title": "UserQuizStats",
+      "description": "Explorer quiz 50-level sequential campaign progress, difficulty tracks, scores, and unlocked ranking achievements.",
+      "type": "object",
+      "properties": {
+        "totalRounds": {
+          "type": "number",
+          "description": "Completed quiz rounds."
+        },
+        "totalCorrect": {
+          "type": "number",
+          "description": "Cumulative correct answers."
+        },
+        "totalQuestions": {
+          "type": "number",
+          "description": "Cumulative answered questions."
+        },
+        "bestScore": {
+          "type": "number",
+          "description": "Highest percentage score (0-100) achieved in a level."
+        },
+        "badges": {
+          "type": "array",
+          "description": "Up to 60 unlocked difficulty-specific ranking and mastery achievement titles."
+        },
+        "selectedDifficulty": {
+          "type": "string",
+          "enum": ["facil", "medio", "dificil", "especialista"],
+          "description": "Active user-selected difficulty track."
+        },
+        "unlockedLevels": {
+          "type": "object",
+          "description": "Highest sequentially unlocked level (1-50) per difficulty track."
+        },
+        "completedLevels": {
+          "type": "object",
+          "description": "Highest completed level (0-50) per difficulty track."
+        },
+        "levelStars": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "Compact JSON map of best star ratings (1-3) per completed difficulty and level."
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Owner user UID."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when updated."
+        }
+      },
+      "required": ["totalRounds", "totalCorrect", "totalQuestions", "bestScore", "badges", "ownerId", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/custom_specimens/{specimenId}": {
+      "schema": { "$ref": "#/entities/CustomSpecimen" },
+      "description": "Publicly readable catalog of user-ingested specimens with strict owner-only mutations."
+    },
+    "/users/{userId}/favorites/{specimenId}": {
+      "schema": { "$ref": "#/entities/UserFavorite" },
+      "description": "Private user bookmarks of BioAtlas specimens."
+    },
+    "/users/{userId}/collections/{collectionId}": {
+      "schema": { "$ref": "#/entities/UserCollection" },
+      "description": "Private user-defined specimen collections."
+    },
+    "/users/{userId}/notes/{specimenId}": {
+      "schema": { "$ref": "#/entities/UserFieldNote" },
+      "description": "Private user field notes per specimen."
+    },
+    "/users/{userId}/quiz_stats/{statsId}": {
+      "schema": { "$ref": "#/entities/UserQuizStats" },
+      "description": "Private user explorer quiz scores and achievement badges."
+    }
+  }
+}

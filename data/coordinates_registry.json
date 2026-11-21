@@ -1,0 +1,1224 @@
+{
+  "leao": [
+    {
+      "lat": -2.33,
+      "lng": 34.83,
+      "locality": "Parque Nacional do Serengeti",
+      "country": "Tanzânia",
+      "formation": "Savana Africana",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 21.12,
+      "lng": 70.82,
+      "locality": "Parque Nacional da Floresta de Gir (Leão-asiático)",
+      "country": "Índia (Gujarat)",
+      "formation": "Santuário de Vida Selvagem",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -24.01,
+      "lng": 31.49,
+      "locality": "Parque Nacional Kruger",
+      "country": "África do Sul",
+      "formation": "Savana e Bosques",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -19.25,
+      "lng": 23.35,
+      "locality": "Delta do Okavango",
+      "country": "Botsuana",
+      "formation": "Zonas Húmidas do Kalahari",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "gato": [
+    {
+      "lat": 31.2,
+      "lng": 30.0,
+      "locality": "Delta do Baixo Nilo (Berço da Domesticação)",
+      "country": "Egito",
+      "formation": "Bacia do Mediterrâneo",
+      "age_str": "Vivente Cosmopolita"
+    },
+    {
+      "lat": 35.15,
+      "lng": 33.3,
+      "locality": "Shillourokambos (Sítio Neolítico)",
+      "country": "Chipre",
+      "formation": "Associação Pré-Histórica com Humanos",
+      "age_str": "9.500 anos atrás"
+    },
+    {
+      "lat": -23.55,
+      "lng": -46.63,
+      "locality": "Habitats Urbanos e Domésticos",
+      "country": "Brasil / Global",
+      "formation": "Ecossistema Cosmopolita Antropogênico",
+      "age_str": "Vivente Cosmopolita"
+    }
+  ],
+  "elefante": [
+    {
+      "lat": -18.6,
+      "lng": 24.5,
+      "locality": "Parque Nacional de Chobe (Maior Densidade de Elefantes)",
+      "country": "Botsuana",
+      "formation": "Bacia do Rio Zambeze",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -3.35,
+      "lng": 38.0,
+      "locality": "Parque Nacional Tsavo Leste/Oeste",
+      "country": "Quênia",
+      "formation": "Savanas Semiáridas",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -24.0,
+      "lng": 31.5,
+      "locality": "Parque Nacional Kruger",
+      "country": "África do Sul",
+      "formation": "Savana Arbórea",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "aguia-real": [
+    {
+      "lat": 56.5,
+      "lng": -4.5,
+      "locality": "Terras Altas da Escócia (Highlands)",
+      "country": "Reino Unido",
+      "formation": "Falésias e Montanhas Caledonianas",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 44.42,
+      "lng": -110.58,
+      "locality": "Parque Nacional de Yellowstone",
+      "country": "Estados Unidos (Wyoming)",
+      "formation": "Montanhas Rochosas",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 46.5,
+      "lng": 8.5,
+      "locality": "Cordilheira dos Alpes Centrais",
+      "country": "Suíça / Áustria",
+      "formation": "Picos e Maciços Alpinos",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "tubarao-martelo": [
+    {
+      "lat": 0.6,
+      "lng": -90.5,
+      "locality": "Arco de Darwin & Ilha Wolf (Grandes Cardumes)",
+      "country": "Equador (Galápagos)",
+      "formation": "Montes Submarinos Oceânicos",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 5.53,
+      "lng": -87.05,
+      "locality": "Parque Nacional Ilha do Coco",
+      "country": "Costa Rica",
+      "formation": "Cordilheira Submarina do Coco",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -23.8,
+      "lng": 35.5,
+      "locality": "Praia do Tofo",
+      "country": "Moçambique",
+      "formation": "Corredor Pelágico do Canal de Moçambique",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "alossauro": [
+    {
+      "lat": 39.32,
+      "lng": -110.85,
+      "locality": "Cleveland-Lloyd Dinosaur Quarry",
+      "country": "Estados Unidos (Utah)",
+      "formation": "Formação Morrison",
+      "age_str": "152 Ma (Jurássico)"
+    },
+    {
+      "lat": 44.5,
+      "lng": -108.0,
+      "locality": "Bighorn Basin (Howe Quarry)",
+      "country": "Estados Unidos (Wyoming)",
+      "formation": "Formação Morrison",
+      "age_str": "150 Ma (Jurássico)"
+    },
+    {
+      "lat": 40.44,
+      "lng": -109.3,
+      "locality": "Dinosaur National Monument",
+      "country": "Estados Unidos (Utah/Colorado)",
+      "formation": "Formação Morrison",
+      "age_str": "151 Ma (Jurássico)"
+    },
+    {
+      "lat": 39.2,
+      "lng": -9.3,
+      "locality": "Lourinhã (Allosaurus europaeus)",
+      "country": "Portugal",
+      "formation": "Formação Lourinhã",
+      "age_str": "150 Ma (Jurássico Superior)"
+    }
+  ],
+  "pterodactilo": [
+    {
+      "lat": 48.9,
+      "lng": 11.2,
+      "locality": "Solnhofen Limestone (Eichstätt & Solnhofen)",
+      "country": "Alemanha (Baviera)",
+      "formation": "Formação Altmühltal",
+      "age_str": "150.8 – 148.5 Ma (Jurássico Superior)"
+    },
+    {
+      "lat": 48.8,
+      "lng": 11.45,
+      "locality": "Kelheim / Nusplingen",
+      "country": "Alemanha (Baviera)",
+      "formation": "Calcário Litográfico Solnhofen",
+      "age_str": "150 Ma (Jurássico Superior)"
+    }
+  ],
+  "crocodilo-do-nilo": [
+    {
+      "lat": -27.8,
+      "lng": 32.5,
+      "locality": "Parque de Zonas Húmidas de iSimangaliso",
+      "country": "África do Sul",
+      "formation": "Estuário de Santa Lúcia",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 24.0,
+      "lng": 32.9,
+      "locality": "Lago Nasser / Rio Nilo",
+      "country": "Egito",
+      "formation": "Bacia Hidrográfica do Nilo",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -1.3,
+      "lng": 35.1,
+      "locality": "Rio Mara (Travessia da Grande Migração)",
+      "country": "Quênia (Masai Mara)",
+      "formation": "Bacia do Rio Mara",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "livyatan-melvillei": [
+    {
+      "lat": -14.1,
+      "lng": -75.7,
+      "locality": "Cerro Colorado (Deserto de Ocucaje)",
+      "country": "Peru (Bacia de Pisco)",
+      "formation": "Formação Pisco",
+      "age_str": "9.9 – 8.9 Ma (Mioceno)"
+    }
+  ],
+  "estegossauro": [
+    {
+      "lat": 40.44,
+      "lng": -109.3,
+      "locality": "Dinosaur Quarry (Dinosaur National Monument)",
+      "country": "Estados Unidos (Utah)",
+      "formation": "Formação Morrison",
+      "age_str": "155 – 150 Ma (Jurássico)"
+    },
+    {
+      "lat": 39.5,
+      "lng": -105.2,
+      "locality": "Morrison (Garden Park Quarry)",
+      "country": "Estados Unidos (Colorado)",
+      "formation": "Formação Morrison",
+      "age_str": "152 Ma (Jurássico)"
+    }
+  ],
+  "lobo": [
+    {
+      "lat": 44.42,
+      "lng": -110.58,
+      "locality": "Parque Nacional de Yellowstone (Alcateias Reintroduzidas)",
+      "country": "Estados Unidos (Wyoming)",
+      "formation": "Ecorregião das Rochosas do Norte",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 62.0,
+      "lng": 15.0,
+      "locality": "Taiga Escandinava",
+      "country": "Suécia / Noruega",
+      "formation": "Floresta Boreal",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 42.0,
+      "lng": -6.5,
+      "locality": "Serra da Culebra (Lobo-ibérico)",
+      "country": "Espanha (Castela e Leão)",
+      "formation": "Bosques e Matagais Mediterrânicos",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "baleia-azul": [
+    {
+      "lat": -64.8,
+      "lng": -63.5,
+      "locality": "Península Antártica",
+      "country": "Oceano Austral",
+      "formation": "Zona Pelágica",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 50.2,
+      "lng": -128.5,
+      "locality": "Ilha de Vancouver",
+      "country": "Canadá / Pacífico Norte",
+      "formation": "Águas Costeiras",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 66.5,
+      "lng": -18.2,
+      "locality": "Costa da Islândia",
+      "country": "Atlântico Norte",
+      "formation": "Águas Subpolares",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -32.0,
+      "lng": 115.0,
+      "locality": "Perth Canyon",
+      "country": "Austrália Ocidental",
+      "formation": "Oceano Índico",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "onca-pintada": [
+    {
+      "lat": -16.5,
+      "lng": -56.5,
+      "locality": "Pantanal Norte (Poconé)",
+      "country": "Brasil (Mato Grosso)",
+      "formation": "Bioma Pantanal",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -3.1,
+      "lng": -60.0,
+      "locality": "Bacia do Rio Negro",
+      "country": "Brasil (Amazonas)",
+      "formation": "Floresta Amazônica",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -25.6,
+      "lng": -54.4,
+      "locality": "Parque Nacional do Iguaçu",
+      "country": "Brasil (Paraná)",
+      "formation": "Mata Atlântica",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 18.5,
+      "lng": -89.5,
+      "locality": "Reserva de Calakmul",
+      "country": "México (Campeche)",
+      "formation": "Selva Maia",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "polvo-comum": [
+    {
+      "lat": 36.5,
+      "lng": -6.3,
+      "locality": "Golfo de Cádis",
+      "country": "Espanha / Mediterrâneo",
+      "formation": "Zona Bentônica Costeira",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -23.0,
+      "lng": -44.3,
+      "locality": "Baía de Ilha Grande",
+      "country": "Brasil (Rio de Janeiro)",
+      "formation": "Recifes e Costões",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 34.5,
+      "lng": 135.0,
+      "locality": "Mar Interior de Seto",
+      "country": "Japão",
+      "formation": "Substrato Rochoso",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "tubarao-branco": [
+    {
+      "lat": -34.6,
+      "lng": 19.4,
+      "locality": "Gansbaai / Dyer Island",
+      "country": "África do Sul",
+      "formation": "Águas Costeiras Temperadas",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -35.1,
+      "lng": 136.1,
+      "locality": "Ilhas Neptune",
+      "country": "Austrália do Sul",
+      "formation": "Plataforma Continental",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 37.8,
+      "lng": -123.0,
+      "locality": "Ilhas Farallon",
+      "country": "Estados Unidos (Califórnia)",
+      "formation": "Pacífico Oriental",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 29.0,
+      "lng": -118.3,
+      "locality": "Ilha Guadalupe",
+      "country": "México (Baja California)",
+      "formation": "Águas Oceânicas Claras",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "anomalocaris": [
+    {
+      "lat": 51.4,
+      "lng": -116.5,
+      "locality": "Burgess Shale (Fossil Ridge)",
+      "country": "Canadá (Colúmbia Britânica)",
+      "formation": "Formação Stephen",
+      "age_str": "508 Ma (Cambriano)"
+    },
+    {
+      "lat": 39.3,
+      "lng": -113.3,
+      "locality": "House Range",
+      "country": "Estados Unidos (Utah)",
+      "formation": "Formação Wheeler",
+      "age_str": "505 Ma (Cambriano)"
+    },
+    {
+      "lat": 24.8,
+      "lng": 102.9,
+      "locality": "Biota de Chengjiang",
+      "country": "China (Yunnan)",
+      "formation": "Folhelho Maotianshan",
+      "age_str": "518 Ma (Cambriano)"
+    }
+  ],
+  "arthropleura": [
+    {
+      "lat": 55.9,
+      "lng": -3.2,
+      "locality": "Craigentinny & Edimburgo",
+      "country": "Escócia",
+      "formation": "Midland Valley Coal",
+      "age_str": "315 Ma (Carbonífero)"
+    },
+    {
+      "lat": 50.4,
+      "lng": 3.8,
+      "locality": "Bacia Huller / Nord-Pas-de-Calais",
+      "country": "França / Bélgica",
+      "formation": "Camadas de Carvão",
+      "age_str": "310 Ma (Carbonífero)"
+    },
+    {
+      "lat": 41.3,
+      "lng": -88.3,
+      "locality": "Mazon Creek",
+      "country": "Estados Unidos (Illinois)",
+      "formation": "Formação Francis Creek",
+      "age_str": "307 Ma (Carbonífero)"
+    }
+  ],
+  "basilosaurus": [
+    {
+      "lat": 29.3,
+      "lng": 30.0,
+      "locality": "Wadi Al-Hitan (Vale das Baleias)",
+      "country": "Egito (Faiyum)",
+      "formation": "Formação Birket Qarun",
+      "age_str": "40 - 35 Ma (Eoceno)"
+    },
+    {
+      "lat": 31.8,
+      "lng": -88.2,
+      "locality": "Condado de Choctaw",
+      "country": "Estados Unidos (Alabama)",
+      "formation": "Formação Jackson",
+      "age_str": "38 Ma (Eoceno)"
+    },
+    {
+      "lat": 32.3,
+      "lng": -90.2,
+      "locality": "Bacia do Rio Pearl",
+      "country": "Estados Unidos (Mississippi)",
+      "formation": "Formação Moodys Branch",
+      "age_str": "37 Ma (Eoceno)"
+    }
+  ],
+  "brachiosaurus": [
+    {
+      "lat": 39.1,
+      "lng": -108.6,
+      "locality": "Grand River Valley (Fruita)",
+      "country": "Estados Unidos (Colorado)",
+      "formation": "Formação Morrison",
+      "age_str": "154 - 150 Ma (Jurássico)"
+    },
+    {
+      "lat": 40.4,
+      "lng": -109.3,
+      "locality": "Dinosaur National Monument",
+      "country": "Estados Unidos (Utah)",
+      "formation": "Formação Morrison",
+      "age_str": "152 Ma (Jurássico)"
+    },
+    {
+      "lat": 42.8,
+      "lng": -106.3,
+      "locality": "Como Bluff / Bone Cabin Quarry",
+      "country": "Estados Unidos (Wyoming)",
+      "formation": "Formação Morrison",
+      "age_str": "150 Ma (Jurássico)"
+    }
+  ],
+  "charnia": [
+    {
+      "lat": 52.7,
+      "lng": -1.3,
+      "locality": "Floresta de Charnwood",
+      "country": "Inglaterra (Leicestershire)",
+      "formation": "Formação Bradgate",
+      "age_str": "570 - 560 Ma (Ediacarano)"
+    },
+    {
+      "lat": 46.6,
+      "lng": -53.2,
+      "locality": "Mistaken Point",
+      "country": "Canadá (Terra Nova)",
+      "formation": "Formação Drook / Conception",
+      "age_str": "565 Ma (Ediacarano)"
+    },
+    {
+      "lat": 65.5,
+      "lng": 39.5,
+      "locality": "Costa de Zimnii Bereg (Mar Branco)",
+      "country": "Rússia (Arkhangelsk)",
+      "formation": "Formação Ust-Pinega",
+      "age_str": "555 Ma (Ediacarano)"
+    }
+  ],
+  "dickinsonia": [
+    {
+      "lat": -31.4,
+      "lng": 138.4,
+      "locality": "Ediacara Hills (Nilpena)",
+      "country": "Austrália do Sul",
+      "formation": "Arenito Pound",
+      "age_str": "555 Ma (Ediacarano)"
+    },
+    {
+      "lat": 65.6,
+      "lng": 40.2,
+      "locality": "Península de Onega",
+      "country": "Rússia (Mar Branco)",
+      "formation": "Formação Erga",
+      "age_str": "558 Ma (Ediacarano)"
+    },
+    {
+      "lat": 51.2,
+      "lng": 27.5,
+      "locality": "Podolia",
+      "country": "Ucrânia",
+      "formation": "Série Mogilev",
+      "age_str": "550 Ma (Ediacarano)"
+    }
+  ],
+  "dimetrodon": [
+    {
+      "lat": 33.8,
+      "lng": -99.4,
+      "locality": "Seymour / Red Beds",
+      "country": "Estados Unidos (Texas)",
+      "formation": "Grupo Clear Fork",
+      "age_str": "285 Ma (Permiano)"
+    },
+    {
+      "lat": 35.2,
+      "lng": -97.5,
+      "locality": "Condado de Cleveland",
+      "country": "Estados Unidos (Oklahoma)",
+      "formation": "Formação Garber",
+      "age_str": "280 Ma (Permiano)"
+    },
+    {
+      "lat": 50.8,
+      "lng": 10.5,
+      "locality": "Bromacker Quarry (Floresta da Turíngia)",
+      "country": "Alemanha",
+      "formation": "Formação Tambach",
+      "age_str": "290 Ma (Permiano)"
+    }
+  ],
+  "dunkleosteus": [
+    {
+      "lat": 41.5,
+      "lng": -81.7,
+      "locality": "Cleveland / Rocky River",
+      "country": "Estados Unidos (Ohio)",
+      "formation": "Folhelho Cleveland",
+      "age_str": "360 Ma (Devoniano)"
+    },
+    {
+      "lat": 31.2,
+      "lng": -4.3,
+      "locality": "Tafilalt / Bacia de Draa",
+      "country": "Marrocos",
+      "formation": "Estratos Kellwasser",
+      "age_str": "365 Ma (Devoniano)"
+    },
+    {
+      "lat": 50.7,
+      "lng": 7.2,
+      "locality": "Maciço Renano",
+      "country": "Alemanha",
+      "formation": "Calcário de Bergisch Gladbach",
+      "age_str": "365 Ma (Devoniano)"
+    }
+  ],
+  "gorgonops": [
+    {
+      "lat": -32.3,
+      "lng": 22.5,
+      "locality": "Bacia do Karoo (Beaufort West)",
+      "country": "África do Sul",
+      "formation": "Grupo Beaufort (Zona Tropidostoma)",
+      "age_str": "255 Ma (Permiano)"
+    },
+    {
+      "lat": -9.5,
+      "lng": 34.0,
+      "locality": "Bacia do Rio Ruhuhu",
+      "country": "Tanzânia",
+      "formation": "Formação Usili",
+      "age_str": "256 Ma (Permiano)"
+    },
+    {
+      "lat": -13.1,
+      "lng": 31.8,
+      "locality": "Vale do Rio Luangwa",
+      "country": "Zâmbia",
+      "formation": "Formação Madumabisa Mudstone",
+      "age_str": "255 Ma (Permiano)"
+    }
+  ],
+  "mammuthus": [
+    {
+      "lat": 71.0,
+      "lng": 149.0,
+      "locality": "Península de Yamal / Rio Kolyma",
+      "country": "Rússia (Sibéria)",
+      "formation": "Permafrost / Pleistoceno",
+      "age_str": "40.000 - 4.000 anos"
+    },
+    {
+      "lat": 71.2,
+      "lng": -179.5,
+      "locality": "Ilha de Wrangel",
+      "country": "Rússia (Ártico)",
+      "formation": "Refúgio Holoceno Tardio",
+      "age_str": "4.000 anos (Extinção)"
+    },
+    {
+      "lat": 64.0,
+      "lng": -139.4,
+      "locality": "Dawson City (Klondike)",
+      "country": "Canadá (Yukon)",
+      "formation": "Camadas de Cascalho Dourado",
+      "age_str": "30.000 anos"
+    },
+    {
+      "lat": 43.4,
+      "lng": -103.5,
+      "locality": "Mammoth Site (Hot Springs)",
+      "country": "Estados Unidos (Dakota do Sul)",
+      "formation": "Depósito de Sinkhole",
+      "age_str": "26.000 anos"
+    }
+  ],
+  "meganeura": [
+    {
+      "lat": 46.2,
+      "lng": 2.9,
+      "locality": "Commentry",
+      "country": "França (Allier)",
+      "formation": "Terreno Carbonífero de Commentry",
+      "age_str": "300 Ma (Carbonífero)"
+    },
+    {
+      "lat": 53.0,
+      "lng": -2.2,
+      "locality": "North Staffordshire Coalfield",
+      "country": "Inglaterra",
+      "formation": "Upper Coal Measures",
+      "age_str": "305 Ma (Carbonífero)"
+    }
+  ],
+  "megatherium": [
+    {
+      "lat": -19.6,
+      "lng": -43.9,
+      "locality": "Grutas de Lagoa Santa",
+      "country": "Brasil (Minas Gerais)",
+      "formation": "Depósito Cársico Pleistocênico",
+      "age_str": "12.000 anos"
+    },
+    {
+      "lat": -38.0,
+      "lng": -57.5,
+      "locality": "Mar del Plata / Rio Quequén",
+      "country": "Argentina (Pampas)",
+      "formation": "Formação Miramar",
+      "age_str": "100.000 anos"
+    },
+    {
+      "lat": -8.8,
+      "lng": -42.5,
+      "locality": "Serra da Capivara",
+      "country": "Brasil (Piauí)",
+      "formation": "Grutas e Abrigamentos",
+      "age_str": "15.000 anos"
+    },
+    {
+      "lat": -30.0,
+      "lng": -51.2,
+      "locality": "Uruguaiana / Touro Passo",
+      "country": "Brasil (Rio Grande do Sul)",
+      "formation": "Formação Touro Passo",
+      "age_str": "13.000 anos"
+    }
+  ],
+  "mosasaurus": [
+    {
+      "lat": 50.8,
+      "lng": 5.7,
+      "locality": "Monte São Pedro (Maastricht)",
+      "country": "Holanda / Bélgica",
+      "formation": "Formação Maastricht",
+      "age_str": "66 Ma (Cretáceo)"
+    },
+    {
+      "lat": 40.3,
+      "lng": -74.2,
+      "locality": "Condado de Monmouth",
+      "country": "Estados Unidos (Nova Jersey)",
+      "formation": "Formação Navesink",
+      "age_str": "68 Ma (Cretáceo)"
+    },
+    {
+      "lat": 32.2,
+      "lng": -7.9,
+      "locality": "Bacia de Ganntour (Benguerir)",
+      "country": "Marrocos",
+      "formation": "Fosfatos Cretáceos",
+      "age_str": "67 Ma (Cretáceo)"
+    }
+  ],
+  "opabinia": [
+    {
+      "lat": 51.4,
+      "lng": -116.5,
+      "locality": "Burgess Shale (Walcott Quarry)",
+      "country": "Canadá (Colúmbia Britânica)",
+      "formation": "Formação Stephen",
+      "age_str": "508 Ma (Cambriano)"
+    }
+  ],
+  "megalodon": [
+    {
+      "lat": 32.8,
+      "lng": -79.9,
+      "locality": "Charleston / Cooper River",
+      "country": "Estados Unidos (Carolina do Sul)",
+      "formation": "Formação Hawthorne",
+      "age_str": "15 Ma (Mioceno)"
+    },
+    {
+      "lat": 38.5,
+      "lng": -76.5,
+      "locality": "Calvert Cliffs",
+      "country": "Estados Unidos (Maryland)",
+      "formation": "Formação Calvert",
+      "age_str": "14 Ma (Mioceno)"
+    },
+    {
+      "lat": 36.7,
+      "lng": -6.0,
+      "locality": "Bacia do Guadalquivir",
+      "country": "Espanha (Andaluzia)",
+      "formation": "Depósitos Neógenos",
+      "age_str": "10 Ma (Mioceno)"
+    },
+    {
+      "lat": -21.8,
+      "lng": 114.1,
+      "locality": "Península de North West Cape",
+      "country": "Austrália Ocidental",
+      "formation": "Calcário Cape Range",
+      "age_str": "12 Ma (Mioceno)"
+    },
+    {
+      "lat": 35.5,
+      "lng": 139.5,
+      "locality": "Chiba / Banto River",
+      "country": "Japão",
+      "formation": "Grupo Miura",
+      "age_str": "8 Ma (Mioceno)"
+    }
+  ],
+  "purussaurus": [
+    {
+      "lat": -9.9,
+      "lng": -67.8,
+      "locality": "Rio Acre / Rio Purus",
+      "country": "Brasil (Acre)",
+      "formation": "Formação Solimões",
+      "age_str": "8 Ma (Mioceno Superior)"
+    },
+    {
+      "lat": -7.5,
+      "lng": -72.7,
+      "locality": "Alto Rio Juruá",
+      "country": "Brasil (Acre)",
+      "formation": "Formação Solimões",
+      "age_str": "8 Ma (Mioceno)"
+    },
+    {
+      "lat": -3.7,
+      "lng": -73.2,
+      "locality": "Iquitos / Rio Amazonas",
+      "country": "Peru (Loreto)",
+      "formation": "Formação Pebas",
+      "age_str": "10 Ma (Mioceno)"
+    },
+    {
+      "lat": 10.7,
+      "lng": -70.7,
+      "locality": "Urumaco",
+      "country": "Venezuela (Falcón)",
+      "formation": "Formação Urumaco",
+      "age_str": "9 Ma (Mioceno)"
+    }
+  ],
+  "quetzalcoatlus": [
+    {
+      "lat": 29.3,
+      "lng": -103.3,
+      "locality": "Big Bend National Park",
+      "country": "Estados Unidos (Texas)",
+      "formation": "Formação Javelina",
+      "age_str": "68 Ma (Cretáceo)"
+    },
+    {
+      "lat": 30.1,
+      "lng": -103.8,
+      "locality": "Brewster County",
+      "country": "Estados Unidos (Texas)",
+      "formation": "Formação Javelina",
+      "age_str": "67 Ma (Cretáceo)"
+    }
+  ],
+  "smilodon": [
+    {
+      "lat": -19.6,
+      "lng": -44.0,
+      "locality": "Gruta da Lapinha (Peter Lund)",
+      "country": "Brasil (Minas Gerais)",
+      "formation": "Depósitos Cársicos de Lagoa Santa",
+      "age_str": "10.000 anos"
+    },
+    {
+      "lat": -34.6,
+      "lng": -58.4,
+      "locality": "Rio Luján / Pampas",
+      "country": "Argentina (Buenos Aires)",
+      "formation": "Formação Luján",
+      "age_str": "12.000 anos"
+    },
+    {
+      "lat": 34.1,
+      "lng": -118.4,
+      "locality": "Rancho La Brea Tar Pits",
+      "country": "Estados Unidos (Califórnia)",
+      "formation": "Poços de Asfalto La Brea",
+      "age_str": "15.000 anos"
+    },
+    {
+      "lat": -5.0,
+      "lng": -39.0,
+      "locality": "Quixeramobim / Ceará",
+      "country": "Brasil (Ceará)",
+      "formation": "Tanques Paleontológicos",
+      "age_str": "11.000 anos"
+    }
+  ],
+  "spinosaurus": [
+    {
+      "lat": 28.3,
+      "lng": 28.9,
+      "locality": "Oásis de Bahariya",
+      "country": "Egito (Deserto Ocidental)",
+      "formation": "Formação Bahariya",
+      "age_str": "95 Ma (Cretáceo)"
+    },
+    {
+      "lat": 31.0,
+      "lng": -3.9,
+      "locality": "Leitos Kem Kem (Taouz)",
+      "country": "Marrocos (Tafilalt)",
+      "formation": "Formação Kem Kem",
+      "age_str": "95 Ma (Cretáceo)"
+    },
+    {
+      "lat": 33.1,
+      "lng": 10.4,
+      "locality": "Chenini / Tataouine",
+      "country": "Tunísia",
+      "formation": "Formação Chenini",
+      "age_str": "100 Ma (Cretáceo)"
+    }
+  ],
+  "spriggina": [
+    {
+      "lat": -31.4,
+      "lng": 138.4,
+      "locality": "Ediacara Hills (Flinders Ranges)",
+      "country": "Austrália do Sul",
+      "formation": "Arenito Pound",
+      "age_str": "550 Ma (Ediacarano)"
+    },
+    {
+      "lat": 65.5,
+      "lng": 39.5,
+      "locality": "Rio Zimnaya Zolotitsa",
+      "country": "Rússia (Mar Branco)",
+      "formation": "Formação Verkhovka",
+      "age_str": "555 Ma (Ediacarano)"
+    }
+  ],
+  "tiktaalik": [
+    {
+      "lat": 76.8,
+      "lng": -83.0,
+      "locality": "Ilha Ellesmere (Nunavut)",
+      "country": "Canadá (Ártico)",
+      "formation": "Formação Fram",
+      "age_str": "375 Ma (Devoniano)"
+    }
+  ],
+  "titanoboa": [
+    {
+      "lat": 11.1,
+      "lng": -72.6,
+      "locality": "Mina de Carvão de Cerrejón",
+      "country": "Colômbia (La Guajira)",
+      "formation": "Formação Cerrejón",
+      "age_str": "60 - 58 Ma (Paleoceno)"
+    }
+  ],
+  "triceratops": [
+    {
+      "lat": 47.5,
+      "lng": -106.2,
+      "locality": "Hell Creek (Jordan)",
+      "country": "Estados Unidos (Montana)",
+      "formation": "Formação Hell Creek",
+      "age_str": "68 - 66 Ma (Cretáceo)"
+    },
+    {
+      "lat": 43.5,
+      "lng": -104.5,
+      "locality": "Lance Creek",
+      "country": "Estados Unidos (Wyoming)",
+      "formation": "Formação Lance",
+      "age_str": "67 Ma (Cretáceo)"
+    },
+    {
+      "lat": 51.5,
+      "lng": -112.7,
+      "locality": "Drumheller / Red Deer River",
+      "country": "Canadá (Alberta)",
+      "formation": "Formação Scollard",
+      "age_str": "66 Ma (Cretáceo)"
+    },
+    {
+      "lat": 39.7,
+      "lng": -105.0,
+      "locality": "Denver Basin (Golden)",
+      "country": "Estados Unidos (Colorado)",
+      "formation": "Formação Denver",
+      "age_str": "68 Ma (Cretáceo)"
+    }
+  ],
+  "tyrannosaurus": [
+    {
+      "lat": 47.5,
+      "lng": -106.2,
+      "locality": "Hell Creek (Garfield County)",
+      "country": "Estados Unidos (Montana)",
+      "formation": "Formação Hell Creek (Holótipo)",
+      "age_str": "68 - 66 Ma (Cretáceo)"
+    },
+    {
+      "lat": 43.5,
+      "lng": -104.5,
+      "locality": "Niobrara County (Lance Creek)",
+      "country": "Estados Unidos (Wyoming)",
+      "formation": "Formação Lance",
+      "age_str": "67 Ma (Cretáceo)"
+    },
+    {
+      "lat": 45.4,
+      "lng": -101.4,
+      "locality": "Faith (Sue Holótipo)",
+      "country": "Estados Unidos (Dakota do Sul)",
+      "formation": "Formação Hell Creek",
+      "age_str": "67 Ma (Cretáceo)"
+    },
+    {
+      "lat": 49.0,
+      "lng": -106.0,
+      "locality": "Frenchman River (Scotty)",
+      "country": "Canadá (Saskatchewan)",
+      "formation": "Formação Frenchman",
+      "age_str": "66 Ma (Cretáceo)"
+    }
+  ],
+  "velociraptor": [
+    {
+      "lat": 44.1,
+      "lng": 103.7,
+      "locality": "Flaming Cliffs (Bayn Dzak)",
+      "country": "Mongólia (Deserto de Gobi)",
+      "formation": "Formação Djadochta",
+      "age_str": "75 - 71 Ma (Cretáceo)"
+    },
+    {
+      "lat": 43.5,
+      "lng": 101.5,
+      "locality": "Tugriken Shireh (Fóssil Lutador)",
+      "country": "Mongólia (Deserto de Gobi)",
+      "formation": "Formação Djadochta",
+      "age_str": "73 Ma (Cretáceo)"
+    },
+    {
+      "lat": 41.8,
+      "lng": 107.0,
+      "locality": "Baía Mandahu (Mongólia Interior)",
+      "country": "China",
+      "formation": "Formação Bayan Mandahu",
+      "age_str": "75 Ma (Cretáceo)"
+    }
+  ],
+  "tardigrado": [
+    {
+      "lat": -77.8,
+      "lng": 166.7,
+      "locality": "McMurdo Dry Valleys",
+      "country": "Antártica",
+      "formation": "Sedimentos Criogênicos Polares",
+      "age_str": "Vivente Cosmopolita"
+    },
+    {
+      "lat": 28.0,
+      "lng": 86.9,
+      "locality": "Himalaia (Acima de 6.000m)",
+      "country": "Nepal",
+      "formation": "Musgos e Liquens Alpinos",
+      "age_str": "Vivente Cosmopolita"
+    },
+    {
+      "lat": 11.3,
+      "lng": 142.2,
+      "locality": "Fossa das Marianas (10.000m)",
+      "country": "Oceano Pacífico",
+      "formation": "Zona Hadal Abissal",
+      "age_str": "Vivente Cosmopolita"
+    },
+    {
+      "lat": -3.1,
+      "lng": -60.0,
+      "locality": "Dossel da Amazônia",
+      "country": "Brasil",
+      "formation": "Biofilmes e Briófitas",
+      "age_str": "Vivente Cosmopolita"
+    }
+  ],
+  "estromatolito-cianobacteria": [
+    {
+      "lat": -26.1,
+      "lng": 114.2,
+      "locality": "Shark Bay (Hamelin Pool)",
+      "country": "Austrália Ocidental",
+      "formation": "Estromatólitos Vivos / Hipersalinos",
+      "age_str": "Vivente Contemporâneo"
+    },
+    {
+      "lat": -21.3,
+      "lng": 119.8,
+      "locality": "Cráton de Pilbara (Apex Chert)",
+      "country": "Austrália",
+      "formation": "Formação Dresser",
+      "age_str": "3.480 Ma (Arqueano)"
+    },
+    {
+      "lat": 65.1,
+      "lng": -50.0,
+      "locality": "Cinturão de Rochas Verdes de Isua",
+      "country": "Groenlândia",
+      "formation": "Formação Isua",
+      "age_str": "3.700 Ma (Arqueano)"
+    },
+    {
+      "lat": -25.8,
+      "lng": 31.0,
+      "locality": "Cinturão de Barberton",
+      "country": "África do Sul",
+      "formation": "Supergrupo Swaziland",
+      "age_str": "3.200 Ma (Arqueano)"
+    }
+  ],
+  "paramecium": [
+    {
+      "lat": 51.5,
+      "lng": -0.1,
+      "locality": "Bacias e Lagoas de Água Doce",
+      "country": "Inglaterra / Europa",
+      "formation": "Ecossistema Límnico",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 40.7,
+      "lng": -74.0,
+      "locality": "Zonas Úmidas Continentais",
+      "country": "Estados Unidos",
+      "formation": "Sedimento Orgânico",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -23.5,
+      "lng": -46.6,
+      "locality": "Represas e Riachos",
+      "country": "Brasil (São Paulo)",
+      "formation": "Plâncton de Água Doce",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "ameba-proteus": [
+    {
+      "lat": 45.4,
+      "lng": 9.2,
+      "locality": "Charcos e Sedimentos Límnicos",
+      "country": "Itália / Europa",
+      "formation": "Biofilme de Detritos Orgânicos",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": -15.8,
+      "lng": -47.9,
+      "locality": "Veredas e Lagoas do Cerrado",
+      "country": "Brasil (Distrito Federal)",
+      "formation": "Vegetação Aquática",
+      "age_str": "Vivente (GBIF)"
+    },
+    {
+      "lat": 35.7,
+      "lng": 139.7,
+      "locality": "Lagos e Charcos de Água Doce",
+      "country": "Japão",
+      "formation": "Substrato Límnico",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "nummulites": [
+    {
+      "lat": 29.98,
+      "lng": 31.13,
+      "locality": "Platô de Gizé (Calcário das Pirâmides)",
+      "country": "Egito",
+      "formation": "Formação Mokattam",
+      "age_str": "45 Ma (Eoceno)"
+    },
+    {
+      "lat": 48.85,
+      "lng": 2.35,
+      "locality": "Bacia de Paris",
+      "country": "França",
+      "formation": "Calcário Lutetiano Grossier",
+      "age_str": "48 Ma (Eoceno)"
+    },
+    {
+      "lat": 42.0,
+      "lng": 2.0,
+      "locality": "Pireneus Catalães (Vic)",
+      "country": "Espanha",
+      "formation": "Margas e Calcários Eocênicos",
+      "age_str": "42 Ma (Eoceno)"
+    }
+  ],
+  "diatomacea": [
+    {
+      "lat": -54.8,
+      "lng": -68.3,
+      "locality": "Canal de Beagle / Antártica",
+      "country": "Argentina / Chile",
+      "formation": "Fitoplâncton Marinho Frígido",
+      "age_str": "Vivente Cosmopolita"
+    },
+    {
+      "lat": 37.0,
+      "lng": -122.0,
+      "locality": "Baía de Monterey",
+      "country": "Estados Unidos (Pacífico)",
+      "formation": "Depósitos de Diatomita",
+      "age_str": "Mioceno ao Vivente"
+    },
+    {
+      "lat": -12.0,
+      "lng": -77.0,
+      "locality": "Ressurgência de Humboldt",
+      "country": "Peru",
+      "formation": "Sedimentos Biogênicos Sílicos",
+      "age_str": "Vivente (GBIF)"
+    }
+  ],
+  "pithovirus": [
+    {
+      "lat": 69.5,
+      "lng": 161.5,
+      "locality": "Bacia do Rio Kolyma (Aneykovsky Yar)",
+      "country": "Rússia (Nordeste da Sibéria)",
+      "formation": "Permafrost Yedoma (30m de profundidade)",
+      "age_str": "30.000 anos (Pleistoceno Superior)"
+    }
+  ]
+}

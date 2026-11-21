@@ -1,0 +1,343 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Pillar 0: Default-Deny Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // =========================================================================
+    // PHASE 3: REUSABLE HARDENED PRIMITIVES
+    // =========================================================================
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isVerifiedUser() && request.auth.uid == userId;
+    }
+
+    function isOptString(data, key, maxLen) {
+      return !(key in data) || (data[key] is string && data[key].size() <= maxLen);
+    }
+
+    function isReqString(data, key, minLen, maxLen) {
+      return (key in data) && data[key] is string && data[key].size() >= minLen && data[key].size() <= maxLen;
+    }
+
+    function isValidStringList(listVal, maxItems) {
+      return listVal is list
+        && listVal.size() <= maxItems
+        && (listVal.size() == 0 || (listVal[0] is string && listVal[0].size() <= 300));
+    }
+
+    function isValidGalleryList(listVal) {
+      return listVal is list
+        && listVal.size() <= 12
+        && (listVal.size() == 0 || (listVal[0] is map && ('url' in listVal[0]) && listVal[0].url is string && listVal[0].url.size() <= 2000));
+    }
+
+    // =========================================================================
+    // VALIDATION BLUEPRINTS (ANTI-UPDATE-GAP)
+    // =========================================================================
+
+    function isValidCustomSpecimen(data, docId) {
+      return data.keys().hasAll([
+        'id', 'name', 'genus', 'era', 'era_display', 'period', 'geological_range',
+        'group', 'group_display', 'diet', 'diet_display', 'habitat', 'skeletal_type',
+        'is_contemporary', 'image_url', 'is_custom_ingested', 'visibility',
+        'ownerId', 'createdAt', 'updatedAt'
+      ])
+      && data.keys().hasOnly([
+        'id', 'name', 'genus', 'scientific_name', 'era', 'era_display', 'period', 'epoch',
+        'geological_range', 'group', 'group_display', 'diet', 'diet_display', 'habitat',
+        'skeletal_type', 'skeletal_composition', 'is_contemporary', 'conservation_status',
+        'length', 'height', 'weight', 'speed', 'bite_force', 'image_url', 'image_caption',
+        'gallery', 'etymology', 'bio', 'curiosities', 'expert', 'occurrences_count',
+        'fossil_locations', 'is_custom_ingested', 'visibility', 'ownerId', 'createdAt', 'updatedAt'
+      ])
+      && isValidId(data.id)
+      && data.id == docId
+      && isReqString(data, 'name', 1, 160)
+      && isReqString(data, 'genus', 1, 120)
+      && isOptString(data, 'scientific_name', 200)
+      && data.era in ['contemporaneo', 'cenozoico', 'mesozoico', 'paleozoico', 'precambriano', 'microbiologico']
+      && isReqString(data, 'era_display', 1, 120)
+      && isReqString(data, 'period', 1, 120)
+      && isOptString(data, 'epoch', 120)
+      && isReqString(data, 'geological_range', 1, 200)
+      && isReqString(data, 'group', 1, 80)
+      && isReqString(data, 'group_display', 1, 160)
+      && isReqString(data, 'diet', 1, 60)
+      && isReqString(data, 'diet_display', 1, 160)
+      && isReqString(data, 'habitat', 1, 80)
+      && data.skeletal_type in ['vertebrado', 'invertebrado', 'microbiologico']
+      && isOptString(data, 'skeletal_composition', 240)
+      && data.is_contemporary is bool
+      && isOptString(data, 'conservation_status', 160)
+      && isOptString(data, 'length', 120)
+      && isOptString(data, 'height', 120)
+      && isOptString(data, 'weight', 120)
+      && isOptString(data, 'speed', 120)
+      && isOptString(data, 'bite_force', 160)
+      && isReqString(data, 'image_url', 1, 2000)
+      && isOptString(data, 'image_caption', 300)
+      && (!('gallery' in data) || isValidGalleryList(data.gallery))
+      && isOptString(data, 'etymology', 600)
+      && isOptString(data, 'bio', 4000)
+      && (!('curiosities' in data) || isValidStringList(data.curiosities, 10))
+      && (!('expert' in data) || (
+        data.expert is map
+        && data.expert.keys().hasOnly(['cladogram', 'osteology', 'biomechanics', 'histology'])
+        && (!('cladogram' in data.expert) || isValidStringList(data.expert.cladogram, 15))
+        && isOptString(data.expert, 'osteology', 1500)
+        && isOptString(data.expert, 'biomechanics', 1500)
+        && isOptString(data.expert, 'histology', 1500)
+      ))
+      && (!('occurrences_count' in data) || (data.occurrences_count is number && data.occurrences_count >= 0 && data.occurrences_count <= 10000000))
+      && isOptString(data, 'fossil_locations', 500)
+      && data.is_custom_ingested == true
+      && data.visibility == 'public'
+      && isValidId(data.ownerId)
+      && data.ownerId == request.auth.uid
+      && data.createdAt is timestamp
+      && data.updatedAt is timestamp;
+    }
+
+    function isValidUserFavorite(data, userId, docId) {
+      return data.keys().hasAll(['specimenId', 'specimenName', 'era', 'ownerId', 'createdAt'])
+        && data.keys().hasOnly(['specimenId', 'specimenName', 'era', 'imageUrl', 'ownerId', 'createdAt'])
+        && isValidId(data.specimenId)
+        && data.specimenId == docId
+        && isReqString(data, 'specimenName', 1, 160)
+        && isReqString(data, 'era', 1, 40)
+        && isOptString(data, 'imageUrl', 2000)
+        && isValidId(data.ownerId)
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.createdAt is timestamp;
+    }
+
+    function isValidUserCollection(data, userId) {
+      return data.keys().hasAll(['name', 'specimenIds', 'ownerId', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['name', 'description', 'specimenIds', 'ownerId', 'createdAt', 'updatedAt'])
+        && isReqString(data, 'name', 1, 80)
+        && isOptString(data, 'description', 300)
+        && data.specimenIds is list
+        && data.specimenIds.size() <= 50
+        && (data.specimenIds.size() == 0 || isValidId(data.specimenIds[0]))
+        && isValidId(data.ownerId)
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidUserFieldNote(data, userId, docId) {
+      return data.keys().hasAll(['specimenId', 'specimenName', 'content', 'ownerId', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['specimenId', 'specimenName', 'content', 'ownerId', 'createdAt', 'updatedAt'])
+        && isValidId(data.specimenId)
+        && data.specimenId == docId
+        && isReqString(data, 'specimenName', 1, 160)
+        && isReqString(data, 'content', 1, 3000)
+        && isValidId(data.ownerId)
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidDifficultyLevelMap(mapVal, minLevel, maxLevel) {
+      return mapVal is map
+        && mapVal.keys().hasAll(['facil', 'medio', 'dificil', 'especialista'])
+        && mapVal.keys().hasOnly(['facil', 'medio', 'dificil', 'especialista'])
+        && mapVal.facil is number && mapVal.facil >= minLevel && mapVal.facil <= maxLevel
+        && mapVal.medio is number && mapVal.medio >= minLevel && mapVal.medio <= maxLevel
+        && mapVal.dificil is number && mapVal.dificil >= minLevel && mapVal.dificil <= maxLevel
+        && mapVal.especialista is number && mapVal.especialista >= minLevel && mapVal.especialista <= maxLevel;
+    }
+
+    function isValidUserQuizStats(data, userId) {
+      return data.keys().hasAll(['totalRounds', 'totalCorrect', 'totalQuestions', 'bestScore', 'badges', 'ownerId', 'updatedAt'])
+        && data.keys().hasOnly([
+          'totalRounds', 'totalCorrect', 'totalQuestions', 'bestScore', 'badges',
+          'selectedDifficulty', 'unlockedLevels', 'completedLevels', 'levelStars',
+          'ownerId', 'updatedAt'
+        ])
+        && data.totalRounds is number && data.totalRounds >= 0 && data.totalRounds <= 100000
+        && data.totalCorrect is number && data.totalCorrect >= 0 && data.totalCorrect <= 500000
+        && data.totalQuestions is number && data.totalQuestions >= 0 && data.totalQuestions <= 500000
+        && data.bestScore is number && data.bestScore >= 0 && data.bestScore <= 100
+        && isValidStringList(data.badges, 60)
+        && (!('selectedDifficulty' in data) || data.selectedDifficulty in ['facil', 'medio', 'dificil', 'especialista'])
+        && (!('unlockedLevels' in data) || isValidDifficultyLevelMap(data.unlockedLevels, 1, 50))
+        && (!('completedLevels' in data) || isValidDifficultyLevelMap(data.completedLevels, 0, 50))
+        && isOptString(data, 'levelStars', 4000)
+        && isValidId(data.ownerId)
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.updatedAt is timestamp;
+    }
+
+    // =========================================================================
+    // COLLECTION 1: PUBLIC CUSTOM INGESTED SPECIMENS
+    // =========================================================================
+    match /custom_specimens/{specimenId} {
+      allow get: if isValidId(specimenId) && existing().visibility == 'public';
+      allow list: if existing().visibility == 'public';
+
+      allow create: if isVerifiedUser()
+        && isValidId(specimenId)
+        && isValidCustomSpecimen(incoming(), specimenId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isVerifiedUser()
+        && isValidId(specimenId)
+        && isValidCustomSpecimen(incoming(), specimenId)
+        && existing().ownerId == request.auth.uid
+        && incoming().ownerId == existing().ownerId
+        && incoming().id == existing().id
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'name', 'bio', 'gallery', 'image_url', 'image_caption',
+          'curiosities', 'expert', 'fossil_locations', 'updatedAt'
+        ]);
+
+      allow delete: if isVerifiedUser()
+        && isValidId(specimenId)
+        && existing().ownerId == request.auth.uid;
+    }
+
+    // =========================================================================
+    // COLLECTION 2: PRIVATE USER FAVORITES
+    // =========================================================================
+    match /users/{userId}/favorites/{specimenId} {
+      allow get: if isOwner(userId) && isValidId(specimenId) && existing().ownerId == request.auth.uid;
+      allow list: if isOwner(userId) && existing().ownerId == request.auth.uid;
+
+      allow create: if isOwner(userId)
+        && isValidId(specimenId)
+        && isValidUserFavorite(incoming(), userId, specimenId)
+        && incoming().createdAt == request.time;
+
+      allow update: if false;
+
+      allow delete: if isOwner(userId)
+        && isValidId(specimenId)
+        && existing().ownerId == request.auth.uid;
+    }
+
+    // =========================================================================
+    // COLLECTION 3: PRIVATE USER COLLECTIONS
+    // =========================================================================
+    match /users/{userId}/collections/{collectionId} {
+      allow get: if isOwner(userId) && isValidId(collectionId) && existing().ownerId == request.auth.uid;
+      allow list: if isOwner(userId) && existing().ownerId == request.auth.uid;
+
+      allow create: if isOwner(userId)
+        && isValidId(collectionId)
+        && isValidUserCollection(incoming(), userId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isOwner(userId)
+        && isValidId(collectionId)
+        && isValidUserCollection(incoming(), userId)
+        && existing().ownerId == request.auth.uid
+        && incoming().ownerId == existing().ownerId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          // Action: Update metadata (name/description)
+          incoming().diff(existing()).affectedKeys().hasOnly(['name', 'description', 'updatedAt'])
+          ||
+          // Action: Update specimen membership list
+          incoming().diff(existing()).affectedKeys().hasOnly(['specimenIds', 'updatedAt'])
+          ||
+          // Action: Update metadata and specimens together
+          incoming().diff(existing()).affectedKeys().hasOnly(['name', 'description', 'specimenIds', 'updatedAt'])
+        );
+
+      allow delete: if isOwner(userId)
+        && isValidId(collectionId)
+        && existing().ownerId == request.auth.uid;
+    }
+
+    // =========================================================================
+    // COLLECTION 4: PRIVATE USER FIELD NOTES
+    // =========================================================================
+    match /users/{userId}/notes/{specimenId} {
+      allow get: if isOwner(userId) && isValidId(specimenId) && existing().ownerId == request.auth.uid;
+      allow list: if isOwner(userId) && existing().ownerId == request.auth.uid;
+
+      allow create: if isOwner(userId)
+        && isValidId(specimenId)
+        && isValidUserFieldNote(incoming(), userId, specimenId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isOwner(userId)
+        && isValidId(specimenId)
+        && isValidUserFieldNote(incoming(), userId, specimenId)
+        && existing().ownerId == request.auth.uid
+        && incoming().ownerId == existing().ownerId
+        && incoming().specimenId == existing().specimenId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['content', 'specimenName', 'updatedAt']);
+
+      allow delete: if isOwner(userId)
+        && isValidId(specimenId)
+        && existing().ownerId == request.auth.uid;
+    }
+
+    // =========================================================================
+    // COLLECTION 5: PRIVATE USER QUIZ STATS & BADGES
+    // =========================================================================
+    match /users/{userId}/quiz_stats/{statsId} {
+      allow get: if isOwner(userId) && isValidId(statsId) && existing().ownerId == request.auth.uid;
+      allow list: if isOwner(userId) && existing().ownerId == request.auth.uid;
+
+      allow create: if isOwner(userId)
+        && isValidId(statsId)
+        && isValidUserQuizStats(incoming(), userId)
+        && incoming().updatedAt == request.time;
+
+      allow update: if isOwner(userId)
+        && isValidId(statsId)
+        && isValidUserQuizStats(incoming(), userId)
+        && existing().ownerId == request.auth.uid
+        && incoming().ownerId == existing().ownerId
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'totalRounds', 'totalCorrect', 'totalQuestions', 'bestScore', 'badges',
+          'selectedDifficulty', 'unlockedLevels', 'completedLevels', 'levelStars', 'updatedAt'
+        ]);
+
+      allow delete: if isOwner(userId)
+        && isValidId(statsId)
+        && existing().ownerId == request.auth.uid;
+    }
+  }
+}
