@@ -1,11 +1,12 @@
 import httpx
 import re
+import urllib.parse
 from typing import Dict, Any, List, Optional
 import logging
 
 logger = logging.getLogger(__name__)
 
-USER_AGENT = "SuperWikiAnimalExplorer/3.0 (bio@earthwiki.org; educational research)"
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 SuperWiki/3.0"
 
 
 def clean_html(raw_html: str) -> str:
@@ -17,51 +18,74 @@ def clean_html(raw_html: str) -> str:
 
 
 async def fetch_wikipedia_summary(taxon_name: str) -> Dict[str, Any]:
-    """Fetches summary, etymology cues, and lead image from PT or EN Wikipedia."""
+    """Fetches summary, etymology cues, and lead image from PT or EN Wikipedia with opensearch fallback."""
     headers = {"User-Agent": USER_AGENT}
-    
-    # 1. Try Portuguese Wikipedia
-    pt_url = f"https://pt.wikipedia.org/api/rest_v1/page/summary/{taxon_name}"
-    try:
-        async with httpx.AsyncClient(headers=headers, timeout=10.0) as client:
+    query_clean = taxon_name.strip()
+
+    async with httpx.AsyncClient(headers=headers, timeout=12.0) as client:
+        # 1. Resolve canonical title via Portuguese Wikipedia opensearch if needed
+        resolved_title = query_clean
+        try:
+            search_url = f"https://pt.wikipedia.org/w/api.php?action=opensearch&search={urllib.parse.quote(query_clean)}&limit=1&namespace=0&format=json"
+            s_resp = await client.get(search_url)
+            if s_resp.status_code == 200:
+                titles = s_resp.json()[1]
+                if titles:
+                    resolved_title = titles[0]
+        except Exception:
+            pass
+
+        # Try Portuguese Wikipedia summary
+        pt_url = f"https://pt.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(resolved_title.replace(' ', '_'))}"
+        try:
             resp = await client.get(pt_url)
             if resp.status_code == 200:
                 data = resp.json()
                 extract = data.get("extract", "")
-                if len(extract) > 40:
+                if len(extract) > 25:
                     thumb = data.get("thumbnail", {}).get("source") or data.get("originalimage", {}).get("source")
                     return {
-                        "title": data.get("title", taxon_name),
+                        "title": data.get("title", resolved_title),
                         "description": data.get("description", ""),
                         "extract": extract,
                         "image_url": thumb,
                         "lang": "pt"
                     }
-    except Exception as e:
-        logger.warning(f"Error querying PT Wikipedia for {taxon_name}: {e}")
+        except Exception as e:
+            logger.warning(f"Error querying PT Wikipedia for {resolved_title}: {e}")
 
-    # 2. Fallback to English Wikipedia
-    en_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{taxon_name}"
-    try:
-        async with httpx.AsyncClient(headers=headers, timeout=10.0) as client:
+        # 2. Fallback to English Wikipedia with opensearch
+        en_resolved = query_clean
+        try:
+            en_search = f"https://en.wikipedia.org/w/api.php?action=opensearch&search={urllib.parse.quote(query_clean)}&limit=1&namespace=0&format=json"
+            s_resp = await client.get(en_search)
+            if s_resp.status_code == 200:
+                titles = s_resp.json()[1]
+                if titles:
+                    en_resolved = titles[0]
+        except Exception:
+            pass
+
+        en_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(en_resolved.replace(' ', '_'))}"
+        try:
             resp = await client.get(en_url)
             if resp.status_code == 200:
                 data = resp.json()
                 thumb = data.get("thumbnail", {}).get("source") or data.get("originalimage", {}).get("source")
                 return {
-                    "title": data.get("title", taxon_name),
+                    "title": data.get("title", en_resolved),
                     "description": data.get("description", ""),
                     "extract": data.get("extract", ""),
                     "image_url": thumb,
                     "lang": "en"
                 }
-    except Exception as e:
-        logger.warning(f"Error querying EN Wikipedia for {taxon_name}: {e}")
+        except Exception as e:
+            logger.warning(f"Error querying EN Wikipedia for {en_resolved}: {e}")
 
     return {
         "title": taxon_name,
-        "description": "Espécime zoológico catalogado no acervo global",
-        "extract": f"{taxon_name} é um espécime biológico catalogado na biodiversidade da Terra.",
+        "description": "Espécime biológico catalogado no acervo global",
+        "extract": f"{taxon_name} é um organismo catalogado na biodiversidade e história biológica da Terra.",
         "image_url": None,
         "lang": "pt"
     }
@@ -72,11 +96,12 @@ async def fetch_multi_perspective_images(taxon_name: str, limit: int = 10) -> Li
     headers = {"User-Agent": USER_AGENT}
     url = "https://commons.wikimedia.org/w/api.php"
     
-    # Dual search queries: living representations vs skeletal/bones/cartilage
+    # Dual search queries: living representations vs skeletal/bones/cartilage/microscopy
     search_configs = [
         # (query, default_category, default_type)
-        (f"{taxon_name} (skeleton OR skull OR bones OR osteology OR fossil OR cartilage OR carapace)", "skeletal_view", "skeleton"),
-        (f"{taxon_name} (life restoration OR paleoart OR living OR in nature OR photo)", "life_view", "living_specimen"),
+        (f"{taxon_name} (skeleton OR skull OR bones OR osteology OR fossil OR cartilage OR carapace OR SEM OR microscopy)", "skeletal_view", "skeleton"),
+        (f"{taxon_name} (ultrastructure OR cell OR diagram OR anatomy OR histologia)", "anatomy_view", "anatomy"),
+        (f"{taxon_name} (life restoration OR paleoart OR living OR in nature OR photo OR microscope)", "life_view", "living_specimen"),
         (f"{taxon_name}", "life_view", "living_specimen")
     ]
     
@@ -189,7 +214,19 @@ def infer_taxonomy_and_ecology(
     group = "mamifero-megafauna"
     group_display = "Mamífero"
 
-    if any(k in combined_text for k in ["dinosaur", "dinossauro", "theropod", "sauropod", "ceratops"]):
+    if any(k in combined_text for k in ["tardigrad", "rotifer", "rotífero", "urso d'água", "water bear"]):
+        group = "micro-animal"
+        group_display = "Micro-Animal Extremófilo"
+    elif any(k in combined_text for k in ["bacteri", "cianobactéri", "cyanobacteri", "stromatolite", "estromatólito", "archaea", "arquea", "escherichia", "procariont"]):
+        group = "bacteria-cianobacteria"
+        group_display = "Bactéria & Cianobactéria"
+    elif any(k in combined_text for k in ["virus", "vírus", "pithovirus", "mimivirus", "pandoravirus"]):
+        group = "virus-gigante"
+        group_display = "Vírus Gigante"
+    elif any(k in combined_text for k in ["protozo", "ameba", "amoeba", "paramecium", "euglena", "ciliat", "protista", "diatom", "foraminif", "nummulite", "alga unicelular"]):
+        group = "protozoario-protista"
+        group_display = "Protozoário & Protista"
+    elif any(k in combined_text for k in ["dinosaur", "dinossauro", "theropod", "sauropod", "ceratops"]):
         group = "dinossauro"
         group_display = "Dinossauro"
     elif any(k in combined_text for k in ["pterosaur", "pterossauro", "azhdarch"]):

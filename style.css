@@ -2037,6 +2037,27 @@ body.expert-mode-active .card {
   border: 1px solid rgba(168, 85, 247, 0.4);
 }
 
+.badge-microbiologico,
+.badge-micro {
+  background: rgba(6, 182, 212, 0.2);
+  color: #67e8f9;
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.25);
+}
+
+.badge-era-microbiologico {
+  background: rgba(6, 182, 212, 0.18);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.era-tab-btn[data-era="microbiologico"]:hover,
+.era-tab-btn[data-era="microbiologico"].active {
+  border-color: #06b6d4;
+  color: #67e8f9;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+}
+
 /* Ficha Estrutural no Modal */
 .structural-spec-box {
   background: rgba(22, 30, 22, 0.65);

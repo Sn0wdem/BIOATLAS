@@ -44,7 +44,7 @@ app.add_middleware(
 async def startup_event():
     init_db()
     specs = get_all_specimens()
-    if len(specs) < 15:
+    if len(specs) < 35:
         seed_database()
 
 
@@ -109,6 +109,18 @@ ERAS_DATA = [
         description="A alvorada da vida animal macroscópica na Terra: os primeiros seres multicelulares enigmáticos de corpo mole no leito marinho primitivo.",
         periods=["Ediacarano"],
         iconic_creatures=["Dickinsonia", "Charnia", "Spriggina", "Kimberella"]
+    ),
+    EraMetadata(
+        id="microbiologico",
+        name="Vida Microbiológica Universal",
+        time_span="3.800 Ma ao Presente",
+        range_ma="3800 - 0",
+        icon="🔬",
+        color="#06b6d4",
+        bg_color="rgba(6, 182, 212, 0.15)",
+        description="A base universal de toda a árvore da vida: bactérias e cianobactérias arqueanas, protistas ciliados, amebas, foraminíferos de concha mineral, diatomáceas de vidro, megavírus e micro-animais extremófilos (tardígrados).",
+        periods=["Arqueano", "Proterozoico", "Paleozoico", "Mesozoico", "Cenozoico", "Holoceno"],
+        iconic_creatures=["Milnesium tardigradum", "Cyanobacteria", "Paramecium caudatum", "Amoeba proteus", "Nummulites", "Navicula", "Pithovirus sibericum"]
     )
 ]
 
@@ -217,9 +229,15 @@ async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -
         skeletal_comp = gbif_data.get("skeletal_composition", "Endoesqueleto Ósseo e Cartilagem")
         cladogram = gbif_data.get("cladogram", [])
     else:
-        skeletal_type = "vertebrado"
-        skeletal_comp = "Endoesqueleto Ósseo e Cartilagem"
-        cladogram = ["Metazoa", "Chordata", "Vertebrata", canonical]
+        is_micro = any(k in canonical.lower() for k in ["tardigrad", "bacteri", "cianobact", "ameba", "amoeba", "paramecium", "diatom", "foraminif", "nummulite", "virus", "vírus", "protist"])
+        if is_micro:
+            skeletal_type = "microbiologico"
+            skeletal_comp = "Parede Celular / Membrana Plasmática / Cutícula Acelular"
+            cladogram = ["Biota", "Microbiologia", canonical]
+        else:
+            skeletal_type = "vertebrado"
+            skeletal_comp = "Endoesqueleto Ósseo e Cartilagem"
+            cladogram = ["Metazoa", "Chordata", "Vertebrata", canonical]
 
     # 6. Infer ecology and habitat
     ecology = infer_taxonomy_and_ecology(canonical, pbdb_data, wiki_data, gbif_data)

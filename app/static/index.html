@@ -12,7 +12,7 @@
   <!-- Leaflet CSS para o mapa global de distribuição e fósseis -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
-  <link rel="stylesheet" href="style.css?v=6.0">
+  <link rel="stylesheet" href="style.css?v=7.0">
 </head>
 <body>
   <header class="hero">
@@ -60,6 +60,9 @@
         <button class="era-tab-btn" data-era="precambriano">
           <span>🦠</span> Pré-Cambriano
         </button>
+        <button class="era-tab-btn" data-era="microbiologico">
+          <span>🔬</span> Vida Microbiológica
+        </button>
       </div>
 
       <!-- Painel de Busca e Ingestão Automática por API -->
@@ -99,13 +102,33 @@
 
         <!-- Filtros Rápidos -->
         <div class="filters-row">
-          <!-- Filtro Vertebrado vs Invertebrado -->
+          <!-- Filtro Estrutura Corporal (Vertebrados, Invertebrados e Microbiológicos) -->
           <div class="filter-control">
             <label for="skeletalFilter">Estrutura Corporal:</label>
             <select id="skeletalFilter">
-              <option value="all">Vertebrados & Invertebrados</option>
+              <option value="all">Todas as Formas de Vida</option>
               <option value="vertebrado">🦴 Apenas Vertebrados</option>
               <option value="invertebrado">🐚 Apenas Invertebrados</option>
+              <option value="microbiologico">🔬 Vida Microbiológica (Célula / Parede / Cutícula)</option>
+            </select>
+          </div>
+
+          <!-- Filtro Grupo Biológico -->
+          <div class="filter-control">
+            <label for="groupFilter">Grupo Taxonômico:</label>
+            <select id="groupFilter">
+              <option value="all">Todos os Grupos</option>
+              <option value="dinossauro">🦖 Dinossauros</option>
+              <option value="mamifero-megafauna">🦣 Mamíferos & Megafauna</option>
+              <option value="reptil-marinho">🦈 Fauna Marinha & Répteis</option>
+              <option value="pterossauro">🦅 Pterossauros & Aves</option>
+              <option value="sinapsideo">🦎 Sinapsídeos & Pelicossauros</option>
+              <option value="artropode-invertebrado">🦐 Artrópodes & Invertebrados</option>
+              <option value="micro-animal">🔬 Micro-Animais Extremófilos (Tardígrados)</option>
+              <option value="protozoario-protista">🧫 Protozoários & Protistas (Amebas / Paramecium)</option>
+              <option value="bacteria-cianobacteria">🦠 Bactérias & Cianobactérias (Estromatólitos)</option>
+              <option value="virus-gigante">🧬 Megavírus / Vírus Gigantes</option>
+              <option value="ediacarano">🌌 Biota Ediacarana</option>
             </select>
           </div>
 
@@ -115,6 +138,7 @@
               <option value="all">Todos os Períodos</option>
               <option value="Holoceno">Holoceno / Atualidade (Contemporâneo)</option>
               <option value="Pleistoceno">Pleistoceno (Idade do Gelo)</option>
+              <option value="Eoceno">Eoceno (Paleógeno)</option>
               <option value="Cretáceo">Cretáceo (145 - 66 Ma)</option>
               <option value="Jurássico">Jurássico (201 - 145 Ma)</option>
               <option value="Triássico">Triássico (252 - 201 Ma)</option>
@@ -122,18 +146,19 @@
               <option value="Devoniano">Devoniano (419 - 359 Ma)</option>
               <option value="Cambriano">Cambriano (541 - 485 Ma)</option>
               <option value="Ediacarano">Ediacarano (635 - 541 Ma)</option>
+              <option value="Arqueano">Arqueano (3.500 Ma - Origem da Vida)</option>
             </select>
           </div>
 
           <div class="filter-control">
-            <label for="dietFilter">Dieta:</label>
+            <label for="dietFilter">Dieta / Nutrição:</label>
             <select id="dietFilter">
               <option value="all">Todas as Dietas</option>
-              <option value="carnivoro">Carnívoros</option>
+              <option value="carnivoro">Carnívoros / Predadores Celulares</option>
               <option value="herbivoro">Herbívoros</option>
               <option value="piscivoro">Piscívoros</option>
-              <option value="filtrador">Filtradores</option>
-              <option value="onivoro">Onívoros</option>
+              <option value="filtrador">Filtradores / Autotróficos / Fotossíntese</option>
+              <option value="onivoro">Onívoros / Microbívoros</option>
             </select>
           </div>
 
@@ -171,27 +196,36 @@
             <button class="discovery-btn" data-era="precambriano">
               🦠 Auto-Pré-Cambriano
             </button>
+            <button class="discovery-btn" data-era="microbiologico">
+              🔬 Auto-Microbiológico
+            </button>
           </div>
         </div>
 
-        <!-- Sugestões Rápidas de Espécimes de Todas as Eras -->
+        <!-- Sugestões Rápidas de Espécimes de Todas as Eras e Microbiologia -->
         <div class="quick-tags">
-          <span class="quick-label">Espécimes em Destaque (Clique para Abrir / Ingerir via API):</span>
+          <span class="quick-label">Espécimes & Microrganismos em Destaque (Clique para Abrir / Ingerir via API):</span>
           <div class="tags-container">
+            <button class="tag-chip" data-name="Milnesium tardigradum">🔬 Tardígrado (Urso d'Água)</button>
+            <button class="tag-chip" data-name="Cyanobacteria">🦠 Estromatólitos (3.5 Ga)</button>
+            <button class="tag-chip" data-name="Paramecium caudatum">🧫 Paramecium</button>
+            <button class="tag-chip" data-name="Amoeba proteus">🔬 Ameba Proteus</button>
+            <button class="tag-chip" data-name="Nummulites">🐚 Nummulites (Foraminífero)</button>
+            <button class="tag-chip" data-name="Diatom">💎 Diatomácea (Alga de Vidro)</button>
+            <button class="tag-chip" data-name="Pithovirus">🧬 Pithovirus (Vírus Gigante)</button>
             <button class="tag-chip" data-name="Panthera onca">🐾 Onça-Pintada</button>
             <button class="tag-chip" data-name="Balaenoptera musculus">🐋 Baleia-Azul</button>
-            <button class="tag-chip" data-name="Carcharodon carcharias">🦈 Tubarão-Branco (Cartilagem)</button>
-            <button class="tag-chip" data-name="Octopus vulgaris">🐙 Polvo-Comum (Invertebrado)</button>
-            <button class="tag-chip" data-name="Loxodonta africana">🐘 Elefante-Africano</button>
+            <button class="tag-chip" data-name="Carcharodon carcharias">🦈 Tubarão-Branco</button>
+            <button class="tag-chip" data-name="Octopus vulgaris">🐙 Polvo-Comum</button>
             <button class="tag-chip" data-name="Tyrannosaurus">🦖 T-Rex</button>
             <button class="tag-chip" data-name="Spinosaurus">🐊 Spinosaurus</button>
             <button class="tag-chip" data-name="Triceratops">🦏 Triceratops</button>
             <button class="tag-chip" data-name="Titanoboa">🐍 Titanoboa</button>
-            <button class="tag-chip" data-name="Smilodon">🐅 Smilodon (Dente-de-Sabre)</button>
-            <button class="tag-chip" data-name="Mammuthus">🦣 Mamute-Lanoso</button>
+            <button class="tag-chip" data-name="Smilodon">🐅 Smilodon</button>
+            <button class="tag-chip" data-name="Mammuthus">🦣 Mamute</button>
             <button class="tag-chip" data-name="Dunkleosteus">🐟 Dunkleosteus</button>
             <button class="tag-chip" data-name="Anomalocaris">🦐 Anomalocaris</button>
-            <button class="tag-chip" data-name="Dickinsonia">🦠 Dickinsonia</button>
+            <button class="tag-chip" data-name="Dickinsonia">🌌 Dickinsonia</button>
           </div>
         </div>
       </div>
@@ -549,6 +583,6 @@
 
   <!-- Leaflet JS para mapeamento georreferenciado -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="app.js?v=6.0"></script>
+  <script src="app.js?v=7.0"></script>
 </body>
 </html>

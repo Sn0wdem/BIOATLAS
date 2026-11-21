@@ -38,13 +38,44 @@ async def match_gbif_species(query: str) -> Optional[Dict[str, Any]]:
             family_name = data.get("family") or ""
             genus_name = data.get("genus") or data.get("canonicalName") or query
             scientific_name = data.get("scientificName") or query
+            kingdom_name = data.get("kingdom") or ""
 
-            # Vertebrate vs Invertebrate determination
+            # Check if organism is Microbiological (Bacteria, Archaea, Protists, Micro-animals, Viruses)
+            is_microbiological = (
+                kingdom_name.lower() in ["bacteria", "archaea", "viruses", "chromista", "protozoa"] or
+                phylum.lower() in ["tardigrada", "rotifera", "nematoda", "ciliophora", "amoebozoa", "bacillariophyta", "foraminifera", "cyanobacteria"] or
+                any(k in query.lower() for k in ["tardigrad", "bactéri", "bacteria", "ameba", "amoeba", "paramecium", "estromatolito", "diatom", "foraminif", "virus", "vírus"])
+            )
+
+            # Vertebrate vs Invertebrate vs Microbiological determination
             is_vertebrate = (phylum.lower() == "chordata") and (class_name.lower() not in ["ascidiacea", "thaliacea", "appendicularia"])
-            skeletal_type = "vertebrado" if is_vertebrate else "invertebrado"
+            
+            if is_microbiological:
+                skeletal_type = "microbiologico"
+            elif is_vertebrate:
+                skeletal_type = "vertebrado"
+            else:
+                skeletal_type = "invertebrado"
 
             # Structural / skeletal composition determination
-            if is_vertebrate:
+            if is_microbiological:
+                if phylum.lower() == "tardigrada" or "tardigrad" in query.lower():
+                    skeletal_comp = "Cutícula Quitinosa Acelular e Hidroesqueleto Microscópico"
+                elif kingdom_name.lower() in ["bacteria", "cyanobacteria"] or "bacteri" in query.lower() or "estromatolito" in query.lower():
+                    skeletal_comp = "Parede Celular de Peptidoglicano e Membrana Plasmática"
+                elif kingdom_name.lower() == "archaea":
+                    skeletal_comp = "Parede Celular de Pseudopeptidoglicano e Monocamada Lipídica"
+                elif phylum.lower() == "bacillariophyta" or "diatom" in query.lower():
+                    skeletal_comp = "Frústula Bivalve Rígida de Sílica Biogênica (SiO2)"
+                elif phylum.lower() == "foraminifera" or "foraminif" in query.lower() or "nummulite" in query.lower():
+                    skeletal_comp = "Testa (Concha) Mineralizada Multilocular de Carbonato de Cálcio (CaCO3)"
+                elif phylum.lower() in ["ciliophora", "amoebozoa"] or any(k in query.lower() for k in ["paramecium", "ameba", "amoeba"]):
+                    skeletal_comp = "Película Protéica Ciliar ou Citoesqueleto Dinâmico de Actina"
+                elif kingdom_name.lower() == "viruses" or "virus" in query.lower() or "vírus" in query.lower():
+                    skeletal_comp = "Capsídeo Proteico Icosaédrico/Ovóide com Tegumento Espesso"
+                else:
+                    skeletal_comp = "Parede Celular ou Membrana Plasmática e Citoesqueleto"
+            elif is_vertebrate:
                 if class_name.lower() in ["chondrichthyes", "elasmobranchii", "holocephali"]:
                     skeletal_comp = "Cartilagem Calcificada (Sem Ossos Verdadeiros)"
                 elif class_name.lower() in ["aves"]:

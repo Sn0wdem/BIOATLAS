@@ -566,14 +566,24 @@ SEED_SPECIMENS = [
 
 
 def seed_database():
-    """Initializes the database and seeds iconic specimens across contemporary and geological eras."""
+    """Initializes the database and seeds iconic specimens across contemporary, geological and microbiological eras."""
     init_db()
-    seeded_count = 0
-    for specimen in SEED_SPECIMENS:
-        upsert_specimen(specimen)
-        seeded_count += 1
-    logger.info(f"Database successfully seeded with {seeded_count} specimens across modern and deep time eras.")
-    return seeded_count
+    catalog_path = os.path.join(os.path.dirname(__file__), "static", "embedded_catalog.json")
+    if os.path.exists(catalog_path):
+        import json
+        with open(catalog_path, "r", encoding="utf-8") as f:
+            specs = json.load(f)
+        for s in specs:
+            upsert_specimen(Specimen(**s))
+        logger.info(f"Database successfully seeded with {len(specs)} specimens from embedded_catalog.json.")
+        return len(specs)
+    else:
+        seeded_count = 0
+        for specimen in SEED_SPECIMENS:
+            upsert_specimen(specimen)
+            seeded_count += 1
+        logger.info(f"Database successfully seeded with {seeded_count} specimens.")
+        return seeded_count
 
 
 if __name__ == "__main__":

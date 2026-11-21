@@ -1828,6 +1828,459 @@ const EMBEDDED_CATALOG = [
     "occurrences_count": 88,
     "fossil_locations": "Mongólia (Deserto de Gobi - Formação Djadochta), China (Mongólia Interior - Formação Bayan Mandahu)",
     "is_custom_ingested": false
+  },
+  {
+    "id": "tardigrado",
+    "name": "Tardígrado (Urso d'Água)",
+    "genus": "Milnesium",
+    "scientific_name": "Milnesium tardigradum (Doyère, 1840)",
+    "era": "contemporaneo",
+    "era_display": "Contemporâneo (Origem no Cambriano)",
+    "period": "Holoceno / Atualidade",
+    "epoch": "Presente",
+    "geological_range": "530 Ma ao Presente",
+    "group": "micro-animal",
+    "group_display": "Micro-Animal Extremófilo",
+    "diet": "onivoro",
+    "diet_display": "Microbívoro / Onívoro",
+    "habitat": "aquatico",
+    "skeletal_type": "microbiologico",
+    "skeletal_composition": "Cutícula Quitinosa Acelular e Hidroesqueleto Microscópico",
+    "is_contemporary": true,
+    "conservation_status": "Espécie Vivente (Extremófilo)",
+    "length": "0,5 a 1,2 mm",
+    "height": "0,2 mm",
+    "weight": "1 micrograma",
+    "speed": "0,002 km/h",
+    "bite_force": "Estiletes orais perfurantes microscópicos",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/SEM_image_of_Milnesium_tardigradum_in_active_state_-_journal.pone.0045682.g001-2_%28white_background%29.png/400px-SEM_image_of_Milnesium_tardigradum_in_active_state_-_journal.pone.0045682.g001-2_%28white_background%29.png",
+    "image_caption": "Microscopia Eletrônica de Varredura (SEM) de Tardígrado em estado ativo",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/SEM_image_of_Milnesium_tardigradum_in_active_state_-_journal.pone.0045682.g001-2_%28white_background%29.png/400px-SEM_image_of_Milnesium_tardigradum_in_active_state_-_journal.pone.0045682.g001-2_%28white_background%29.png",
+        "caption": "Microscopia de varredura (SEM) do corpo segmentado e 8 patas",
+        "type": "living_specimen",
+        "category": "life_view",
+        "author": "PLOS ONE / Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Tardigrade_in_SEM.jpg/400px-Tardigrade_in_SEM.jpg",
+        "caption": "Detalhe da cutícula quitinosa e garras bucais",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Science Source / Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Tardigrade_%288410242270%29.jpg/400px-Tardigrade_%288410242270%29.jpg",
+        "caption": "Tardígrado vivo em microscopia de luz polarizada",
+        "type": "anatomy",
+        "category": "anatomy_view",
+        "author": "Flickr / Wikimedia Commons"
+      }
+    ],
+    "etymology": "Tardigrada = 'que caminha lentamente' (latim: tardus + gradus)",
+    "bio": "O tardígrado (popularmente urso d'água) é o ser vivo mais resistente do Planeta Terra. Capaz de suportar o vácuo espacial, temperaturas de -272°C a 150°C, doses letais de radiação e dessecação quase total por décadas em estado de criptobiose anidrobiótica.",
+    "curiosities": [
+      "Suporta radiação ionizante centenas de vezes superior à dose fatal para qualquer vertebrado.",
+      "Entra em estado de 'barril' (tun state), perdendo 99% da água corporal e parando o metabolismo até reidratação.",
+      "Possui linhagem fóssil ancestral preservada em âmbar datada desde o período Cambriano (530 milhões de anos)."
+    ],
+    "expert": {
+      "cladogram": [
+        "Biota",
+        "Animalia",
+        "Ecdysozoa",
+        "Panarthropoda",
+        "Tardigrada",
+        "Eutardigrada",
+        "Milnesium",
+        "Milnesium tardigradum"
+      ],
+      "osteology": "Inexistência de ossos; sustentação provida por hidroesqueleto pressurizado e cutícula flexível de quitina com trocas periódicas (ecdise).",
+      "biomechanics": "Oito patas lobópodas curtas não articuladas com garras terminais operadas por contração hidrostática do blastoceloma.",
+      "histology": "Eutelia celular: número fixo de células somáticas adultas; células ricas em proteínas de resistência térmica e anidrobiose."
+    },
+    "occurrences_count": 1250,
+    "fossil_locations": "Global (Musgos, líquens, sedimentos oceânicos e permafrost polar)",
+    "is_custom_ingested": false
+  },
+  {
+    "id": "estromatolito-cianobacteria",
+    "name": "Estromatólitos (Cianobactérias)",
+    "genus": "Cyanobacteria",
+    "scientific_name": "Collenia / Gloeocapsa (Procariontes Fotossintetizantes)",
+    "era": "precambriano",
+    "era_display": "Pré-Cambriano (Arqueano, 3.500 Ma)",
+    "period": "Arqueano e Proterozoico",
+    "epoch": "Eoarqueano ao Presente",
+    "geological_range": "3.500 Ma - Presente (3.5 Bilhões de Anos)",
+    "group": "bacteria-cianobacteria",
+    "group_display": "Bactéria & Cianobactéria Fotossintetizante",
+    "diet": "filtrador",
+    "diet_display": "Autotrófico Fotossintetizante (Oxigênio)",
+    "habitat": "bentonico",
+    "skeletal_type": "microbiologico",
+    "skeletal_composition": "Esteiras Microbianas Laminadas de Carbonato de Cálcio (CaCO3) e Parede Celular de Peptidoglicano",
+    "is_contemporary": false,
+    "conservation_status": "Fóssil Fundamental da Origem da Vida",
+    "length": "Células de 2 a 10 µm (Rochas de até 2 metros)",
+    "height": "5 cm a 1 metro",
+    "weight": "Quilos a toneladas (bioconstruções rochosas)",
+    "speed": "Sésseis / Imóveis",
+    "bite_force": "Não aplicável (Bioquímica oxigenadora)",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Stromatolithe_Pal%C3%A9oarch%C3%A9en_-_MNHT.PAL.2009.10.1.jpg/400px-Stromatolithe_Pal%C3%A9oarch%C3%A9en_-_MNHT.PAL.2009.10.1.jpg",
+    "image_caption": "Corte polido de fóssil de Estromatólito Paleoarqueano (3,5 bilhões de anos)",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Stromatolithe_Pal%C3%A9oarch%C3%A9en_-_MNHT.PAL.2009.10.1.jpg/400px-Stromatolithe_Pal%C3%A9oarch%C3%A9en_-_MNHT.PAL.2009.10.1.jpg",
+        "caption": "Estrutura interna em camadas laminadas (litoformação microbiana)",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Muséum de Toulouse / Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Stromatolites_in_Sharkbay.jpg/400px-Stromatolites_in_Sharkbay.jpg",
+        "caption": "Colônias modernas de estromatólitos vivos em Shark Bay, Austrália",
+        "type": "living_specimen",
+        "category": "life_view",
+        "author": "Wikimedia Commons"
+      }
+    ],
+    "etymology": "Stromatólito = 'pedra de esteira' (grego: stroma + lithos)",
+    "bio": "Os estromatólitos são as construções biológicas mais antigas conhecidas no registro fóssil da Terra (3,5 bilhões de anos). Formados por esteiras de cianobactérias fotossintetizantes, foram os principais responsáveis pelo Grande Evento de Oxigenação, que oxigenou a atmosfera e viabilizou a evolução animal.",
+    "curiosities": [
+      "Criaram a camada de ozônio da Terra através de bilhões de anos de liberação contínua de oxigênio.",
+      "As camadas rochosas se formavam quando as esteiras mucilaginosas pegajosas prendiam partículas minerais sedimentares suspensas na água.",
+      "Ainda existem estromatólitos vivos em águas hipersalinas como a Baía dos Tubarões (Shark Bay) na Austrália."
+    ],
+    "expert": {
+      "cladogram": [
+        "Biota",
+        "Bacteria",
+        "Terrabacteria",
+        "Cyanobacteria",
+        "Oxyphotobacteria",
+        "Chroococcales",
+        "Collenia"
+      ],
+      "osteology": "Biomineralização induzida: precipitação de calcita e aragonita por alcalinização fotossintética local, gerando rocha biogênica laminada.",
+      "biomechanics": "Organização colonial filamentosa sésseis com motilidade fototática lenta por extrusão de polissacarídeos.",
+      "histology": "Células procariontes sem núcleo ou mitocôndrias; tilacoides membranosos dispersos no citoplasma ricos em clorofila-a e ficobilinas."
+    },
+    "occurrences_count": 340,
+    "fossil_locations": "Pilbara (Austrália), Isua (Groenlândia), Barberton (África do Sul)",
+    "is_custom_ingested": false
+  },
+  {
+    "id": "paramecium",
+    "name": "Paramecium caudatum",
+    "genus": "Paramecium",
+    "scientific_name": "Paramecium caudatum (Ehrenberg, 1833)",
+    "era": "contemporaneo",
+    "era_display": "Contemporâneo (Ciliados)",
+    "period": "Holoceno / Atualidade",
+    "epoch": "Presente",
+    "geological_range": "Origem Proterozoica (~1.000 Ma) ao Presente",
+    "group": "protozoario-protista",
+    "group_display": "Protozoário Ciliado (Alveolata)",
+    "diet": "filtrador",
+    "diet_display": "Filtrador / Bacterívoro Celular",
+    "habitat": "aquatico",
+    "skeletal_type": "microbiologico",
+    "skeletal_composition": "Película Protéica Ciliar Elástica e Citoesqueleto Tubulinar",
+    "is_contemporary": true,
+    "conservation_status": "Espécie Vivente Cosmopolita",
+    "length": "170 a 330 µm (0,2 mm)",
+    "height": "50 µm",
+    "weight": "1 nanograma",
+    "speed": "0,007 km/h (2 mm/s)",
+    "bite_force": "Sucção ciliar celular no citóstoma",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Paramecium.jpg/400px-Paramecium.jpg",
+    "image_caption": "Microscopia de contraste de fase de Paramecium caudatum em natação ativa",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Paramecium.jpg/400px-Paramecium.jpg",
+        "caption": "Vista do corpo celular em forma de chinelo com cílios",
+        "type": "living_specimen",
+        "category": "life_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Semciliate.png/400px-Semciliate.png",
+        "caption": "Microscopia de varredura (SEM) das fileiras ciliares e citóstoma",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Wikimedia Commons"
+      }
+    ],
+    "etymology": "Paramecium = 'de formato alongado / oval' (grego: paramekes)",
+    "bio": "Paramecium é um dos protozoários mais célebres da biologia celular. Unicelular e de natação veloz impulsionada por milhares de cílios coordenados, possui citóstoma para ingestão de bactérias e vacúolos contráteis para osmorregulação.",
+    "curiosities": [
+      "Nada em trajetória helicoidal girando sobre o próprio eixo longitudinal a velocidades de até 2 mm por segundo.",
+      "Possui tricocistos sob a película que funcionam como 'arpões' defensivos que explodem para fora quando atacado.",
+      "Apresenta dimorfismo nuclear único: um micronúcleo diploide reprodutivo e um macronúcleo metabólico poliploide."
+    ],
+    "expert": {
+      "cladogram": [
+        "Biota",
+        "Eukaryota",
+        "SAR",
+        "Alveolata",
+        "Ciliophora",
+        "Oligohymenophorea",
+        "Paramecium",
+        "Paramecium caudatum"
+      ],
+      "osteology": "Citoesqueleto infragenital formado por cinetossomos e microtúbulos sub-peliculares que mantêm a rigidez estrutural.",
+      "biomechanics": "Ondas metacronais de batimento ciliar de potência e retorno alternados regidos por influxo de íons de cálcio (Ca2+).",
+      "histology": "Célula eucariótica complexa sem tecidos; córtex celular alveolar com ribossomos, alvéolos corticais e dois vacúolos contráteis radiais."
+    },
+    "occurrences_count": 980,
+    "fossil_locations": "Água doce global e sedimentos orgânicos",
+    "is_custom_ingested": false
+  },
+  {
+    "id": "ameba-proteus",
+    "name": "Amoeba proteus",
+    "genus": "Amoeba",
+    "scientific_name": "Amoeba proteus (Leidy, 1878)",
+    "era": "contemporaneo",
+    "era_display": "Contemporâneo (Amebozoários)",
+    "period": "Holoceno / Atualidade",
+    "epoch": "Presente",
+    "geological_range": "Origem Proterozoica ao Presente",
+    "group": "protozoario-protista",
+    "group_display": "Protozoário Amebozoário Predador",
+    "diet": "carnivoro",
+    "diet_display": "Predador Celular por Fagocitose",
+    "habitat": "aquatico",
+    "skeletal_type": "microbiologico",
+    "skeletal_composition": "Citoesqueleto Dinâmico de Microfilamentos de Actina e Membrana Plasmática Amorfa",
+    "is_contemporary": true,
+    "conservation_status": "Espécie Vivente Universal",
+    "length": "250 a 750 µm",
+    "height": "Amorfa / Variável",
+    "weight": "2 nanogramas",
+    "speed": "0,0001 km/h",
+    "bite_force": "Englobamento por pseudópodes e vacúolo digestivo",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Amoeba_proteus_with_many_pseudopodia.jpg/400px-Amoeba_proteus_with_many_pseudopodia.jpg",
+    "image_caption": "Amoeba proteus estendendo múltiplos pseudópodes digitiformes",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Amoeba_proteus_with_many_pseudopodia.jpg/400px-Amoeba_proteus_with_many_pseudopodia.jpg",
+        "caption": "Corpo celular amorfo em movimento ameboide",
+        "type": "living_specimen",
+        "category": "life_view",
+        "author": "Wikimedia Commons"
+      }
+    ],
+    "etymology": "Amoeba = 'mudança / transformação' (grego: amoibe) + Proteus = divindade mutante",
+    "bio": "Amoeba proteus é um dos maiores e mais emblemáticos protozoários da biosfera. Sem formato corporal definido, locomove-se e preda bactérias e algas microscópicas emitindo pseudópodes que englobam a presa por fagocitose.",
+    "curiosities": [
+      "Seu genoma possui cerca de 290 bilhões de pares de bases de DNA, quase 100 vezes maior que o genoma humano!",
+      "O movimento ameboide é produzido por polimerização e despolimerização rápida de actina-miosina no citoplasma.",
+      "Pode emitir dezenas de pseudópodes ao mesmo tempo enquanto sonda o substrato aquático à procura de presas."
+    ],
+    "expert": {
+      "cladogram": [
+        "Biota",
+        "Eukaryota",
+        "Amorphea",
+        "Amoebozoa",
+        "Tubulinea",
+        "Amoebida",
+        "Amoeba",
+        "Amoeba proteus"
+      ],
+      "osteology": "Ausência de estruturas esqueléticas rígidas; sustentação dependente da pressão hidrostática intracelular e actina cortical.",
+      "biomechanics": "Fluidos citoplasmáticos passam ciclicamente de estado gel (ectoplasma) para estado sol (endoplasma liquefeito).",
+      "histology": "Célula única multinucleada ou mononucleada gigante; membrana celular revestida externamente por glicocálice filamentoso."
+    },
+    "occurrences_count": 640,
+    "fossil_locations": "Ambientes límnicos e charcos ricos em matéria orgânica",
+    "is_custom_ingested": false
+  },
+  {
+    "id": "nummulites",
+    "name": "Nummulites (Foraminífero Gigante)",
+    "genus": "Nummulites",
+    "scientific_name": "Nummulites gizehensis (Lamarck, 1804)",
+    "era": "cenozoico",
+    "era_display": "Cenozoico (Eoceno, 56 - 33.9 Ma)",
+    "period": "Eoceno (Paleógeno)",
+    "epoch": "Eoceno Médio",
+    "geological_range": "65 a 33.9 Ma (Paleógeno)",
+    "group": "protozoario-protista",
+    "group_display": "Protista Foraminífero Fóssil Biomineral",
+    "diet": "filtrador",
+    "diet_display": "Filtrador / Microbívoro com Reticulopódios",
+    "habitat": "bentonico",
+    "skeletal_type": "microbiologico",
+    "skeletal_composition": "Testa (Concha) Calcária Multilocular de Carbonato de Cálcio (CaCO3)",
+    "is_contemporary": false,
+    "conservation_status": "Fóssil-Guia Extinto",
+    "length": "2 a 6 cm de diâmetro",
+    "height": "3 a 8 mm",
+    "weight": "5 a 30 gramas",
+    "speed": "0,00001 km/h",
+    "bite_force": "Reticulopódios adesivos microscópicos",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Nummulitids.jpg/400px-Nummulitids.jpg",
+    "image_caption": "Fósseis de carapaças calcárias espiraladas de Nummulites",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Nummulitids.jpg/400px-Nummulitids.jpg",
+        "caption": "Fósseis de Nummulites incrustados em rocha calcária eocênica",
+        "type": "living_specimen",
+        "category": "life_view",
+        "author": "Wikimedia Commons"
+      }
+    ],
+    "etymology": "Nummulites = 'pedra em forma de moeda' (latim: nummulus)",
+    "bio": "Nummulites foi um gênero de foraminíferos que dominou os mares quentes do Eoceno. Apesar de ser um organismo unicelular, construía conchas espiraladas de calcário de até 6 cm de diâmetro. O calcário nummulítico foi a rocha utilizada na construção das Pirâmides de Gizé no Egito.",
+    "curiosities": [
+      "É considerado um dos maiores organismos unicelulares eucariotos que já existiram na história geológica.",
+      "A famosa Esfinge e as Pirâmides de Quéops, Quéfren e Miquerinos no Egito contêm milhões de fósseis de Nummulites gravados em suas pedras.",
+      "Suas câmaras internas continham algas unicelulares endossimbióticas que realizavam fotossíntese para nutrir o protista gigante."
+    ],
+    "expert": {
+      "cladogram": [
+        "Biota",
+        "Eukaryota",
+        "SAR",
+        "Rhizaria",
+        "Foraminifera",
+        "Rotaliida",
+        "Nummulites",
+        "Nummulites gizehensis"
+      ],
+      "osteology": "Testa calcítica hialina lamelar perfurada com múltiplos septos secundários espiralados formando câmaras comunicantes.",
+      "biomechanics": "Projeção externa de reticulopódios filamentosos através dos poros calcários para fixação bentônica e captura trófica.",
+      "histology": "Célula única ocupando todas as câmaras interligadas por canais citoplasmáticos axiais."
+    },
+    "occurrences_count": 420,
+    "fossil_locations": "Platô de Gizé (Egito), Bacia de Paris (França), Mar de Tethys",
+    "is_custom_ingested": false
+  },
+  {
+    "id": "diatomacea",
+    "name": "Diatomácea (Alga de Vidro)",
+    "genus": "Navicula",
+    "scientific_name": "Navicula / Bacillariophyceae (Haeckel, 1878)",
+    "era": "contemporaneo",
+    "era_display": "Contemporâneo (Origem no Jurássico)",
+    "period": "Holoceno / Atualidade",
+    "epoch": "Presente",
+    "geological_range": "190 Ma (Jurássico) ao Presente",
+    "group": "protozoario-protista",
+    "group_display": "Microalga Biomineral de Sílica (Chromista)",
+    "diet": "filtrador",
+    "diet_display": "Autotrófico Fotossintetizante",
+    "habitat": "aquatico",
+    "skeletal_type": "microbiologico",
+    "skeletal_composition": "Frústula Bivalve Rígida de Sílica Biogênica Hidratada (Dióxido de Silício - SiO2)",
+    "is_contemporary": true,
+    "conservation_status": "Espécie Vivente (Base da Cadeia Oceânica)",
+    "length": "20 a 100 µm",
+    "height": "10 µm",
+    "weight": "0,5 nanogramas",
+    "speed": "0,001 km/h (deslizamento por rafe de mucilagem)",
+    "bite_force": "Não aplicável (Fotossíntese)",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Diatoms_through_the_microscope.jpg/400px-Diatoms_through_the_microscope.jpg",
+    "image_caption": "Diatomáceas em microscopia óptica com frústulas de vidro natural",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Diatoms_through_the_microscope.jpg/400px-Diatoms_through_the_microscope.jpg",
+        "caption": "Frústulas geométricas bivalves de sílica pura",
+        "type": "living_specimen",
+        "category": "life_view",
+        "author": "Wikimedia Commons"
+      }
+    ],
+    "etymology": "Diatom = 'cortado em dois' (grego: dia + temnein)",
+    "bio": "As diatomáceas são algas unicelulares microscópicas revestidas por uma frústula de vidro de sílica pura (SiO2). São responsáveis por produzir mais de 20% a 50% de todo o oxigênio atmosférico do planeta, além de formarem a base do fitoplâncton marinho.",
+    "curiosities": [
+      "Produzem mais oxigênio a cada respiração humana do que todas as florestas tropicais somadas.",
+      "Suas carapaças de vidro caem no fundo dos mares após a morte, formando o diatomito usado por Alfred Nobel para inventar a dinamite.",
+      "A arquitetura nanoscópica de suas conchas de sílica possui resistência mecânica e propriedades ópticas fotônicas superiores a vidros sintéticos."
+    ],
+    "expert": {
+      "cladogram": [
+        "Biota",
+        "Eukaryota",
+        "SAR",
+        "Stramenopiles",
+        "Ochrophyta",
+        "Bacillariophyceae",
+        "Naviculales",
+        "Navicula"
+      ],
+      "osteology": "Frústula de dióxido de silício biogênico hidratado (SiO2) dividida em epiteca e hipoteca.",
+      "biomechanics": "Deslizamento por esteira de mucilagem polissacarídica secretada através da fenda da rafe.",
+      "histology": "Plastos fotossintetizantes ricos em fucoxantina e clorofilas a e c; ausência de paredes celulósicas."
+    },
+    "occurrences_count": 1850,
+    "fossil_locations": "Oceano global, rios, lagos e depósitos de diatomito",
+    "is_custom_ingested": false
+  },
+  {
+    "id": "pithovirus",
+    "name": "Pithovirus sibericum (Vírus Gigante)",
+    "genus": "Pithovirus",
+    "scientific_name": "Pithovirus sibericum (Legendre et al., 2014)",
+    "era": "cenozoico",
+    "era_display": "Cenozoico (Pleistoceno, 30.000 anos)",
+    "period": "Pleistoceno (Idade do Gelo)",
+    "epoch": "Pleistoceno Superior",
+    "geological_range": "Permafrost Siberiano Fóssil (30.000 anos atrás)",
+    "group": "virus-gigante",
+    "group_display": "Megavírus / Vírus Gigante Pré-Histórico",
+    "diet": "carnivoro",
+    "diet_display": "Parasita Intracelular de Amebas",
+    "habitat": "terrestre",
+    "skeletal_type": "microbiologico",
+    "skeletal_composition": "Capsídeo Proteico Espesso de 60 nm em Ânfora com Rolha Apical em Colmeia",
+    "is_contemporary": false,
+    "conservation_status": "Vírus Fóssil Reanimado em Laboratório",
+    "length": "1,5 micrômetros (1.500 nm)",
+    "height": "0,5 micrômetros (500 nm)",
+    "weight": "Massa atômica viral colossal (~100 megadaltons)",
+    "speed": "Imóvel (Infeção passiva por fagocitose)",
+    "bite_force": "Abertura de rolha apical e fusão de membrana com o fagosomo",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Pithovirus_sibericum_sketch.jpg/400px-Pithovirus_sibericum_sketch.jpg",
+    "image_caption": "Morfologia em ânfora do vírion gigante de Pithovirus sibericum",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Pithovirus_sibericum_sketch.jpg/400px-Pithovirus_sibericum_sketch.jpg",
+        "caption": "Ilustração anatômica do vírion de 1,5 µm com rolha apical",
+        "type": "living_specimen",
+        "category": "life_view",
+        "author": "Wikimedia Commons"
+      }
+    ],
+    "etymology": "Pithovirus = de 'pithos' (grego: grande ânfora de armazenamento da Grécia Antiga)",
+    "bio": "Pithovirus sibericum é um megavírus desenterrado do permafrost congelado da Sibéria após 30.000 anos de hibernação fóssil. Com 1,5 micrômetro de comprimento, é maior que muitas bactérias e possui estrutura oval em forma de ânfora com uma tampa apical fechada por uma estrutura em favo de mel.",
+    "curiosities": [
+      "É 50% maior que o Mimivirus e pode ser facilmente visualizado em microscópio óptico comum.",
+      "Ficou 30 mil anos congelado no gelo eterno siberiano desde a era dos mamutes e ao ser reidratado em 2014 infectou ativamente amebas em laboratório.",
+      "Seu envelope tem espessura de 60 nm e seu genoma possui 610.000 pares de bases de DNA de fita dupla."
+    ],
+    "expert": {
+      "cladogram": [
+        "Biota",
+        "Acytota",
+        "Varidnaviria",
+        "Nucleocytoviricota",
+        "Pithoviridae",
+        "Pithovirus",
+        "Pithovirus sibericum"
+      ],
+      "osteology": "Invólucro proteico espesso de 60 nm com feixes de fibras e estrutura apical em favo de mel ('cork').",
+      "biomechanics": "Entra na célula hospedeira por fagocitose induzida e abre sua rolha apical liberando o genoma viral.",
+      "histology": "Partícula acelular gigante; replicação citoplasmática sem penetrar no núcleo da ameba."
+    },
+    "occurrences_count": 12,
+    "fossil_locations": "Kolyma, Sibéria (Rússia) - Camada de 30 metros de permafrost",
+    "is_custom_ingested": false
   }
 ];
 
@@ -1933,26 +2386,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function setupEventListeners() {
-  searchBtn.addEventListener('click', () => handleSearch());
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') handleSearch();
-  });
-  
-  searchInput.addEventListener('input', () => {
-    if (searchInput.value.trim().length > 0) {
-      clearBtn.classList.remove('hidden');
-    } else {
+  if (searchBtn) searchBtn.addEventListener('click', () => handleSearch());
+  if (searchInput) {
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSearch();
+    });
+    searchInput.addEventListener('input', () => {
+      if (clearBtn) {
+        if (searchInput.value.trim().length > 0) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+      }
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
       clearBtn.classList.add('hidden');
-    }
-  });
+      handleSearch();
+    });
+  }
 
-  clearBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    clearBtn.classList.add('hidden');
-    handleSearch();
-  });
-
-  btnAutoIngest.addEventListener('click', () => handleAutoIngestPrompt());
+  if (btnAutoIngest) btnAutoIngest.addEventListener('click', () => handleAutoIngestPrompt());
 
   if (skeletalFilter) {
     skeletalFilter.addEventListener('change', () => {
@@ -1961,22 +2419,30 @@ function setupEventListeners() {
     });
   }
 
-  periodFilter.addEventListener('change', () => {
-    state.currentPeriod = periodFilter.value;
-    loadCatalog();
-  });
+  if (periodFilter) {
+    periodFilter.addEventListener('change', () => {
+      state.currentPeriod = periodFilter.value;
+      loadCatalog();
+    });
+  }
 
-  groupFilter.addEventListener('change', () => {
-    state.currentGroup = groupFilter.value;
-    loadCatalog();
-  });
+  if (groupFilter) {
+    groupFilter.addEventListener('change', () => {
+      state.currentGroup = groupFilter.value;
+      loadCatalog();
+    });
+  }
 
-  dietFilter.addEventListener('change', () => {
-    state.currentDiet = dietFilter.value;
-    loadCatalog();
-  });
+  if (dietFilter) {
+    dietFilter.addEventListener('change', () => {
+      state.currentDiet = dietFilter.value;
+      loadCatalog();
+    });
+  }
 
-  resetFiltersBtn.addEventListener('click', () => resetAllFilters());
+  if (resetFiltersBtn) {
+    resetFiltersBtn.addEventListener('click', () => resetAllFilters());
+  }
 
   const refreshCatalogBtn = document.getElementById('refreshCatalogBtn');
   if (refreshCatalogBtn) {
@@ -1986,44 +2452,52 @@ function setupEventListeners() {
     });
   }
 
-  eraTabsContainer.addEventListener('click', (e) => {
-    const btn = e.target.closest('.era-tab-btn');
-    if (!btn) return;
-    
-    document.querySelectorAll('.era-tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    state.currentEra = btn.getAttribute('data-era');
-    loadCatalog();
-  });
+  if (eraTabsContainer) {
+    eraTabsContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.era-tab-btn');
+      if (!btn) return;
 
-  globalExpertToggle.addEventListener('change', () => {
-    state.isExpertMode = globalExpertToggle.checked;
-    modalExpertToggle.checked = state.isExpertMode;
-    toggleExpertModeDisplay();
-  });
+      document.querySelectorAll('.era-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-  modalExpertToggle.addEventListener('change', () => {
-    state.isExpertMode = modalExpertToggle.checked;
-    globalExpertToggle.checked = state.isExpertMode;
-    toggleExpertModeDisplay();
-  });
+      state.currentEra = btn.getAttribute('data-era');
+      loadCatalog();
+    });
+  }
 
-  if (btnToggleExpertInFooter) {
-    btnToggleExpertInFooter.addEventListener('click', () => {
-      state.isExpertMode = !state.isExpertMode;
-      globalExpertToggle.checked = state.isExpertMode;
-      modalExpertToggle.checked = state.isExpertMode;
+  if (globalExpertToggle) {
+    globalExpertToggle.addEventListener('change', () => {
+      state.isExpertMode = globalExpertToggle.checked;
+      if (modalExpertToggle) modalExpertToggle.checked = state.isExpertMode;
       toggleExpertModeDisplay();
     });
   }
 
-  wikiTabsBar.addEventListener('click', (e) => {
-    const tabBtn = e.target.closest('.wiki-tab-btn');
-    if (!tabBtn) return;
-    const tabId = tabBtn.getAttribute('data-tab');
-    switchWikiTab(tabId);
-  });
+  if (modalExpertToggle) {
+    modalExpertToggle.addEventListener('change', () => {
+      state.isExpertMode = modalExpertToggle.checked;
+      if (globalExpertToggle) globalExpertToggle.checked = state.isExpertMode;
+      toggleExpertModeDisplay();
+    });
+  }
+
+  if (btnToggleExpertInFooter) {
+    btnToggleExpertInFooter.addEventListener('click', () => {
+      state.isExpertMode = !state.isExpertMode;
+      if (globalExpertToggle) globalExpertToggle.checked = state.isExpertMode;
+      if (modalExpertToggle) modalExpertToggle.checked = state.isExpertMode;
+      toggleExpertModeDisplay();
+    });
+  }
+
+  if (wikiTabsBar) {
+    wikiTabsBar.addEventListener('click', (e) => {
+      const tabBtn = e.target.closest('.wiki-tab-btn');
+      if (!tabBtn) return;
+      const tabId = tabBtn.getAttribute('data-tab');
+      switchWikiTab(tabId);
+    });
+  }
 
   const catContainer = document.getElementById('galleryCategoryChips');
   if (catContainer) {
@@ -2037,29 +2511,31 @@ function setupEventListeners() {
     });
   }
 
-  closeWikiBtn.addEventListener('click', closeWikiModal);
-  btnCloseWikiFooter.addEventListener('click', closeWikiModal);
-  wikiModalBackdrop.addEventListener('click', closeWikiModal);
+  if (closeWikiBtn) closeWikiBtn.addEventListener('click', closeWikiModal);
+  if (btnCloseWikiFooter) btnCloseWikiFooter.addEventListener('click', closeWikiModal);
+  if (wikiModalBackdrop) wikiModalBackdrop.addEventListener('click', closeWikiModal);
 
-  closeLightboxBtn.addEventListener('click', closeLightbox);
-  lightboxBackdrop.addEventListener('click', closeLightbox);
-  lightboxPrevBtn.addEventListener('click', () => navigateLightbox(-1));
-  lightboxNextBtn.addEventListener('click', () => navigateLightbox(1));
+  if (closeLightboxBtn) closeLightboxBtn.addEventListener('click', closeLightbox);
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+  if (lightboxPrevBtn) lightboxPrevBtn.addEventListener('click', () => navigateLightbox(-1));
+  if (lightboxNextBtn) lightboxNextBtn.addEventListener('click', () => navigateLightbox(1));
 
-  btnZoomFeatured.addEventListener('click', () => {
-    if (state.selectedSpecimen && state.selectedSpecimen.image_url) {
-      openLightbox(0);
-    }
-  });
+  if (btnZoomFeatured) {
+    btnZoomFeatured.addEventListener('click', () => {
+      if (state.selectedSpecimen && state.selectedSpecimen.image_url) {
+        openLightbox(0);
+      }
+    });
+  }
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (!lightboxModal.classList.contains('hidden')) {
+      if (lightboxModal && !lightboxModal.classList.contains('hidden')) {
         closeLightbox();
-      } else if (!wikiModal.classList.contains('hidden')) {
+      } else if (wikiModal && !wikiModal.classList.contains('hidden')) {
         closeWikiModal();
       }
-    } else if (!lightboxModal.classList.contains('hidden')) {
+    } else if (lightboxModal && !lightboxModal.classList.contains('hidden')) {
       if (e.key === 'ArrowLeft') navigateLightbox(-1);
       if (e.key === 'ArrowRight') navigateLightbox(1);
     }
@@ -2117,7 +2593,13 @@ async function loadCatalog(showSpinner = false) {
   if (showSpinner) showLoading('Filtrando acervo...');
   
   const params = new URLSearchParams();
-  if (state.currentEra && state.currentEra !== 'all') params.append('era', state.currentEra);
+  if (state.currentEra && state.currentEra !== 'all') {
+    if (state.currentEra === 'microbiologico') {
+      params.append('skeletal_type', 'microbiologico');
+    } else {
+      params.append('era', state.currentEra);
+    }
+  }
   if (state.currentPeriod && state.currentPeriod !== 'all') params.append('period', state.currentPeriod);
   if (state.currentGroup && state.currentGroup !== 'all') params.append('group', state.currentGroup);
   if (state.currentDiet && state.currentDiet !== 'all') params.append('diet', state.currentDiet);
@@ -2158,7 +2640,11 @@ function filterEmbeddedCatalog() {
   let list = [...EMBEDDED_CATALOG];
 
   if (state.currentEra && state.currentEra !== 'all') {
-    list = list.filter(s => s.era.toLowerCase() === state.currentEra.toLowerCase());
+    if (state.currentEra === 'microbiologico') {
+      list = list.filter(s => s.skeletal_type === 'microbiologico' || s.group.includes('micro') || s.group.includes('bacteria') || s.group.includes('virus') || s.group.includes('protozoario'));
+    } else {
+      list = list.filter(s => s.era.toLowerCase() === state.currentEra.toLowerCase());
+    }
   }
 
   if (state.currentPeriod && state.currentPeriod !== 'all') {
@@ -2221,10 +2707,26 @@ function renderCards(specimens) {
     card.setAttribute('data-id', spec.id);
 
     const eraClass = `badge-era-${spec.era}`;
+    const isMicro = spec.skeletal_type === 'microbiologico';
     const isVertebrate = spec.skeletal_type === 'vertebrado';
-    const skeletalBadgeClass = isVertebrate ? 'badge-vertebrado' : 'badge-invertebrado';
-    const skeletalIcon = isVertebrate ? '🦴' : '🐚';
-    const skeletalLabel = isVertebrate ? 'Vertebrado' : 'Invertebrado';
+    let skeletalBadgeClass = 'badge-invertebrado';
+    let skeletalIcon = '🐚';
+    let skeletalLabel = 'Invertebrado';
+    let quickBtnIcon = '🦴';
+
+    if (isMicro) {
+      skeletalBadgeClass = 'badge-microbiologico';
+      skeletalIcon = '🔬';
+      skeletalLabel = 'Microbiológico';
+      quickBtnIcon = '🔬';
+    } else if (isVertebrate) {
+      skeletalBadgeClass = 'badge-vertebrado';
+      skeletalIcon = '🦴';
+      skeletalLabel = 'Vertebrado';
+      quickBtnIcon = '🦴';
+    } else {
+      quickBtnIcon = '🐚';
+    }
     const thumbUrl = getThumbnailUrl(spec.image_url, 400);
 
     card.innerHTML = `
@@ -2278,8 +2780,8 @@ function renderCards(specimens) {
             </svg>
           </button>
           
-          <button class="secondary-btn btn-quick-skeleton" data-id="${spec.id}" title="Ver Esqueleto, Ossos ou Cartilagem">
-            🦴
+          <button class="secondary-btn btn-quick-skeleton" data-id="${spec.id}" title="Ver Estrutura / Esqueleto / Citologia Direto">
+            ${quickBtnIcon}
           </button>
         </div>
       </div>
@@ -2353,44 +2855,54 @@ async function handleAutoIngestPrompt() {
 
 
 async function executeAutoIngest(taxonName) {
-  if (!state.isBackendOnline) {
-    showToast(`Para buscar novos animais online via GBIF, inicie o servidor com './iniciar.sh' no terminal.`, 'ℹ️');
-    return;
-  }
-
   showLoading(`Consultando GBIF, PBDB e Wikimedia para minerar dados de "${taxonName}"...`);
   
   try {
+    const eraHint = (state.currentEra && state.currentEra !== 'all' && state.currentEra !== 'microbiologico') ? state.currentEra : null;
     const res = await fetch(`${API_BASE}/api/ingest`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: taxonName,
-        era_hint: state.currentEra !== 'all' ? state.currentEra : null
+        era_hint: eraHint
       })
     });
     
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     hideLoading();
 
     if (data.success && data.specimen) {
+      state.isBackendOnline = true;
       showToast(data.message, '🎉');
-      await loadCatalog();
+      const existsIdx = state.specimens.findIndex(s => s.id === data.specimen.id);
+      if (existsIdx >= 0) {
+        state.specimens[existsIdx] = data.specimen;
+      } else {
+        state.specimens.unshift(data.specimen);
+      }
+      renderCards(state.specimens);
+      updateStats(state.specimens.length, true);
       openWikiModal(data.specimen.id, 'tab-overview');
     } else {
-      showToast(data.message || 'Não foi possível localizar dados científicos para o animal.', '⚠️');
+      showToast(data.message || 'Não foi possível localizar dados científicos para este organismo.', '⚠️');
     }
   } catch (err) {
     hideLoading();
     console.error('Erro na ingestão:', err);
-    showToast('Falha na comunicação com o serviço de ingestão via API.', '❌');
+    showToast(`Para minerar "${taxonName}" em tempo real nas bases mundiais, certifique-se de que o servidor FastAPI está ativo.`, 'ℹ️');
   }
 }
 
 
 async function openOrIngestSpecimen(name) {
   const cleanId = name.toLowerCase().replace(/ /g, '-');
-  const found = EMBEDDED_CATALOG.find(s => 
+  const found = state.specimens.find(s => 
+    s.id === cleanId || 
+    s.name.toLowerCase().includes(name.toLowerCase()) || 
+    s.genus.toLowerCase() === name.toLowerCase() ||
+    (s.scientific_name && s.scientific_name.toLowerCase().includes(name.toLowerCase()))
+  ) || EMBEDDED_CATALOG.find(s => 
     s.id === cleanId || 
     s.name.toLowerCase().includes(name.toLowerCase()) || 
     s.genus.toLowerCase() === name.toLowerCase() ||
@@ -2399,12 +2911,10 @@ async function openOrIngestSpecimen(name) {
   
   if (found) {
     openWikiModal(found.id, 'tab-overview');
-  } else if (state.isBackendOnline) {
-    searchInput.value = name;
-    clearBtn.classList.remove('hidden');
-    await executeAutoIngest(name);
   } else {
-    showToast(`Espécime em expansão. Inicie o backend com './iniciar.sh' para baixá-lo!`, '💡');
+    searchInput.value = name;
+    if (clearBtn) clearBtn.classList.remove('hidden');
+    await executeAutoIngest(name);
   }
 }
 
@@ -2454,11 +2964,31 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
   eraBadge.textContent = spec.era_display;
   eraBadge.className = `badge-era badge-era-${spec.era}`;
 
+  const isMicro = spec.skeletal_type === 'microbiologico';
   const isVertebrate = spec.skeletal_type === 'vertebrado';
   const skeletalBadge = document.getElementById('wikiSkeletalBadge');
-  skeletalBadge.textContent = isVertebrate ? '🦴 Vertebrado' : '🐚 Invertebrado';
-  skeletalBadge.className = `badge-skeletal ${isVertebrate ? 'badge-vertebrado' : 'badge-invertebrado'}`;
   
+  if (isMicro) {
+    skeletalBadge.textContent = '🔬 Vida Microbiológica';
+    skeletalBadge.className = 'badge-skeletal badge-microbiologico';
+    document.getElementById('specSkeletalType').textContent = 'Microbiológico (Unicelular / Acelular / Micro-invertebrado)';
+  } else if (isVertebrate) {
+    skeletalBadge.textContent = '🦴 Vertebrado';
+    skeletalBadge.className = 'badge-skeletal badge-vertebrado';
+    document.getElementById('specSkeletalType').textContent = 'Vertebrado (Possui coluna vertebral e crânio)';
+  } else {
+    skeletalBadge.textContent = '🐚 Invertebrado';
+    skeletalBadge.className = 'badge-skeletal badge-invertebrado';
+    document.getElementById('specSkeletalType').textContent = 'Invertebrado (Sem coluna vertebral)';
+  }
+  
+  const tabSkeletonBtn = document.getElementById('tabBtnSkeleton');
+  if (tabSkeletonBtn) {
+    tabSkeletonBtn.innerHTML = isMicro 
+      ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"/></svg> 🔬 Estrutura Celular & Citologia'
+      : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-3-3v6M4 6h16M4 18h16"/></svg> 🦴 Esqueleto, Ossos & Cartilagem';
+  }
+
   const periodBadge = document.getElementById('wikiPeriodBadge');
   periodBadge.textContent = spec.period;
 
@@ -2466,7 +2996,6 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
   document.getElementById('wikiDietBadge').textContent = spec.diet_display;
 
   // Ficha Estrutural
-  document.getElementById('specSkeletalType').textContent = isVertebrate ? 'Vertebrado (Possui coluna vertebral e crânio)' : 'Invertebrado (Sem coluna vertebral)';
   document.getElementById('specSkeletalComp').textContent = spec.skeletal_composition || 'Estrutura corporal não-mineralizada';
   document.getElementById('specConservationStatus').textContent = spec.conservation_status || (spec.is_contemporary ? 'Espécie Vivente' : 'Fóssil Extinto');
 
@@ -2548,7 +3077,13 @@ function renderSkeletonTab(spec) {
   const isVertebrate = spec.skeletal_type === 'vertebrado';
   const explanation = document.getElementById('skeletonExplanationText');
   
-  if (isVertebrate) {
+  const isMicro = spec.skeletal_type === 'microbiologico';
+  if (isMicro) {
+    explanation.innerHTML = `
+      <strong>${spec.name}</strong> é um espécime de <strong>VIDA MICROBIOLÓGICA</strong>.<br>
+      Sua sustentação e organização celular baseiam-se em <strong>${spec.skeletal_composition || 'Parede Celular / Membrana Plasmática / Citoesqueleto'}</strong>, sem ossos ou esqueleto mineralizado de vertebrado.
+    `;
+  } else if (isVertebrate) {
     explanation.innerHTML = `
       <strong>${spec.name}</strong> é um <strong>VERTEBRADO</strong>.<br>
       Possui <strong>${spec.skeletal_composition || 'Endoesqueleto Ósseo Articulado'}</strong> com crânio rígido, coluna vertebral axial e sustentação esquelética interna.
@@ -2808,12 +3343,12 @@ function resetAllFilters() {
   state.currentSkeletalType = 'all';
   state.searchQuery = '';
 
-  searchInput.value = '';
-  clearBtn.classList.add('hidden');
+  if (searchInput) searchInput.value = '';
+  if (clearBtn) clearBtn.classList.add('hidden');
   if (skeletalFilter) skeletalFilter.value = 'all';
-  periodFilter.value = 'all';
-  groupFilter.value = 'all';
-  dietFilter.value = 'all';
+  if (periodFilter) periodFilter.value = 'all';
+  if (groupFilter) groupFilter.value = 'all';
+  if (dietFilter) dietFilter.value = 'all';
 
   document.querySelectorAll('.era-tab-btn').forEach(b => {
     b.classList.toggle('active', b.getAttribute('data-era') === 'all');
