@@ -21,6 +21,9 @@ from app.services.gbif_service import match_gbif_species, fetch_gbif_occurrences
 from app.services.wiki_service import (
     fetch_wikipedia_summary, fetch_multi_perspective_images, infer_taxonomy_and_ecology, USER_AGENT
 )
+from app.services.knowledge_engine import (
+    find_known_taxon, build_specimen_from_known, get_curated_occurrences, normalize_text, estimate_biometrics_by_group
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("superwiki_api")
@@ -176,31 +179,61 @@ async def get_specimen_detail(identifier: str):
 
 
 async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -> Optional[Specimen]:
-    """Dynamically ingests any animal species (contemporary or extinct) via GBIF, Wikipedia, Commons & PBDB."""
+    """Dynamically ingests any animal species (contemporary or extinct) via curated knowledge + GBIF, Wikipedia, Commons & PBDB."""
     name_clean = taxon_name.strip()
     slug = name_clean.lower().replace(" ", "-")
 
-    # Check local cache first
+    # 0. Check pre-curated scientific knowledge engine FIRST (guarantees real biometrics & images)
+    known = find_known_taxon(name_clean)
+    if known:
+        specimen = build_specimen_from_known(known)
+        upsert_specimen(specimen)
+        return specimen
+
+    # Check local cache
     existing = get_specimen_by_id(slug)
     if existing:
         return existing
 
-    # 1. Query GBIF Backbone Taxonomy for global classification
-    gbif_data = await match_gbif_species(name_clean)
-    canonical = gbif_data.get("canonical_name", name_clean) if gbif_data else name_clean
-    scientific = gbif_data.get("scientific_name", f"{name_clean}") if gbif_data else name_clean
+    # 1. Query Wikipedia (PT) first to resolve Portuguese vernacular name to formal title & scientific binomial
+    wiki_data = await fetch_wikipedia_summary(name_clean)
+    wiki_title = wiki_data.get("title", name_clean)
+    wiki_extract = wiki_data.get("extract", "")
 
-    # 2. Query Wikipedia (PT/EN) for Portuguese summary & lead image
-    wiki_data = await fetch_wikipedia_summary(canonical)
+    # Extract scientific candidate from text (e.g. "(Panthera pardus)")
+    scientific_candidate = None
+    sc_match = re.search(r'\((?:[a-z]{2}:\s*)?([A-Z][a-z]+ [a-z]+)\)', wiki_extract)
+    if sc_match:
+        scientific_candidate = sc_match.group(1)
+
+    # 2. Query GBIF Backbone Taxonomy using scientific candidate or cleaned name
+    gbif_query = scientific_candidate or wiki_title
+    gbif_data = await match_gbif_species(gbif_query)
+    if not gbif_data and scientific_candidate:
+        gbif_data = await match_gbif_species(name_clean)
+
+    canonical = gbif_data.get("canonical_name", wiki_title) if gbif_data else wiki_title
+    scientific = gbif_data.get("scientific_name", scientific_candidate or canonical) if gbif_data else (scientific_candidate or canonical)
 
     # 3. Query PBDB to see if it's a prehistoric fossil taxon
-    pbdb_data = await fetch_taxon_info(canonical)
+    pbdb_data = await fetch_taxon_info(scientific_candidate or canonical)
 
-    # 4. Determine Era & Contemporary status
-    is_contemporary = False
-    conservation_status = "Fóssil Extinto"
+    # 4. Determine Era & Contemporary status with intelligent text keywords
+    combined_lower = f"{name_clean} {canonical} {scientific} {wiki_extract}".lower()
+    
+    is_prehistoric_dino = any(k in combined_lower for k in [
+        "dinossauro", "dinosaur", "pterossauro", "pterosaur", "sauropod", "theropod", "ceratops",
+        "hadrosaur", "jurássico", "jurassico", "cretáceo", "cretaceo", "triássico", "triassico", "mesozoico", "mesozóico"
+    ])
+    is_paleozoic = any(k in combined_lower for k in [
+        "paleozoico", "paleozóico", "permiano", "carbonífero", "carbonifero", "devoniano", "siluriano",
+        "ordoviciano", "cambriano", "trilobita", "trilobite"
+    ])
+    is_cenozoic_fossil = any(k in combined_lower for k in [
+        "pleistoceno", "mioceno", "eoceno", "oligoceno", "paleoceno", "megafauna extinta", "smilodon", "mamute", "mammuthus"
+    ])
 
-    if era_hint == "contemporaneo":
+    if era_hint == "contemporaneo" and not (is_prehistoric_dino or is_paleozoic):
         is_contemporary = True
         era_key = "contemporaneo"
         era_name = "Contemporâneo (Fauna Atual)"
@@ -208,14 +241,34 @@ async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -
         geo_range = "Época Atual (Holoceno - Presente)"
         conservation_status = "Espécie Vivente"
     elif pbdb_data and (pbdb_data.get("max_ma", 0) > 0.01):
-        # Definitely a fossil taxon
+        is_contemporary = False
         era_key = pbdb_data.get("era", "mesozoico")
         era_name = pbdb_data.get("era_display", "Mesozoico")
         period_pt = pbdb_data.get("period", "Período Fóssil")
         geo_range = pbdb_data.get("geological_range", "Registro fóssil paleontológico")
         conservation_status = "Extinto no Registro Fóssil"
+    elif is_prehistoric_dino:
+        is_contemporary = False
+        era_key = "mesozoico"
+        era_name = "Mesozoico"
+        period_pt = "Jurássico / Cretáceo"
+        geo_range = "Era Mesozoica (252 a 66 Ma)"
+        conservation_status = "Extinto no Registro Fóssil"
+    elif is_paleozoic:
+        is_contemporary = False
+        era_key = "paleozoico"
+        era_name = "Paleozoico"
+        period_pt = "Paleozoico Superior"
+        geo_range = "Era Paleozoica (541 a 252 Ma)"
+        conservation_status = "Extinto no Registro Fóssil"
+    elif is_cenozoic_fossil:
+        is_contemporary = False
+        era_key = "cenozoico"
+        era_name = "Cenozoico"
+        period_pt = "Neógeno / Pleistoceno"
+        geo_range = "Fóssil Cenozoico (66 Ma ao Pleistoceno)"
+        conservation_status = "Extinto no Registro Fóssil"
     else:
-        # If PBDB didn't match as a fossil, check if it's contemporary fauna
         is_contemporary = True
         era_key = "contemporaneo"
         era_name = "Contemporâneo (Fauna Atual)"
@@ -235,19 +288,35 @@ async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -
             skeletal_comp = "Parede Celular / Membrana Plasmática / Cutícula Acelular"
             cladogram = ["Biota", "Microbiologia", canonical]
         else:
-            skeletal_type = "vertebrado"
-            skeletal_comp = "Endoesqueleto Ósseo e Cartilagem"
-            cladogram = ["Metazoa", "Chordata", "Vertebrata", canonical]
+            is_inv = any(k in combined_lower for k in ["invertebrad", "artrópode", "inseto", "aracnídeo", "molusco", "polvo", "caracol", "verme", "cnidário", "água-viva", "crustáceo"])
+            skeletal_type = "invertebrado" if is_inv else "vertebrado"
+            skeletal_comp = "Exoesqueleto Quitinoso ou Concha Calcária" if is_inv else "Endoesqueleto Ósseo e Cartilagem"
+            cladogram = ["Metazoa", "Chordata" if not is_inv else "Invertebrata", canonical]
 
     # 6. Infer ecology and habitat
     ecology = infer_taxonomy_and_ecology(canonical, pbdb_data, wiki_data, gbif_data)
 
-    # 7. Fetch multi-perspective images (Living individual + Bones/Skeleton/Cartilage + Anatomy)
-    images = await fetch_multi_perspective_images(canonical, limit=10)
+    # 7. Extract realistic biometrics (Length, Height, Weight, Speed, Bite force)
+    len_match = re.search(r'(\d+(?:[.,]\d+)?\s*(?:a\s*\d+(?:[.,]\d+)?)?\s*(?:metros?|m|centímetros?|cm|milímetros?|mm))\b', wiki_extract, re.I)
+    wt_match = re.search(r'(\d+(?:[.,]\d+)?\s*(?:a\s*\d+(?:[.,]\d+)?)?\s*(?:quilogramas?|kg|toneladas?|t|gramas?|g))\b', wiki_extract, re.I)
+    spd_match = re.search(r'(\d+(?:[.,]\d+)?\s*(?:a\s*\d+(?:[.,]\d+)?)?\s*km/h)\b', wiki_extract, re.I)
 
-    # Determine primary lead image
+    # Compute intelligent physical ranges according to animal group
+    defaults = estimate_biometrics_by_group(ecology["group"], ecology["diet"], ecology["habitat"], name_clean)
+    spec_length = len_match.group(1) if len_match else defaults["length"]
+    spec_weight = wt_match.group(1) if wt_match else defaults["weight"]
+    spec_speed = spd_match.group(1) if spd_match else defaults["speed"]
+    spec_height = defaults["height"]
+    spec_bite = defaults["bite_force"]
+
+    # 8. Fetch multi-perspective images using both scientific and english terms
+    search_term = scientific_candidate or canonical
+    images = await fetch_multi_perspective_images(search_term, limit=8)
+    if not images and search_term != name_clean:
+        images = await fetch_multi_perspective_images(name_clean, limit=6)
+
+    # Primary image selection
     primary_image = None
-    # Prefer living view for main card
     life_imgs = [img for img in images if img.get("category") == "life_view"]
     if life_imgs:
         primary_image = life_imgs[0]["url"]
@@ -263,7 +332,8 @@ async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -
             "author": "Wikimedia Commons"
         })
     else:
-        primary_image = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Purussaurus_brasiliensis_reconstruction.png/960px-Purussaurus_brasiliensis_reconstruction.png"
+        # High-res SVG group placeholder (never purussaurus!)
+        primary_image = f"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22400%22%20viewBox%3D%220%200%20600%20400%22%3E%3Crect%20fill%3D%22%230d1510%22%20width%3D%22600%22%20height%3D%22400%22%2F%3E%3Ctext%20fill%3D%22%2310b981%22%20font-family%3D%22system-ui%22%20font-size%3D%2264%22%20x%3D%2250%25%22%20y%3D%2242%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3E%F0%9F%A6%AC%3C%2Ftext%3E%3Ctext%20fill%3D%22%23ffffff%22%20font-family%3D%22system-ui%22%20font-weight%3D%22bold%22%20font-size%3D%2222%22%20x%3D%2250%25%22%20y%3D%2262%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3E{name_clean}%3C%2Ftext%3E%3Ctext%20fill%3D%22%2394a3b8%22%20font-family%3D%22system-ui%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2272%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3E{scientific}%3C%2Ftext%3E%3C%2Fsvg%3E"
 
     gallery_items = [
         GalleryItem(
@@ -276,25 +346,25 @@ async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -
         for img in images
     ]
 
-    bio_text = wiki_data.get("extract") or f"{canonical} ({scientific}) é um espécime zoológico da biodiversidade da Terra."
-    
+    bio_text = wiki_data.get("extract") or f"{canonical} ({scientific}) é um organismo da história biológica do planeta Terra."
+
     curiosities = [
         f"Classificação Estrutural: {skeletal_type.capitalize()} ({skeletal_comp}).",
         f"Pertence ao grupo taxonômico {ecology['group_display']} com hábito alimentar {ecology['diet_display']}.",
-        f"Consome dados científicos abertos integrados da GBIF, PBDB e acervos mundiais de anatomia.",
-        f"Status e Época: {era_name} ({period_pt})."
+        f"Consome dados científicos integrados da GBIF, PBDB e acervos abertos de anatomia.",
+        f"Status e Época Geológica: {era_name} ({period_pt})."
     ]
 
     expert_data = ExpertData(
         cladogram=cladogram,
         osteology=f"Organização esquelética do tipo {skeletal_type.upper()}: {skeletal_comp}. Morfologia adaptada ao nicho de {ecology['diet_display']} em habitat {ecology['habitat']}.",
-        biomechanics=f"Cinemática e biofísica de locomoção adaptadas ao meio {ecology['habitat']}, com sustentação mecânica proporcionada por {skeletal_comp.lower()}.",
-        histology=f"Estrutura tecidual com densidade celular e matriz extracelular típica de espécimes da classe {gbif_data.get('class_name', ecology['group_display']) if gbif_data else ecology['group_display']}."
+        biomechanics=f"Cinemática e sustentação física adaptadas ao meio {ecology['habitat']}, com suporte mecânico por {skeletal_comp.lower()}.",
+        histology=f"Estrutura tecidual com densidade celular típica de organismos do grupo {ecology['group_display']}."
     )
 
     specimen = Specimen(
         id=slug,
-        name=wiki_data.get("title", canonical),
+        name=wiki_title,
         genus=gbif_data.get("genus", canonical) if gbif_data else canonical,
         scientific_name=scientific,
         era=era_key,
@@ -311,19 +381,19 @@ async def perform_auto_ingest(taxon_name: str, era_hint: Optional[str] = None) -
         skeletal_composition=skeletal_comp,
         is_contemporary=is_contemporary,
         conservation_status=conservation_status,
-        length="Estimativa anatômica em estudo",
-        height="Estimativa anatômica em estudo",
-        weight="Estimativa biomecânica em estudo",
-        speed="Estimativa locomotora em estudo",
-        bite_force="Estimativa de força em estudo",
+        length=spec_length,
+        height=spec_height,
+        weight=spec_weight,
+        speed=spec_speed,
+        bite_force=spec_bite,
         image_url=primary_image,
         image_caption=f"Representação de {canonical}",
         gallery=gallery_items,
-        etymology=f"Táxon descrito cientificamente na classe {gbif_data.get('class_name', '') if gbif_data else ''}.",
+        etymology=f"Táxon descrito cientificamente como {scientific}.",
         bio=bio_text,
         curiosities=curiosities,
         expert=expert_data,
-        occurrences_count=15,
+        occurrences_count=18,
         fossil_locations="Distribuição biogeográfica global" if is_contemporary else f"Estratos fósseis do período {period_pt}",
         is_custom_ingested=True
     )
@@ -374,29 +444,47 @@ def discover_specimens(era: Optional[str] = None):
 
 @app.get("/api/occurrences/{taxon_name}", response_model=List[Occurrence])
 async def get_occurrences(taxon_name: str, limit: int = 40):
-    """Fetches real georeferenced coordinates from GBIF (living species) or PBDB (fossil species)."""
+    """Fetches real georeferenced coordinates from GBIF (living species), PBDB (fossil species) or curated knowledge."""
     clean_name = taxon_name.strip()
     
-    # Check if specimen is contemporary
-    spec = get_specimen_by_id(clean_name.lower().replace(" ", "-")) or get_specimen_by_id(clean_name)
+    # 0. Check pre-curated high-accuracy coordinates
+    curated = get_curated_occurrences(clean_name)
+    if curated:
+        return curated
     
+    # Check if specimen exists in database to check its name / scientific_name / id
+    spec = get_specimen_by_id(clean_name.lower().replace(" ", "-")) or get_specimen_by_id(clean_name)
+    if spec:
+        for candidate in [spec.id, spec.name, spec.scientific_name, spec.genus]:
+            if candidate:
+                c = get_curated_occurrences(candidate)
+                if c:
+                    return c
+
+    # 1. Check if specimen is contemporary
     if spec and spec.is_contemporary:
         # Query GBIF for live coordinates
-        gbif_match = await match_gbif_species(clean_name)
+        query_target = spec.scientific_name or spec.genus or clean_name
+        gbif_match = await match_gbif_species(query_target)
         if gbif_match and gbif_match.get("usage_key"):
             occs = await fetch_gbif_occurrences(gbif_match["usage_key"], limit=limit)
             if occs:
                 return occs
     
-    # Fallback / Fossil: Query PBDB
-    occs = await fetch_taxon_occurrences(clean_name, limit=limit)
-    if not occs:
-        # Try GBIF as fallback even for fossils
-        gbif_match = await match_gbif_species(clean_name)
-        if gbif_match and gbif_match.get("usage_key"):
-            occs = await fetch_gbif_occurrences(gbif_match["usage_key"], limit=limit)
+    # 2. Fallback / Fossil: Query PBDB
+    query_target = (spec.scientific_name or spec.genus or clean_name) if spec else clean_name
+    occs = await fetch_taxon_occurrences(query_target, limit=limit)
+    if occs:
+        return occs
 
-    return occs or []
+    # 3. Try GBIF as fallback even for fossils
+    gbif_match = await match_gbif_species(clean_name)
+    if gbif_match and gbif_match.get("usage_key"):
+        occs = await fetch_gbif_occurrences(gbif_match["usage_key"], limit=limit)
+        if occs:
+            return occs
+
+    return []
 
 
 @app.get("/api/proxy-image")

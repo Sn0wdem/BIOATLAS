@@ -2335,6 +2335,12 @@ const state = {
   isBackendOnline: false
 };
 
+// Normalização textual para buscas insensíveis a acentos, cedilhas e maiúsculas
+function normalizeStr(str) {
+  if (!str || typeof str !== 'string') return '';
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
 // Placeholder SVG resiliente para paleoarte e fotos
 const PLACEHOLDER_IMAGE = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22260%22%20viewBox%3D%220%200%20400%20260%22%3E%3Crect%20fill%3D%22%23121712%22%20width%3D%22400%22%20height%3D%22260%22%2F%3E%3Ctext%20fill%3D%22%234ade80%22%20font-family%3D%22system-ui%22%20font-size%3D%2246%22%20x%3D%2250%25%22%20y%3D%2245%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3E%F0%9F%A6%8E%3C%2Ftext%3E%3Ctext%20fill%3D%22%238fa38f%22%20font-family%3D%22system-ui%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2268%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3EImagem%20Cient%C3%ADfica%20do%20Esp%C3%A9cime%3C%2Ftext%3E%3C%2Fsvg%3E";
 
@@ -2652,37 +2658,39 @@ function filterEmbeddedCatalog() {
 
   if (state.currentEra && state.currentEra !== 'all') {
     if (state.currentEra === 'microbiologico') {
-      list = list.filter(s => s.skeletal_type === 'microbiologico' || s.group.includes('micro') || s.group.includes('bacteria') || s.group.includes('virus') || s.group.includes('protozoario'));
+      list = list.filter(s => s.skeletal_type === 'microbiologico' || (s.group && s.group.includes('micro')) || (s.group && s.group.includes('bacteria')) || (s.group && s.group.includes('virus')) || (s.group && s.group.includes('protozoario')));
     } else {
       list = list.filter(s => s.era.toLowerCase() === state.currentEra.toLowerCase());
     }
   }
 
   if (state.currentPeriod && state.currentPeriod !== 'all') {
-    const p = state.currentPeriod.toLowerCase();
-    list = list.filter(s => s.period.toLowerCase().includes(p) || (s.epoch && s.epoch.toLowerCase().includes(p)));
+    const p = normalizeStr(state.currentPeriod);
+    list = list.filter(s => normalizeStr(s.period).includes(p) || (s.epoch && normalizeStr(s.epoch).includes(p)));
   }
 
   if (state.currentGroup && state.currentGroup !== 'all') {
-    const g = state.currentGroup.toLowerCase();
-    list = list.filter(s => s.group.toLowerCase() === g || s.group_display.toLowerCase().includes(g));
+    const g = normalizeStr(state.currentGroup);
+    list = list.filter(s => normalizeStr(s.group) === g || (s.group_display && normalizeStr(s.group_display).includes(g)));
   }
 
   if (state.currentDiet && state.currentDiet !== 'all') {
-    list = list.filter(s => s.diet.toLowerCase() === state.currentDiet.toLowerCase());
+    list = list.filter(s => normalizeStr(s.diet) === normalizeStr(state.currentDiet));
   }
 
   if (state.currentSkeletalType && state.currentSkeletalType !== 'all') {
-    list = list.filter(s => s.skeletal_type.toLowerCase() === state.currentSkeletalType.toLowerCase());
+    list = list.filter(s => normalizeStr(s.skeletal_type) === normalizeStr(state.currentSkeletalType));
   }
 
   if (state.searchQuery) {
-    const q = state.searchQuery.toLowerCase().trim();
+    const q = normalizeStr(state.searchQuery);
     list = list.filter(s => 
-      s.name.toLowerCase().includes(q) ||
-      s.genus.toLowerCase().includes(q) ||
-      (s.scientific_name && s.scientific_name.toLowerCase().includes(q)) ||
-      (s.bio && s.bio.toLowerCase().includes(q))
+      normalizeStr(s.name).includes(q) ||
+      normalizeStr(s.genus).includes(q) ||
+      (s.scientific_name && normalizeStr(s.scientific_name).includes(q)) ||
+      (s.bio && normalizeStr(s.bio).includes(q)) ||
+      (s.group_display && normalizeStr(s.group_display).includes(q)) ||
+      (s.etymology && normalizeStr(s.etymology).includes(q))
     );
   }
 
@@ -2692,9 +2700,7 @@ function filterEmbeddedCatalog() {
 
 function getThumbnailUrl(url, targetWidth = 400) {
   if (!url || typeof url !== 'string') return url;
-  if (url.includes('/thumb/') && url.includes('/960px-')) {
-    return url.replace('/960px-', `/${targetWidth}px-`);
-  }
+  // Mantém a URL original sem forçar reescrita arbitrária de largura para evitar erros 404
   return url;
 }
 
@@ -2907,18 +2913,17 @@ async function executeAutoIngest(taxonName) {
 
 
 async function openOrIngestSpecimen(name) {
-  const cleanId = name.toLowerCase().replace(/ /g, '-');
-  const found = state.specimens.find(s => 
-    s.id === cleanId || 
-    s.name.toLowerCase().includes(name.toLowerCase()) || 
-    s.genus.toLowerCase() === name.toLowerCase() ||
-    (s.scientific_name && s.scientific_name.toLowerCase().includes(name.toLowerCase()))
-  ) || EMBEDDED_CATALOG.find(s => 
-    s.id === cleanId || 
-    s.name.toLowerCase().includes(name.toLowerCase()) || 
-    s.genus.toLowerCase() === name.toLowerCase() ||
-    (s.scientific_name && s.scientific_name.toLowerCase().includes(name.toLowerCase()))
-  );
+  const norm = normalizeStr(name);
+  const cleanId = norm.replace(/\s+/g, '-');
+  const pool = [...state.specimens, ...EMBEDDED_CATALOG];
+  const found = pool.find(s => {
+    const sId = normalizeStr(s.id);
+    const sName = normalizeStr(s.name);
+    const sGenus = normalizeStr(s.genus);
+    const sSci = normalizeStr(s.scientific_name);
+    return sId === cleanId || sName === norm || sName.includes(norm) ||
+           norm.includes(sName) || sGenus === norm || (sSci && sSci.includes(norm));
+  });
   
   if (found) {
     openWikiModal(found.id, 'tab-overview');
@@ -3031,8 +3036,16 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
 
   // Imagem de Destaque e Galeria
   const featuredImg = document.getElementById('wikiFeaturedImg');
+  featuredImg.referrerPolicy = 'no-referrer';
   featuredImg.src = spec.image_url;
-  featuredImg.onerror = () => { featuredImg.src = PLACEHOLDER_IMAGE; };
+  featuredImg.onerror = () => {
+    if (!featuredImg.src.includes('/api/proxy-image') && state.isBackendOnline && spec.image_url && spec.image_url.startsWith('http')) {
+      featuredImg.src = `${API_BASE}/api/proxy-image?url=${encodeURIComponent(spec.image_url)}`;
+      featuredImg.onerror = () => { featuredImg.src = PLACEHOLDER_IMAGE; };
+    } else {
+      featuredImg.src = PLACEHOLDER_IMAGE;
+    }
+  };
   document.getElementById('wikiFeaturedCaption').textContent = spec.image_caption || 'Representação visual do indivíduo';
 
   // Miniaturas
@@ -3225,6 +3238,59 @@ function closeWikiModal() {
 // ============================================================================
 
 const SPECIMEN_COORDINATES_MAP = {
+  "leao": [
+    { lat: -2.33, lng: 34.83, locality: "Parque Nacional do Serengeti", country: "Tanzânia", formation: "Savana Africana", age_str: "Vivente (GBIF)" },
+    { lat: 21.12, lng: 70.82, locality: "Parque Nacional da Floresta de Gir (Leão-asiático)", country: "Índia (Gujarat)", formation: "Santuário de Vida Selvagem", age_str: "Vivente (GBIF)" },
+    { lat: -24.01, lng: 31.49, locality: "Parque Nacional Kruger", country: "África do Sul", formation: "Savana e Bosques", age_str: "Vivente (GBIF)" },
+    { lat: -19.25, lng: 23.35, locality: "Delta do Okavango", country: "Botsuana", formation: "Zonas Húmidas do Kalahari", age_str: "Vivente (GBIF)" }
+  ],
+  "gato": [
+    { lat: 31.20, lng: 30.00, locality: "Delta do Baixo Nilo (Berço da Domesticação)", country: "Egito", formation: "Bacia do Mediterrâneo", age_str: "Vivente Cosmopolita" },
+    { lat: 35.15, lng: 33.30, locality: "Shillourokambos (Sítio Neolítico)", country: "Chipre", formation: "Associação Pré-Histórica com Humanos", age_str: "9.500 anos atrás" },
+    { lat: -23.55, lng: -46.63, locality: "Habitats Urbanos e Domésticos", country: "Brasil / Global", formation: "Ecossistema Cosmopolita Antropogênico", age_str: "Vivente Cosmopolita" }
+  ],
+  "elefante": [
+    { lat: -18.60, lng: 24.50, locality: "Parque Nacional de Chobe (Maior Densidade de Elefantes)", country: "Botsuana", formation: "Bacia do Rio Zambeze", age_str: "Vivente (GBIF)" },
+    { lat: -3.35, lng: 38.00, locality: "Parque Nacional Tsavo Leste/Oeste", country: "Quênia", formation: "Savanas Semiáridas", age_str: "Vivente (GBIF)" },
+    { lat: -24.00, lng: 31.50, locality: "Parque Nacional Kruger", country: "África do Sul", formation: "Savana Arbórea", age_str: "Vivente (GBIF)" }
+  ],
+  "aguia-real": [
+    { lat: 56.50, lng: -4.50, locality: "Terras Altas da Escócia (Highlands)", country: "Reino Unido", formation: "Falésias e Montanhas Caledonianas", age_str: "Vivente (GBIF)" },
+    { lat: 44.42, lng: -110.58, locality: "Parque Nacional de Yellowstone", country: "Estados Unidos (Wyoming)", formation: "Montanhas Rochosas", age_str: "Vivente (GBIF)" },
+    { lat: 46.50, lng: 8.50, locality: "Cordilheira dos Alpes Centrais", country: "Suíça / Áustria", formation: "Picos e Maciços Alpinos", age_str: "Vivente (GBIF)" }
+  ],
+  "tubarao-martelo": [
+    { lat: 0.60, lng: -90.50, locality: "Arco de Darwin & Ilha Wolf (Grandes Cardumes)", country: "Equador (Galápagos)", formation: "Montes Submarinos Oceânicos", age_str: "Vivente (GBIF)" },
+    { lat: 5.53, lng: -87.05, locality: "Parque Nacional Ilha do Coco", country: "Costa Rica", formation: "Cordilheira Submarina do Coco", age_str: "Vivente (GBIF)" },
+    { lat: -23.80, lng: 35.50, locality: "Praia do Tofo", country: "Moçambique", formation: "Corredor Pelágico do Canal de Moçambique", age_str: "Vivente (GBIF)" }
+  ],
+  "alossauro": [
+    { lat: 39.32, lng: -110.85, locality: "Cleveland-Lloyd Dinosaur Quarry", country: "Estados Unidos (Utah)", formation: "Formação Morrison", age_str: "152 Ma (Jurássico)" },
+    { lat: 44.50, lng: -108.00, locality: "Bighorn Basin (Howe Quarry)", country: "Estados Unidos (Wyoming)", formation: "Formação Morrison", age_str: "150 Ma (Jurássico)" },
+    { lat: 40.44, lng: -109.30, locality: "Dinosaur National Monument", country: "Estados Unidos (Utah/Colorado)", formation: "Formação Morrison", age_str: "151 Ma (Jurássico)" },
+    { lat: 39.20, lng: -9.30, locality: "Lourinhã (Allosaurus europaeus)", country: "Portugal", formation: "Formação Lourinhã", age_str: "150 Ma (Jurássico Superior)" }
+  ],
+  "pterodactilo": [
+    { lat: 48.90, lng: 11.20, locality: "Solnhofen Limestone (Eichstätt & Solnhofen)", country: "Alemanha (Baviera)", formation: "Formação Altmühltal", age_str: "150.8 – 148.5 Ma (Jurássico Superior)" },
+    { lat: 48.80, lng: 11.45, locality: "Kelheim / Nusplingen", country: "Alemanha (Baviera)", formation: "Calcário Litográfico Solnhofen", age_str: "150 Ma (Jurássico Superior)" }
+  ],
+  "crocodilo-do-nilo": [
+    { lat: -27.80, lng: 32.50, locality: "Parque de Zonas Húmidas de iSimangaliso", country: "África do Sul", formation: "Estuário de Santa Lúcia", age_str: "Vivente (GBIF)" },
+    { lat: 24.00, lng: 32.90, locality: "Lago Nasser / Rio Nilo", country: "Egito", formation: "Bacia Hidrográfica do Nilo", age_str: "Vivente (GBIF)" },
+    { lat: -1.30, lng: 35.10, locality: "Rio Mara (Travessia da Grande Migração)", country: "Quênia (Masai Mara)", formation: "Bacia do Rio Mara", age_str: "Vivente (GBIF)" }
+  ],
+  "livyatan-melvillei": [
+    { lat: -14.10, lng: -75.70, locality: "Cerro Colorado (Deserto de Ocucaje)", country: "Peru (Bacia de Pisco)", formation: "Formação Pisco", age_str: "9.9 – 8.9 Ma (Mioceno)" }
+  ],
+  "estegossauro": [
+    { lat: 40.44, lng: -109.30, locality: "Dinosaur Quarry (Dinosaur National Monument)", country: "Estados Unidos (Utah)", formation: "Formação Morrison", age_str: "155 – 150 Ma (Jurássico)" },
+    { lat: 39.50, lng: -105.20, locality: "Morrison (Garden Park Quarry)", country: "Estados Unidos (Colorado)", formation: "Formação Morrison", age_str: "152 Ma (Jurássico)" }
+  ],
+  "lobo": [
+    { lat: 44.42, lng: -110.58, locality: "Parque Nacional de Yellowstone (Alcateias Reintroduzidas)", country: "Estados Unidos (Wyoming)", formation: "Ecorregião das Rochosas do Norte", age_str: "Vivente (GBIF)" },
+    { lat: 62.00, lng: 15.00, locality: "Taiga Escandinava", country: "Suécia / Noruega", formation: "Floresta Boreal", age_str: "Vivente (GBIF)" },
+    { lat: 42.00, lng: -6.50, locality: "Serra da Culebra (Lobo-ibérico)", country: "Espanha (Castela e Leão)", formation: "Bosques e Matagais Mediterrânicos", age_str: "Vivente (GBIF)" }
+  ],
   "baleia-azul": [
     { lat: -64.8, lng: -63.5, locality: "Península Antártica", country: "Oceano Austral", formation: "Zona Pelágica", age_str: "Vivente (GBIF)" },
     { lat: 50.2, lng: -128.5, locality: "Ilha de Vancouver", country: "Canadá / Pacífico Norte", formation: "Águas Costeiras", age_str: "Vivente (GBIF)" },
@@ -3419,8 +3485,9 @@ function init3DGlobe() {
     return;
   }
 
-  // Previne inicialização duplicada
+  // Previne inicialização duplicada do WebGLRenderer, mas reativa animação e redimensiona
   if (state.globeRenderer) {
+    startGlobeAnimation();
     onGlobeResize();
     return;
   }
@@ -3813,12 +3880,21 @@ function flyToGlobeCoordinate(lat, lng) {
 }
 
 function startGlobeAnimation() {
-  if (state.globeAnimId) cancelAnimationFrame(state.globeAnimId);
+  if (state.globeAnimId) {
+    cancelAnimationFrame(state.globeAnimId);
+    state.globeAnimId = null;
+  }
 
   let pulseTime = 0;
 
   function animate() {
     state.globeAnimId = requestAnimationFrame(animate);
+
+    // Se a modal estiver oculta, não executa cálculos nem renderização desnecessária
+    const modal = document.getElementById('wikiModal');
+    if (modal && modal.classList.contains('hidden')) {
+      return;
+    }
 
     if (state.globeMesh) {
       if (!state.globeIsDragging) {
@@ -3858,7 +3934,7 @@ function startGlobeAnimation() {
     }
   }
 
-  animate();
+  state.globeAnimId = requestAnimationFrame(animate);
 }
 
 function onGlobeResize() {
@@ -3867,18 +3943,38 @@ function onGlobeResize() {
 
   const width = container.clientWidth;
   const height = container.clientHeight;
-  if (width === 0 || height === 0) return;
+  if (width < 20 || height < 20) return;
 
   state.globeCamera.aspect = width / height;
   state.globeCamera.updateProjectionMatrix();
   state.globeRenderer.setSize(width, height);
 }
 
+function clearGlobeMarkers() {
+  if (!state.globeMarkersGroup) return;
+  while (state.globeMarkersGroup.children.length > 0) {
+    const child = state.globeMarkersGroup.children[0];
+    state.globeMarkersGroup.remove(child);
+    child.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) {
+        if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+        else obj.material.dispose();
+      }
+    });
+  }
+  state.globeInteractiveMarkers = [];
+}
+
 async function update3DGlobeForSpecimen(specimen) {
   if (!specimen) return;
 
-  // Garante que Three.js e o Globo estejam inicializados
+  // Garante que Three.js e o Globo estejam inicializados e em loop ativo
   init3DGlobe();
+  startGlobeAnimation();
+  onGlobeResize();
+  setTimeout(onGlobeResize, 60);
+  setTimeout(onGlobeResize, 180);
 
   const loadingOverlay = document.getElementById('globe3dLoading');
   const localityElem = document.getElementById('globeSpecLocality');
@@ -3911,10 +4007,11 @@ async function update3DGlobeForSpecimen(specimen) {
 
   let occurrences = [];
 
-  // 1. Tenta buscar ocorrências reais da API
+  // 1. Tenta buscar ocorrências reais da API (curadas, GBIF ou PBDB)
   if (state.isBackendOnline) {
     try {
-      const res = await fetch(`${API_BASE}/api/occurrences/${encodeURIComponent(specimen.scientific_name || specimen.genus || specimen.name)}`);
+      const queryKey = specimen.id || specimen.scientific_name || specimen.genus || specimen.name;
+      const res = await fetch(`${API_BASE}/api/occurrences/${encodeURIComponent(queryKey)}`);
       if (res.ok) {
         occurrences = await res.json();
       }
@@ -3926,8 +4023,11 @@ async function update3DGlobeForSpecimen(specimen) {
   // 2. Se a API retornou vazio ou estiver offline, usa os dados georreferenciados embutidos
   if (!occurrences || occurrences.length === 0) {
     const specId = specimen.id;
+    const normId = normalizeStr(specId);
     if (SPECIMEN_COORDINATES_MAP[specId]) {
       occurrences = SPECIMEN_COORDINATES_MAP[specId];
+    } else if (SPECIMEN_COORDINATES_MAP[normId]) {
+      occurrences = SPECIMEN_COORDINATES_MAP[normId];
     } else {
       occurrences = generateFallbackOccurrences(specimen);
     }
@@ -3935,16 +4035,8 @@ async function update3DGlobeForSpecimen(specimen) {
 
   if (loadingOverlay) loadingOverlay.classList.add('hidden');
 
-  // Limpa marcadores 3D anteriores
-  if (state.globeMarkersGroup) {
-    while (state.globeMarkersGroup.children.length > 0) {
-      const obj = state.globeMarkersGroup.children[0];
-      state.globeMarkersGroup.remove(obj);
-      if (obj.geometry) obj.geometry.dispose();
-      if (obj.material) obj.material.dispose();
-    }
-  }
-  state.globeInteractiveMarkers = [];
+  // Limpa marcadores anteriores com descarte de geometria/material
+  clearGlobeMarkers();
 
   if (countBadge) {
     countBadge.textContent = `${occurrences.length} pontos mapeados`;
