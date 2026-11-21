@@ -1978,6 +1978,14 @@ function setupEventListeners() {
 
   resetFiltersBtn.addEventListener('click', () => resetAllFilters());
 
+  const refreshCatalogBtn = document.getElementById('refreshCatalogBtn');
+  if (refreshCatalogBtn) {
+    refreshCatalogBtn.addEventListener('click', () => {
+      loadCatalog(true);
+      showToast('Acervo atualizado com sucesso!', '🔄');
+    });
+  }
+
   eraTabsContainer.addEventListener('click', (e) => {
     const btn = e.target.closest('.era-tab-btn');
     if (!btn) return;
@@ -2185,6 +2193,14 @@ function filterEmbeddedCatalog() {
 }
 
 
+function getThumbnailUrl(url, targetWidth = 400) {
+  if (!url || typeof url !== 'string') return url;
+  if (url.includes('/thumb/') && url.includes('/960px-')) {
+    return url.replace('/960px-', `/${targetWidth}px-`);
+  }
+  return url;
+}
+
 function renderCards(specimens) {
   resultsGrid.innerHTML = '';
   
@@ -2209,11 +2225,12 @@ function renderCards(specimens) {
     const skeletalBadgeClass = isVertebrate ? 'badge-vertebrado' : 'badge-invertebrado';
     const skeletalIcon = isVertebrate ? '🦴' : '🐚';
     const skeletalLabel = isVertebrate ? 'Vertebrado' : 'Invertebrado';
+    const thumbUrl = getThumbnailUrl(spec.image_url, 400);
 
     card.innerHTML = `
       <div class="card-media-wrap">
         <img 
-          src="${spec.image_url}" 
+          src="${thumbUrl}" 
           alt="${spec.name}" 
           class="card-img" 
           loading="lazy"
