@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script de inicialização resiliente da Super Wiki com FastAPI
+# Script de inicialização resiliente do BioAtlas com FastAPI
 cd "$(dirname "$0")"
 
 # Ativa o ambiente virtual se existir
@@ -54,7 +54,7 @@ if [ "$PORT" != "$REQUESTED_PORT" ]; then
 fi
 
 echo "=========================================================="
-echo "🌍 Super Wiki Global da Vida na Terra (FastAPI Engine)"
+echo "🌍 BioAtlas — Plataforma Global de Biodiversidade e Paleontologia"
 echo "🚀 Servidor rodando em: http://localhost:$PORT"
 echo "📚 Documentação API em:  http://localhost:$PORT/docs"
 echo "=========================================================="

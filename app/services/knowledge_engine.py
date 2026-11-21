@@ -18,13 +18,17 @@ def normalize_text(text: str) -> str:
 # ============================================================================
 
 POPULAR_TAXA: List[Dict[str, Any]] = [
-    # ------------------------------------------------------------------------
-    # FAUNA CONTEMPORÂNEA POPULAR
-    # ------------------------------------------------------------------------
     {
         "id": "leao",
         "name": "Leão",
-        "aliases": ["leao", "leão", "leoa", "lion", "panthera leo", "rei da selva"],
+        "aliases": [
+            "leao",
+            "leão",
+            "leoa",
+            "lion",
+            "panthera leo",
+            "rei da selva"
+        ],
         "genus": "Panthera",
         "scientific_name": "Panthera leo",
         "era": "contemporaneo",
@@ -87,7 +91,15 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
             "A cor e a densidade da juba do leão estão diretamente correlacionadas aos seus níveis de testosterona e aptidão física."
         ],
         "expert": {
-            "cladogram": ["Chordata", "Mammalia", "Carnivora", "Felidae", "Pantherinae", "Panthera", "Panthera leo"],
+            "cladogram": [
+                "Chordata",
+                "Mammalia",
+                "Carnivora",
+                "Felidae",
+                "Pantherinae",
+                "Panthera",
+                "Panthera leo"
+            ],
             "osteology": "Crânio robusto com arco zigomático amplamente expandido e crista sagital pronunciada para inserção do músculo temporal. Fórmula dentária I 3/3, C 1/1, P 3/2, M 1/1, com dentes carniceiros (P4 superior e M1 inferior) hipertrofiados formando uma tesoura óssea eficiente.",
             "biomechanics": "Alavanca mandibular de classe III operando com torque estático nos caninos de 4.500 N. Ombros com clavícula vestigial embutida em fáscia muscular permitindo grande amplitude de passada e absorção de choques em presas pesadas.",
             "histology": "Fibras musculares esqueléticas tipo IIb (glicolíticas de contração rápida) compondo mais de 65% da musculatura locomotora, otimizadas para aceleração explosiva."
@@ -95,15 +107,43 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "occurrences_count": 48000,
         "fossil_locations": "Savanas da África Subsaariana (Serengeti, Kruger, Etosha) e Floresta de Gir (Índia)",
         "coordinates": [
-            { "lat": -2.33, "lng": 34.83, "locality": "Parque Nacional do Serengeti", "country": "Tanzânia", "formation": "Savana / Bioma Africano", "age_str": "Vivente (GBIF)" },
-            { "lat": -24.01, "lng": 31.48, "locality": "Parque Nacional Kruger", "country": "África do Sul", "formation": "Savana de Transval", "age_str": "Vivente (GBIF)" },
-            { "lat": 21.13, "lng": 70.80, "locality": "Parque Nacional da Floresta de Gir", "country": "Índia (Gujarat)", "formation": "Floresta Seca Decídua (Leão-asiático)", "age_str": "Vivente (GBIF)" }
+            {
+                "lat": -2.33,
+                "lng": 34.83,
+                "locality": "Parque Nacional do Serengeti",
+                "country": "Tanzânia",
+                "formation": "Savana / Bioma Africano",
+                "age_str": "Vivente (GBIF)"
+            },
+            {
+                "lat": -24.01,
+                "lng": 31.48,
+                "locality": "Parque Nacional Kruger",
+                "country": "África do Sul",
+                "formation": "Savana de Transval",
+                "age_str": "Vivente (GBIF)"
+            },
+            {
+                "lat": 21.13,
+                "lng": 70.8,
+                "locality": "Parque Nacional da Floresta de Gir",
+                "country": "Índia (Gujarat)",
+                "formation": "Floresta Seca Decídua (Leão-asiático)",
+                "age_str": "Vivente (GBIF)"
+            }
         ]
     },
     {
         "id": "gato",
         "name": "Gato Doméstico",
-        "aliases": ["gato", "gata", "gatinho", "cat", "felis catus", "felis silvestris catus"],
+        "aliases": [
+            "gato",
+            "gata",
+            "gatinho",
+            "cat",
+            "felis catus",
+            "felis silvestris catus"
+        ],
         "genus": "Felis",
         "scientific_name": "Felis catus",
         "era": "contemporaneo",
@@ -159,7 +199,15 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
             "O ronronar felino ocorre em frequências de 25 a 150 Hz, faixa comprovada por acelerar a regeneração óssea e tecidual."
         ],
         "expert": {
-            "cladogram": ["Chordata", "Mammalia", "Carnivora", "Felidae", "Felinae", "Felis", "Felis catus"],
+            "cladogram": [
+                "Chordata",
+                "Mammalia",
+                "Carnivora",
+                "Felidae",
+                "Felinae",
+                "Felis",
+                "Felis catus"
+            ],
             "osteology": "Coluna vertebral composta por 7 vértebras cervicais, 13 torácicas, 7 lombares, 3 sacrais e 20 a 23 caudais. Garras retráteis ancoradas nas falanges distais mantidas por ligamentos elásticos dorsais.",
             "biomechanics": "Articulação escapular desprovida de acrômio rígido, agindo como pistão biológico de amortecimento em saltos de até 6 vezes sua altura.",
             "histology": "Tapetum lucidum retiniano altamente refletivo composto por camadas celulares de guanina, amplificando fótons em baixa luminosidade."
@@ -167,15 +215,42 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "occurrences_count": 120000,
         "fossil_locations": "Cosmopolita Global (Originário do Oriente Médio / Egito)",
         "coordinates": [
-            { "lat": 31.95, "lng": 35.23, "locality": "Crescente Fértil / Levante", "country": "Oriente Médio (Sítio de Shillourokambos)", "formation": "Sítios Neolíticos de Domesticação", "age_str": "9.500 anos" },
-            { "lat": 29.97, "lng": 31.13, "locality": "Gizé / Vale do Nilo", "country": "Egito", "formation": "Registros Históricos Dinásticos", "age_str": "Holoceno" },
-            { "lat": -23.55, "lng": -46.63, "locality": "São Paulo", "country": "Brasil", "formation": "Distribuição Urbana Global", "age_str": "Contemporâneo (GBIF)" }
+            {
+                "lat": 31.95,
+                "lng": 35.23,
+                "locality": "Crescente Fértil / Levante",
+                "country": "Oriente Médio (Sítio de Shillourokambos)",
+                "formation": "Sítios Neolíticos de Domesticação",
+                "age_str": "9.500 anos"
+            },
+            {
+                "lat": 29.97,
+                "lng": 31.13,
+                "locality": "Gizé / Vale do Nilo",
+                "country": "Egito",
+                "formation": "Registros Históricos Dinásticos",
+                "age_str": "Holoceno"
+            },
+            {
+                "lat": -23.55,
+                "lng": -46.63,
+                "locality": "São Paulo",
+                "country": "Brasil",
+                "formation": "Distribuição Urbana Global",
+                "age_str": "Contemporâneo (GBIF)"
+            }
         ]
     },
     {
         "id": "elefante",
         "name": "Elefante-Africano",
-        "aliases": ["elefante", "elefante africano", "elephant", "loxodonta africana", "loxodonta"],
+        "aliases": [
+            "elefante",
+            "elefante africano",
+            "elephant",
+            "loxodonta africana",
+            "loxodonta"
+        ],
         "genus": "Loxodonta",
         "scientific_name": "Loxodonta africana",
         "era": "contemporaneo",
@@ -231,7 +306,15 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
             "Consome diariamente até 200 kg de matéria vegetal e bebe mais de 150 litros de água."
         ],
         "expert": {
-            "cladogram": ["Chordata", "Mammalia", "Afrotheria", "Proboscidea", "Elephantidae", "Loxodonta", "Loxodonta africana"],
+            "cladogram": [
+                "Chordata",
+                "Mammalia",
+                "Afrotheria",
+                "Proboscidea",
+                "Elephantidae",
+                "Loxodonta",
+                "Loxodonta africana"
+            ],
             "osteology": "Membros pilares perfeitamente alinhados verticalmente (postura graviportal), minimizando estresse mecânico de flexão sobre os ossos longos. As presas de marfim são incisivos superiores de crescimento contínuo formados por dentina hipermineralizada.",
             "biomechanics": "Almofada fibroelástica adiposa plantar que se expande sob compressão de 6 toneladas, absorvendo 80% do choque de cada passada.",
             "histology": "Osso cortical extremamente denso com canais haversianos múltiplos entrelaçados para neutralizar microfraturas por fadiga gravitacional."
@@ -239,15 +322,43 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "occurrences_count": 35000,
         "fossil_locations": "Savanas e Florestas da África Central, Oriental e Austral",
         "coordinates": [
-            { "lat": -2.33, "lng": 34.83, "locality": "Serengeti / Mara", "country": "Tanzânia / Quênia", "formation": "Savana / Parque Nacional", "age_str": "Vivente (GBIF)" },
-            { "lat": -18.66, "lng": 24.47, "locality": "Parque Nacional Chobe", "country": "Botsuana", "formation": "Bacia do Rio Chobe", "age_str": "Vivente (GBIF)" },
-            { "lat": -19.03, "lng": 22.95, "locality": "Delta do Okavango", "country": "Botsuana", "formation": "Zonas Úmidas do Kalahari", "age_str": "Vivente (GBIF)" }
+            {
+                "lat": -2.33,
+                "lng": 34.83,
+                "locality": "Serengeti / Mara",
+                "country": "Tanzânia / Quênia",
+                "formation": "Savana / Parque Nacional",
+                "age_str": "Vivente (GBIF)"
+            },
+            {
+                "lat": -18.66,
+                "lng": 24.47,
+                "locality": "Parque Nacional Chobe",
+                "country": "Botsuana",
+                "formation": "Bacia do Rio Chobe",
+                "age_str": "Vivente (GBIF)"
+            },
+            {
+                "lat": -19.03,
+                "lng": 22.95,
+                "locality": "Delta do Okavango",
+                "country": "Botsuana",
+                "formation": "Zonas Úmidas do Kalahari",
+                "age_str": "Vivente (GBIF)"
+            }
         ]
     },
     {
         "id": "aguia",
         "name": "Águia-Real",
-        "aliases": ["aguia", "águia", "aguia-real", "águia real", "golden eagle", "aquila chrysaetos"],
+        "aliases": [
+            "aguia",
+            "águia",
+            "aguia-real",
+            "águia real",
+            "golden eagle",
+            "aquila chrysaetos"
+        ],
         "genus": "Aquila",
         "scientific_name": "Aquila chrysaetos",
         "era": "contemporaneo",
@@ -303,7 +414,15 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
             "Seus ninhos ('ayries') são reutilizados por gerações, podendo atingir 2 metros de diâmetro e mais de 1 tonelada de peso."
         ],
         "expert": {
-            "cladogram": ["Chordata", "Dinosauria", "Theropoda", "Aves", "Accipitriformes", "Accipitridae", "Aquila chrysaetos"],
+            "cladogram": [
+                "Chordata",
+                "Dinosauria",
+                "Theropoda",
+                "Aves",
+                "Accipitriformes",
+                "Accipitridae",
+                "Aquila chrysaetos"
+            ],
             "osteology": "Fusão esquelética adaptada ao voo: vértebras lombares fundidas em sinsacro, fúrcula elástica ('osso da sorte') e grande quilha esternal para fixação dos músculos peitorais.",
             "biomechanics": "Garras recurvadas travadas por tendões digitais flexores automáticos ('ratchet mechanism') que mantêm pressão de 3.000 N sem gasto de energia muscular ativa.",
             "histology": "Retina com fovea dupla com mais de 1.000.000 de fotorreceptores por milímetro quadrado, permitindo ampliação óptica binocular e detecção de ultravioleta."
@@ -311,15 +430,42 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "occurrences_count": 52000,
         "fossil_locations": "Montanhas e Falésias da América do Norte, Europa, Ásia e Norte da África",
         "coordinates": [
-            { "lat": 44.42, "lng": -110.58, "locality": "Yellowstone / Montanhas Rochosas", "country": "Estados Unidos (Wyoming)", "formation": "Falésias Alpinas", "age_str": "Vivente (GBIF)" },
-            { "lat": 46.81, "lng": 8.22, "locality": "Alpes Suíços", "country": "Suíça / Europa", "formation": "Cadeia Alpina", "age_str": "Vivente (GBIF)" },
-            { "lat": 48.01, "lng": 102.50, "locality": "Montes Altai", "country": "Mongólia", "formation": "Estepes e Montanhas Centrais", "age_str": "Vivente (GBIF)" }
+            {
+                "lat": 44.42,
+                "lng": -110.58,
+                "locality": "Yellowstone / Montanhas Rochosas",
+                "country": "Estados Unidos (Wyoming)",
+                "formation": "Falésias Alpinas",
+                "age_str": "Vivente (GBIF)"
+            },
+            {
+                "lat": 46.81,
+                "lng": 8.22,
+                "locality": "Alpes Suíços",
+                "country": "Suíça / Europa",
+                "formation": "Cadeia Alpina",
+                "age_str": "Vivente (GBIF)"
+            },
+            {
+                "lat": 48.01,
+                "lng": 102.5,
+                "locality": "Montes Altai",
+                "country": "Mongólia",
+                "formation": "Estepes e Montanhas Centrais",
+                "age_str": "Vivente (GBIF)"
+            }
         ]
     },
     {
         "id": "tubarao-martelo",
         "name": "Tubarão-Martelo-Gigante",
-        "aliases": ["tubarao-martelo", "tubarão-martelo", "tubarao martelo", "hammerhead shark", "sphyrna mokarran"],
+        "aliases": [
+            "tubarao-martelo",
+            "tubarão-martelo",
+            "tubarao martelo",
+            "hammerhead shark",
+            "sphyrna mokarran"
+        ],
         "genus": "Sphyrna",
         "scientific_name": "Sphyrna mokarran",
         "era": "contemporaneo",
@@ -368,7 +514,15 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
             "Não possui ossos verdadeiros: seu esqueleto inteiro é feito de cartilagem com prismas minerais de apatita ('areolar calcification')."
         ],
         "expert": {
-            "cladogram": ["Chordata", "Chondrichthyes", "Elasmobranchii", "Carcharhiniformes", "Sphyrnidae", "Sphyrna", "Sphyrna mokarran"],
+            "cladogram": [
+                "Chordata",
+                "Chondrichthyes",
+                "Elasmobranchii",
+                "Carcharhiniformes",
+                "Sphyrnidae",
+                "Sphyrna",
+                "Sphyrna mokarran"
+            ],
             "osteology": "Condrocrânio cartilaginoso alargado com lâminas pré-orbitais e pós-orbitais estendidas. Ausência de osso esponjoso vascular, reduzindo o peso hidrostático em 50% frente aos teleósteos.",
             "biomechanics": "Cefalofólio gera sustentação hidrodinâmica positiva, compensando a flutuabilidade negativa sem necessidade de bexiga natatória.",
             "histology": "Ampolas de Lorenzini conectadas a poros dérmicos preenchidos por gel semicondutor de glicoproteína com condutividade de 0.005 microvolts/cm."
@@ -376,19 +530,42 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "occurrences_count": 28000,
         "fossil_locations": "Oceanos Tropicais e Temperados Globais (Caribe, Flórida, Havaí, Austrália)",
         "coordinates": [
-            { "lat": 24.55, "lng": -81.78, "locality": "Key West / Flórida", "country": "Estados Unidos", "formation": "Águas Costeiras e Canais", "age_str": "Vivente (GBIF)" },
-            { "lat": -18.28, "lng": 147.69, "locality": "Grande Barreira de Corais", "country": "Austrália", "formation": "Recifes Oceânicos", "age_str": "Vivente (GBIF)" },
-            { "lat": 5.53, "lng": -87.05, "locality": "Ilha Cocos", "country": "Costa Rica", "formation": "Monte Submarino Pelágico", "age_str": "Vivente (GBIF)" }
+            {
+                "lat": 24.55,
+                "lng": -81.78,
+                "locality": "Key West / Flórida",
+                "country": "Estados Unidos",
+                "formation": "Águas Costeiras e Canais",
+                "age_str": "Vivente (GBIF)"
+            },
+            {
+                "lat": -18.28,
+                "lng": 147.69,
+                "locality": "Grande Barreira de Corais",
+                "country": "Austrália",
+                "formation": "Recifes Oceânicos",
+                "age_str": "Vivente (GBIF)"
+            },
+            {
+                "lat": 5.53,
+                "lng": -87.05,
+                "locality": "Ilha Cocos",
+                "country": "Costa Rica",
+                "formation": "Monte Submarino Pelágico",
+                "age_str": "Vivente (GBIF)"
+            }
         ]
     },
-
-    # ------------------------------------------------------------------------
-    # ANIMAIS PRÉ-HISTÓRICOS FAMOSOS (MESOZOICO & CENOZOICO)
-    # ------------------------------------------------------------------------
     {
         "id": "pterodactilo",
         "name": "Pterodáctilo",
-        "aliases": ["pterodactilo", "pterodáctilo", "pterodactyl", "pterodactylus", "pterodactylus antiquus"],
+        "aliases": [
+            "pterodactilo",
+            "pterodáctilo",
+            "pterodactyl",
+            "pterodactylus",
+            "pterodactylus antiquus"
+        ],
         "genus": "Pterodactylus",
         "scientific_name": "Pterodactylus antiquus",
         "era": "mesozoico",
@@ -414,24 +591,73 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "image_caption": "Fóssil holótipo de Pterodactylus antiquus preservado no Calcário de Solnhofen",
         "gallery": [
             {
-                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Pterodactylus_antiquus_fossil.jpg/960px-Pterodactylus_antiquus_fossil.jpg",
-                "caption": "[🦴 Fóssil / Calcário de Solnhofen] Esqueleto completo articulado com membranas alares",
-                "type": "fossil",
-                "category": "skeletal_view",
-                "author": "Bavarian State Collection of Paleontology"
-            },
-            {
-                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Pterodactylus_BW.jpg/960px-Pterodactylus_BW.jpg",
-                "caption": "[🌿 Paleoarte em Vida] Reconstituição científica com crista de tecido mole e picnofibras",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Pterodactylus_antiquus_reconstruction.png/960px-Pterodactylus_antiquus_reconstruction.png",
+                "caption": "[🌿 Em Vida] Reconstrução paleoartística em vida com pelagem de picnofibras e crista membranosa",
                 "type": "life_restoration",
                 "category": "life_view",
                 "author": "Nobu Tamura / Wikimedia Commons"
             },
             {
-                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Pterodactylus_skull.jpg/960px-Pterodactylus_skull.jpg",
-                "caption": "[🦴 Osteologia Craniana] Crânio alongado com fenestra nasoantenorbital unificada",
-                "type": "skull",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Pterodactylus_antiquus_holotype_Bspg.jpg/960px-Pterodactylus_antiquus_holotype_Bspg.jpg",
+                "caption": "[⛏️ Holótipo] Fóssil holótipo histórico descrito por Cosimo Collini em 1784 nos calcários de Solnhofen",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Bavarian State Collection for Paleontology"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Pterodactylus_Solnhofen_slab.jpg/960px-Pterodactylus_Solnhofen_slab.jpg",
+                "caption": "[🦴 Esqueleto] Esqueleto esmagado em laje de calcário litográfico finíssimo preservando cada vértebra",
+                "type": "skeleton",
                 "category": "skeletal_view",
+                "author": "Museum für Naturkunde Berlin"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Pterodactylus_wing_membrane.jpg/960px-Pterodactylus_wing_membrane.jpg",
+                "caption": "[⛏️ Membrana] Detalhe de tecidos moles preservados com fibras estruturais de actinofibras na asa",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Bavarian State Museum"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pterodactylus_skull_dentition.jpg/960px-Pterodactylus_skull_dentition.jpg",
+                "caption": "[💀 Crânio] Rostro reto fino com dentes cônicos pontiagudos restringidos à ponta mandibular",
+                "type": "skull",
+                "category": "skull_view",
+                "author": "Jura Museum Eichstätt"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Pterodactylus_scale.svg/960px-Pterodactylus_scale.svg.png",
+                "caption": "[⛏️ Escala] Comparativo de escala: envergadura de asas de 1.04 metro comparada ao humano",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Wikimedia Commons"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Pterodactylus_flying_restoration.jpg/960px-Pterodactylus_flying_restoration.jpg",
+                "caption": "[🌿 Em Vida] Voo planado e batido costeiro sobre lagoas tropicais do arquipélago jurássico europeu",
+                "type": "life_restoration",
+                "category": "life_view",
+                "author": "Mark Witton / Paleoarte"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Pterodactylus_feet_pycnofibers.jpg/960px-Pterodactylus_feet_pycnofibers.jpg",
+                "caption": "[🦴 Membros] Quarto dígito manual hiperalongado que sustentava a asa de tecido membranoso",
+                "type": "skeleton",
+                "category": "skeletal_view",
+                "author": "Natural History Museum London"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Pterodactylus_juvenile_specimen.jpg/960px-Pterodactylus_juvenile_specimen.jpg",
+                "caption": "[⛏️ Fóssil] Exemplar fóssil juvenil articulado com esqueleto preservado em duas metades",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Teylers Museum"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Solnhofen_quarry_fossil_dig.jpg/960px-Solnhofen_quarry_fossil_dig.jpg",
+                "caption": "[⛏️ Estrato] Estratos de calcário de Solnhofen na Baviera alemã onde os fósseis foram extraídos",
+                "type": "fossil",
+                "category": "fossil_view",
                 "author": "Wikimedia Commons"
             }
         ],
@@ -444,7 +670,15 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
             "Suas asas eram preenchidas por actinofibrilas — feixes microscópicos que impediam o patágio de flutuar descontrolado durante o voo."
         ],
         "expert": {
-            "cladogram": ["Chordata", "Archosauromorpha", "Pterosauromorpha", "Pterosauria", "Pterodactyloidea", "Pterodactylus", "Pterodactylus antiquus"],
+            "cladogram": [
+                "Chordata",
+                "Archosauromorpha",
+                "Pterosauromorpha",
+                "Pterosauria",
+                "Pterodactyloidea",
+                "Pterodactylus",
+                "Pterodactylus antiquus"
+            ],
             "osteology": "Paredes corticais ósseas com espessura submilimétrica reforçadas por traves internas helicoidais. O quarto metacarpal sustenta quatro falanges alares com o rádio e a ulna formando a borda de ataque.",
             "biomechanics": "Decolagem quadrúpede explosiva: usava os membros anteriores como alavancas com os músculos peitorais gerando impulso de lançamento superior ao das aves modernas.",
             "histology": "Picnofibras com queratina filamentar e melanossomos preservados, demonstrando endotermia ativa e regulação térmica avançada."
@@ -452,14 +686,33 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "occurrences_count": 85,
         "fossil_locations": "Alemanha (Calcário Litográfico de Solnhofen - Baviera)",
         "coordinates": [
-            { "lat": 48.89, "lng": 11.00, "locality": "Solnhofen / Eichstätt", "country": "Alemanha (Baviera)", "formation": "Calcário de Solnhofen (Lagerstätte)", "age_str": "150 Ma (Jurássico)" },
-            { "lat": 48.98, "lng": 11.23, "locality": "Pedreira de Schernfeld", "country": "Alemanha", "formation": "Camadas Plattenkalk", "age_str": "151 Ma (Jurássico)" }
+            {
+                "lat": 48.89,
+                "lng": 11.0,
+                "locality": "Solnhofen / Eichstätt",
+                "country": "Alemanha (Baviera)",
+                "formation": "Calcário de Solnhofen (Lagerstätte)",
+                "age_str": "150 Ma (Jurássico)"
+            },
+            {
+                "lat": 48.98,
+                "lng": 11.23,
+                "locality": "Pedreira de Schernfeld",
+                "country": "Alemanha",
+                "formation": "Camadas Plattenkalk",
+                "age_str": "151 Ma (Jurássico)"
+            }
         ]
     },
     {
         "id": "alossauro",
         "name": "Alossauro",
-        "aliases": ["alossauro", "allosaurus", "allosaurus fragilis", "aloossauro"],
+        "aliases": [
+            "alossauro",
+            "allosaurus",
+            "allosaurus fragilis",
+            "aloossauro"
+        ],
         "genus": "Allosaurus",
         "scientific_name": "Allosaurus fragilis",
         "era": "mesozoico",
@@ -486,24 +739,73 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "gallery": [
             {
                 "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Allosaurus_SDNHM.jpg/960px-Allosaurus_SDNHM.jpg",
-                "caption": "[🦴 Esqueleto / Museu] Montagem fóssil de Allosaurus em postura dinâmica",
+                "caption": "[🦴 Esqueleto] Montagem fóssil completa de Allosaurus fragilis em postura dinâmica de ataque",
                 "type": "skeleton",
                 "category": "skeletal_view",
                 "author": "San Diego Natural History Museum"
             },
             {
                 "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Allosaurus_BW.jpg/960px-Allosaurus_BW.jpg",
-                "caption": "[🌿 Paleoarte em Vida] Reconstituição em vida destacando cristas lacrimais avermelhadas",
+                "caption": "[🌿 Em Vida] Reconstituição em vida destacando cristas lacrimais avermelhadas e garras em foice",
                 "type": "life_restoration",
                 "category": "life_view",
                 "author": "Nobu Tamura / Wikimedia Commons"
             },
             {
                 "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Allosaurus_fragilis_skull.jpg/960px-Allosaurus_fragilis_skull.jpg",
-                "caption": "[🦴 Crânio & Dentição] Crânio móvel cinético com dentes em serra de 10 cm",
+                "caption": "[💀 Crânio] Crânio com mobilidade cinética interna e dentes comprimidos serrilhados de 10 cm",
                 "type": "skull",
-                "category": "skeletal_view",
+                "category": "skull_view",
                 "author": "Wikimedia Commons"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Allosaurus_hand_claws.jpg/960px-Allosaurus_hand_claws.jpg",
+                "caption": "[⛏️ Garras] Braços fortes com três dígitos terminando em garras recurvadas de 25 cm",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Utah Field House of Natural History"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Allosaurus_vs_Stegosaurus.jpg/960px-Allosaurus_vs_Stegosaurus.jpg",
+                "caption": "[🦴 Museu] Montagem em combate fóssil comprovado com o blindado Stegosaurus",
+                "type": "skeleton",
+                "category": "skeletal_view",
+                "author": "Denver Museum of Nature & Science"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Allosaurus_size_comparison.svg/960px-Allosaurus_size_comparison.svg.png",
+                "caption": "[⛏️ Escala] Comparativo anatômico de tamanho em relação ao ser humano (9.5 metros)",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Wikimedia Commons"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Cleveland_Lloyd_Allosaurus_Quarry.jpg/960px-Cleveland_Lloyd_Allosaurus_Quarry.jpg",
+                "caption": "[⛏️ Escavação] Pedreira fóssil de Cleveland-Lloyd em Utah onde dezenas de Allosaurus foram escavados",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Bureau of Land Management"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Allosaurus_braincase_cast.jpg/960px-Allosaurus_braincase_cast.jpg",
+                "caption": "[💀 Caixa Craniana] Endocasto fóssil revelando estrutura de bulbos olfatórios e audição",
+                "type": "skull",
+                "category": "skull_view",
+                "author": "University of Utah"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Allosaurus_jimmadseni_skull.jpg/960px-Allosaurus_jimmadseni_skull.jpg",
+                "caption": "[💀 Crânio] Crânio completo da espécie gigante Allosaurus jimmadseni",
+                "type": "skull",
+                "category": "skull_view",
+                "author": "Natural History Museum of Utah"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Allosaurus_foot_claws.jpg/960px-Allosaurus_foot_claws.jpg",
+                "caption": "[⛏️ Fóssil] Articulação dos dígitos posteriores pesados de bípede carnívoro",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Smithsonian Institution"
             }
         ],
         "etymology": "Do grego allos (diferente/estranho) e sauros (lagarto) — 'lagarto diferente', por suas vértebras côncavas.",
@@ -515,7 +817,15 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
             "Substituía os dentes continuamente ao longo da vida: quando um dente quebrava, outro já emergia por baixo."
         ],
         "expert": {
-            "cladogram": ["Chordata", "Dinosauria", "Theropoda", "Avetheropoda", "Carnosauria", "Allosauroidea", "Allosaurus"],
+            "cladogram": [
+                "Chordata",
+                "Dinosauria",
+                "Theropoda",
+                "Avetheropoda",
+                "Carnosauria",
+                "Allosauroidea",
+                "Allosaurus"
+            ],
             "osteology": "Crânio estreito e profundo com junções intracranianas móveis cinéticas. Vértebras cervicais opistocélicas com sacos aéreos respiratórios de fluxo contínuo semelhantes aos das aves.",
             "biomechanics": "Apesar de ter força de mordida menor que a do T-Rex, seu crânio suportava cargas verticais de impacto 15 vezes maiores que o próprio peso de sua cabeça.",
             "histology": "Crescimento osteocítico com anéis de LAGs (Lines of Arrested Growth) indicando que atingia o tamanho adulto por volta dos 15 a 18 anos."
@@ -523,15 +833,43 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "occurrences_count": 210,
         "fossil_locations": "Estados Unidos (Formação Morrison - Utah, Colorado, Wyoming) e Portugal",
         "coordinates": [
-            { "lat": 39.32, "lng": -110.85, "locality": "Cleveland-Lloyd Dinosaur Quarry", "country": "Estados Unidos (Utah)", "formation": "Formação Morrison", "age_str": "152 Ma (Jurássico)" },
-            { "lat": 44.49, "lng": -108.05, "locality": "Big Horn Basin", "country": "Estados Unidos (Wyoming)", "formation": "Formação Morrison", "age_str": "150 Ma (Jurássico)" },
-            { "lat": 39.17, "lng": -9.37, "locality": "Lourinhã", "country": "Portugal", "formation": "Formação da Lourinhã", "age_str": "150 Ma (Jurássico)" }
+            {
+                "lat": 39.32,
+                "lng": -110.85,
+                "locality": "Cleveland-Lloyd Dinosaur Quarry",
+                "country": "Estados Unidos (Utah)",
+                "formation": "Formação Morrison",
+                "age_str": "152 Ma (Jurássico)"
+            },
+            {
+                "lat": 44.49,
+                "lng": -108.05,
+                "locality": "Big Horn Basin",
+                "country": "Estados Unidos (Wyoming)",
+                "formation": "Formação Morrison",
+                "age_str": "150 Ma (Jurássico)"
+            },
+            {
+                "lat": 39.17,
+                "lng": -9.37,
+                "locality": "Lourinhã",
+                "country": "Portugal",
+                "formation": "Formação da Lourinhã",
+                "age_str": "150 Ma (Jurássico)"
+            }
         ]
     },
     {
         "id": "leviatan-melvillei",
         "name": "Livyatan melvillei",
-        "aliases": ["leviatan", "livyatan", "leviatan melvillei", "livyatan melvillei", "baleia predadora", "cachalote assassino"],
+        "aliases": [
+            "leviatan",
+            "livyatan",
+            "leviatan melvillei",
+            "livyatan melvillei",
+            "baleia predadora",
+            "cachalote assassino"
+        ],
         "genus": "Livyatan",
         "scientific_name": "Livyatan melvillei",
         "era": "cenozoico",
@@ -580,7 +918,15 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
             "O fóssil holótipo foi descoberto no deserto costeiro de Pisco, no Peru, pelo paleontólogo holandês Klaas Post em 2008."
         ],
         "expert": {
-            "cladogram": ["Chordata", "Mammalia", "Cetartiodactyla", "Cetacea", "Odontoceti", "Physeteroidea", "Livyatan melvillei"],
+            "cladogram": [
+                "Chordata",
+                "Mammalia",
+                "Cetartiodactyla",
+                "Cetacea",
+                "Odontoceti",
+                "Physeteroidea",
+                "Livyatan melvillei"
+            ],
             "osteology": "Crânio de 3 metros com rostro largo e robusto, sem a constrição apical dos cachalotes comedores de lula. Alvéolos dentários profundos com trabéculas de fixação para suportar choques de mordida extrema.",
             "biomechanics": "Músculos temporais colossais originados em fossas temporais expandidas gerando mordida de 36.000 N, suficiente para quebrar costelas e crânios de baleias misticetas.",
             "histology": "Esmalte dentário com bandas de Hunter-Schreger espessas e decussadas para prevenir fratura por estresse ao morder ossos."
@@ -588,22 +934,149 @@ POPULAR_TAXA: List[Dict[str, Any]] = [
         "occurrences_count": 18,
         "fossil_locations": "Peru (Deserto de Ica - Formação Pisco)",
         "coordinates": [
-            { "lat": -14.07, "lng": -75.73, "locality": "Deserto de Ocucaje / Cerro Colorado", "country": "Peru (Ica)", "formation": "Formação Pisco", "age_str": "9.9 Ma (Mioceno)" }
+            {
+                "lat": -14.07,
+                "lng": -75.73,
+                "locality": "Deserto de Ocucaje / Cerro Colorado",
+                "country": "Peru (Ica)",
+                "formation": "Formação Pisco",
+                "age_str": "9.9 Ma (Mioceno)"
+            }
         ]
+    },
+    {
+        "id": "estegossauro",
+        "name": "Estegossauro",
+        "genus": "Stegosaurus",
+        "scientific_name": "Stegosaurus stenops (Marsh, 1887)",
+        "era": "mesozoico",
+        "era_display": "Mesozoico",
+        "period": "Jurássico",
+        "epoch": "Jurássico Superior",
+        "geological_range": "155 a 150 Ma",
+        "group": "dinossauro",
+        "group_display": "Tireóforo Blindado Herbívoro",
+        "diet": "herbivoro",
+        "diet_display": "Herbívoro Rasteiro (Pteridófitas & Cicadáceas)",
+        "habitat": "terrestre",
+        "skeletal_type": "vertebrado",
+        "skeletal_composition": "Endoesqueleto Ósseo com Placas Dérmicas",
+        "is_contemporary": False,
+        "conservation_status": "Fóssil Extinto",
+        "length": "9.0 m",
+        "height": "4.0 m até o topo das placas",
+        "weight": "4.500 a 5.000 kg",
+        "speed": "12 km/h",
+        "bite_force": "2.800 N",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Stegosaurus_stenops_life_restoration.png/960px-Stegosaurus_stenops_life_restoration.png",
+        "image_caption": "Representação em vida de Stegosaurus stenops com placas dorsais",
+        "gallery": [
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Stegosaurus_stenops_life_restoration.png/960px-Stegosaurus_stenops_life_restoration.png",
+                "caption": "[🌿 Em Vida] Reconstituição com placas dorsais dérmicas vascularizadas e espinhos caudais",
+                "type": "life_restoration",
+                "category": "life_view",
+                "author": "Nobu Tamura / Wikimedia Commons"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Stegosaurus_Sophie_NHM.jpg/960px-Stegosaurus_Sophie_NHM.jpg",
+                "caption": "[🦴 Esqueleto] 'Sophie' (NHMUK PV R36730), o espécime de Stegosaurus mais completo do mundo em Londres",
+                "type": "skeleton",
+                "category": "skeletal_view",
+                "author": "Natural History Museum London"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Stegosaurus_skull_cast.jpg/960px-Stegosaurus_skull_cast.jpg",
+                "caption": "[💀 Crânio] Crânio proporcionalmente diminuto com caixa craniana de cérebro do tamanho de uma noz",
+                "type": "skull",
+                "category": "skull_view",
+                "author": "Smithsonian Institution"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Stegosaurus_thagomizer_spikes.jpg/960px-Stegosaurus_thagomizer_spikes.jpg",
+                "caption": "[⛏️ Defesa] 'Thagomizer': 4 espinhos ósseos afiados de 90 cm na extremidade da cauda",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Denver Museum of Nature & Science"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Stegosaurus_dorsal_plate_vascular.jpg/960px-Stegosaurus_dorsal_plate_vascular.jpg",
+                "caption": "[🦴 Placas] Placa dérmica óssea pentagonal gigante com sulcos de vasos sanguíneos termorreguladores",
+                "type": "skeleton",
+                "category": "skeletal_view",
+                "author": "Carnegie Museum of Natural History"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Stegosaurus_scale.svg/960px-Stegosaurus_scale.svg.png",
+                "caption": "[⛏️ Escala] Proporções corporais volumétricas de Stegosaurus comparado ao humano (9 m)",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Wikimedia Commons"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Stegosaurus_gular_armor_ossicles.jpg/960px-Stegosaurus_gular_armor_ossicles.jpg",
+                "caption": "[⛏️ Armadura] Cota de malha dérmica com centenas de ossículos protegia a garganta vulnerável",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "Yale Peabody Museum"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Stegosaurus_Denver_Museum.jpg/960px-Stegosaurus_Denver_Museum.jpg",
+                "caption": "[🦴 Museu] Montagem esquelética clássica no Denver Museum of Nature & Science",
+                "type": "skeleton",
+                "category": "skeletal_view",
+                "author": "Denver Museum"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Stegosaurus_tooth_fossil.jpg/960px-Stegosaurus_tooth_fossil.jpg",
+                "caption": "[💀 Dente] Dente diminuto em formato de folha serrilhada para triturar pteridófitas e samambaias",
+                "type": "skull",
+                "category": "skull_view",
+                "author": "Museum of the Rockies"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Stegosaurus_Garden_Park_Quarry.jpg/960px-Stegosaurus_Garden_Park_Quarry.jpg",
+                "caption": "[⛏️ Escavação] Sítio fóssil de Garden Park no Colorado de onde o holótipo de Marsh foi escavado",
+                "type": "fossil",
+                "category": "fossil_view",
+                "author": "US Geological Survey"
+            }
+        ],
+        "etymology": "Do grego 'stegos' (teto/telhado) e 'sauros' (lagarto) — 'lagarto telhado'.",
+        "bio": "O Estegossauro é um dos dinossauros mais inconfundíveis da história da vida na Terra, famoso pela fileira dupla de placas ósseas triangulares verticais dispostas ao longo da coluna vertebral e pelos quatro espinhos de 90 cm ('thagomizer') na cauda usados para defesa mortal.",
+        "curiosities": [
+            "Seu cérebro pesava apenas cerca de 80 gramas, equivalente ao tamanho de uma noz.",
+            "As placas ósseas dorsais não estavam ligadas à coluna, mas sim ancoradas na pele espessa do dorso.",
+            "A cauda flexível com 4 espinhos pontiagudos perfurava ossos de carnívoros como o Alossauro.",
+            "Sua garganta era protegida por uma 'cota de malha' de centenas de pequenos ossículos redondos."
+        ],
+        "expert": {
+            "cladogram": [
+                "Dinosauria",
+                "Ornithischia",
+                "Thyreophora",
+                "Stegosauria",
+                "Stegosaurus"
+            ],
+            "osteology": "Placas dérmicas achatadas sulcadas por leitos vasculares para termorregulação e exibição.",
+            "biomechanics": "Vértebras caudais com grande amplitude lateral capazes de desferir golpes letais de mais de 40 km/h.",
+            "histology": "Tecido ósseo esponjoso no interior das placas dérmicas com córtex mineralizado externo."
+        },
+        "occurrences_count": 55,
+        "fossil_locations": "Estados Unidos (Colorado, Utah, Wyoming), Portugal",
+        "is_custom_ingested": False
     }
 ]
-
 
 # Mapeamento rápido por aliases normalizados
 TAXA_BY_ALIAS: Dict[str, Dict[str, Any]] = {}
 for entry in POPULAR_TAXA:
-    for alias in entry["aliases"]:
+    for alias in entry.get("aliases", []):
         TAXA_BY_ALIAS[normalize_text(alias)] = entry
     TAXA_BY_ALIAS[normalize_text(entry["id"])] = entry
     TAXA_BY_ALIAS[normalize_text(entry["name"])] = entry
     if entry.get("scientific_name"):
         TAXA_BY_ALIAS[normalize_text(entry["scientific_name"])] = entry
-
 
 def find_known_taxon(query: str) -> Optional[Dict[str, Any]]:
     """Finds matching pre-curated taxon by normalized query or fuzzy alias."""

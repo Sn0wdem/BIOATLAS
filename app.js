@@ -1,5 +1,5 @@
 /**
- * Super Wiki Global da Vida na Terra
+ * BioAtlas — Plataforma Global de Biodiversidade e Paleontologia
  * Frontend Controller resiliente e de ultra-alta velocidade
  */
 
@@ -509,10 +509,73 @@ const EMBEDDED_CATALOG = [
     "gallery": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Brachiosaurus_DB.jpg/960px-Brachiosaurus_DB.jpg",
-        "caption": "Reconstrução em vida de Brachiosaurus altithorax",
+        "caption": "[🌿 Em Vida] Reconstituição em vida pastando nas copas de coníferas e cicadáceas a 13 metros de altura",
         "type": "life_restoration",
         "category": "life_view",
         "author": "Dmitry Bogdanov"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Brachiosaurus_mount_FMNH.jpg/960px-Brachiosaurus_mount_FMNH.jpg",
+        "caption": "[🦴 Esqueleto] Montagem esquelética gigante com membros dianteiros alongados no Field Museum",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Field Museum Chicago"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Brachiosaurus_humerus_FMNH.jpg/960px-Brachiosaurus_humerus_FMNH.jpg",
+        "caption": "[🦴 Úmero] Úmero fóssil maciço medindo 2.04 metros de comprimento (FMNH PR 251)",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "The Field Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Brachiosaurus_vertebra_pneumatic.jpg/960px-Brachiosaurus_vertebra_pneumatic.jpg",
+        "caption": "[🦴 Vértebra] Vértebra cervical gigante neumatizada com câmaras internas que aliviavam peso",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Natural History Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Brachiosaurus_skull_cast.jpg/960px-Brachiosaurus_skull_cast.jpg",
+        "caption": "[💀 Crânio] Crânio com arco nasal proeminente e fenestras amplas",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Denver Museum of Nature & Science"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Brachiosaurus_teeth_spatulate.jpg/960px-Brachiosaurus_teeth_spatulate.jpg",
+        "caption": "[💀 Dentição] Dentes em formato de espátula para cisalhamento e colheita de folhagens duras",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Smithsonian Institution"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Brachiosaurus_scale.svg/960px-Brachiosaurus_scale.svg.png",
+        "caption": "[⛏️ Escala] Comparativo de tamanho colossal: 26 metros de comprimento e 40 toneladas",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Brachiosaurus_Riggs_1900_Holotype.jpg/960px-Brachiosaurus_Riggs_1900_Holotype.jpg",
+        "caption": "[⛏️ Escavação] Fotografia histórica da escavação do holótipo por Elmer Riggs em 1900 no Colorado",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Elmer Riggs (1900)"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Brachiosaurus_pelvis_sacrum.jpg/960px-Brachiosaurus_pelvis_sacrum.jpg",
+        "caption": "[🦴 Pelve] Cintura pélvica maciça e sacro fundido para suporte da massa corporal",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Museum of Western Colorado"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Brachiosaurus_herd_Morrison.jpg/960px-Brachiosaurus_herd_Morrison.jpg",
+        "caption": "[🌿 Em Vida] Manada de Brachiosaurus em deslocamento na bacia semi-árida da Formação Morrison",
+        "type": "life_restoration",
+        "category": "life_view",
+        "author": "Mark Hallett / Paleoarte"
       }
     ],
     "etymology": "Do grego 'brachion' (braço) e 'sauros' (lagarto), com 'altithorax' (tórax profundo/alto). Descrito por Elmer Riggs em 1903.",
@@ -1433,10 +1496,73 @@ const EMBEDDED_CATALOG = [
     "gallery": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Spinosaurus_life_restoration_by_Emily_Willoughby_2020.png/960px-Spinosaurus_life_restoration_by_Emily_Willoughby_2020.png",
-        "caption": "Reconstrução em vida de Spinosaurus semi-aquático com cauda em remo",
+        "caption": "[🌿 Em Vida] Reconstituição em vida com cauda natatória em remo e vela dorsal de 1.8 m",
         "type": "life_restoration",
         "category": "life_view",
         "author": "Emily Willoughby"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Spinosaurus_aegyptiacus_skeletal_mount.jpg/960px-Spinosaurus_aegyptiacus_skeletal_mount.jpg",
+        "caption": "[🦴 Esqueleto] Montagem esquelética completa com vértebras de espinhas hiperalongadas",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "National Geographic Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Spinosaurus_skull_MSNM_V4047.jpg/960px-Spinosaurus_skull_MSNM_V4047.jpg",
+        "caption": "[💀 Crânio] Crânio de focinho longo subcônico no Museu de História Natural de Milão",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Museo di Storia Naturale di Milano"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Spinosaurus_teeth.jpg/960px-Spinosaurus_teeth.jpg",
+        "caption": "[💀 Dentição] Dentes cônicos adaptados para perfurar e reter peixes escorregadios",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Spinosaurus_tail_paddle_fossil.jpg/960px-Spinosaurus_tail_paddle_fossil.jpg",
+        "caption": "[⛏️ Fóssil] Cauda em forma de remo com espinhas hemais que geravam empuxo natatório",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Nature / Ibrahim et al."
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Spinosaurus_swimming_paleoart.jpg/960px-Spinosaurus_swimming_paleoart.jpg",
+        "caption": "[🌿 Em Vida] Spinosaurus submerso perseguindo peixes gigantes no sistema deltaico",
+        "type": "life_restoration",
+        "category": "life_view",
+        "author": "Nobu Tamura"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Spinosaurus_Stromer_1915_plates.jpg/960px-Spinosaurus_Stromer_1915_plates.jpg",
+        "caption": "[⛏️ Histórico] Pranchas monográficas originais de Ernst Stromer desenhadas em 1915",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Ernst Stromer (1915)"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Spinosaurus_scale.svg/960px-Spinosaurus_scale.svg.png",
+        "caption": "[⛏️ Escala] Comparativo de proporções: o mais longo carnívoro terrestre (15 metros)",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Spinosaurus_Kem_Kem_Fossil.jpg/960px-Spinosaurus_Kem_Kem_Fossil.jpg",
+        "caption": "[⛏️ Fóssil] Estratos fósseis dos Leitos Kem Kem no Marrocos (Deserto do Saara)",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Spinosaurus_claw_fossil.jpg/960px-Spinosaurus_claw_fossil.jpg",
+        "caption": "[⛏️ Fóssil] Garra ungueal manual gigante de 30 cm do primeiro dedo dianteiro",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Royal Ontario Museum"
       }
     ],
     "etymology": "Do grego 'spinos' (espinha/espinho) e 'sauros' (lagarto), 'do Egito'. Descrito por Ernst Stromer em 1915.",
@@ -1670,10 +1796,73 @@ const EMBEDDED_CATALOG = [
     "gallery": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Triceratops_life_restoration_by_Julius_Csotonyi.jpg/960px-Triceratops_life_restoration_by_Julius_Csotonyi.jpg",
-        "caption": "Reconstrução em vida de Triceratops em ambiente florestal",
+        "caption": "[🌿 Em Vida] Reconstrução paleoartística em vida pastando nas florestas de Hell Creek",
         "type": "life_restoration",
         "category": "life_view",
         "author": "Julius T. Csotonyi"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Triceratops_prorsus_skeleton.jpg/960px-Triceratops_prorsus_skeleton.jpg",
+        "caption": "[🦴 Esqueleto] Esqueleto fóssil completo montado de Triceratops com escudo ósseo maciço",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "National Museum of Natural History"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Triceratops_skull_AMNH.jpg/960px-Triceratops_skull_AMNH.jpg",
+        "caption": "[💀 Crânio] Crânio fóssil de 2.5 metros de comprimento no American Museum of Natural History",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "AMNH New York"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Triceratops_horns_fossil.jpg/960px-Triceratops_horns_fossil.jpg",
+        "caption": "[💀 Chifres] Par de chifres supraorbitais de 1 metro de comprimento revestidos por queratina",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Smithsonian Institution"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Triceratops_frill_fossil.jpg/960px-Triceratops_frill_fossil.jpg",
+        "caption": "[🦴 Escudo] Gola óssea parietal sólida contínua sem fenestras abertas",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Museum of the Rockies"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Triceratops_beak_and_dentition.jpg/960px-Triceratops_beak_and_dentition.jpg",
+        "caption": "[💀 Dentição] Bico rostral córneo e colunas de baterias dentárias de cisalhamento vegetal",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Science Museum of Minnesota"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Triceratops_scale_chart.png/960px-Triceratops_scale_chart.png",
+        "caption": "[⛏️ Escala] Diagrama de proporções anatômicas comparado a um ser humano (9 metros)",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Triceratops_Lane_Mummy_Skin.jpg/960px-Triceratops_Lane_Mummy_Skin.jpg",
+        "caption": "[⛏️ Fóssil] Impressões fósseis mumificadas da pele de Triceratops com tubérculos hexagonais",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Houston Museum of Natural Science"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Triceratops_mount_Senckenberg.jpg/960px-Triceratops_mount_Senckenberg.jpg",
+        "caption": "[🦴 Museu] Montagem dinâmica em postura defensiva no Museu Senckenberg de Frankfurt",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Senckenberg Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Triceratops_Yoshi_Quarry.jpg/960px-Triceratops_Yoshi_Quarry.jpg",
+        "caption": "[⛏️ Escavação] Crânio de Triceratops sendo escavado em leito de arenito de Hell Creek",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Museum of the Rockies"
       }
     ],
     "etymology": "Do grego 'tri' (três), 'keras' (chifre) e 'ops' (rosto), com o latim 'horridus' (áspero/rugoso). Descrito por Othniel Charles Marsh em 1889.",
@@ -1730,17 +1919,87 @@ const EMBEDDED_CATALOG = [
     "gallery": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tyrannosaurus_rex_by_mariolanzas.jpg/960px-Tyrannosaurus_rex_by_mariolanzas.jpg",
-        "caption": "[🌿 Indivíduo em Vida] Reconstrução em vida de T. rex com tegumento moderno",
+        "caption": "[🌿 Em Vida] Reconstituição em vida com tegumento moderno e postura ativa",
         "type": "life_restoration",
         "category": "life_view",
-        "author": "Mario Lanzas"
+        "author": "Mario Lanzas / Wikimedia Commons"
       },
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Tyrannosaurus_Sue.jpg/960px-Tyrannosaurus_Sue.jpg",
-        "caption": "[🦴 Esqueleto / Ossos] Esqueleto fóssil completo montado de 'Sue' (FMNH PR 2081)",
+        "caption": "[🦴 Esqueleto] Esqueleto fóssil completo montado de 'Sue' (FMNH PR 2081) no Field Museum",
         "type": "skeleton",
         "category": "skeletal_view",
-        "author": "The Field Museum"
+        "author": "The Field Museum of Natural History"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Tyrannosaurus_rex_skull_%28AMNH_5027%29.jpg/960px-Tyrannosaurus_rex_skull_%28AMNH_5027%29.jpg",
+        "caption": "[💀 Crânio] Crânio fóssil AMNH 5027 em vista oblíqua destacando ampla visão binocular",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "American Museum of Natural History"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Tyrannosaurus_rex_holotype.jpg/960px-Tyrannosaurus_rex_holotype.jpg",
+        "caption": "[🦴 Holótipo] Espécime-tipo holótipo CM 9380 no Carnegie Museum de Pittsburgh",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Carnegie Museum of Natural History"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Tyrannosaurus_rex_skull_Denver.jpg/960px-Tyrannosaurus_rex_skull_Denver.jpg",
+        "caption": "[💀 Dentição] Crânio fóssil em vista lateral no Museu de Denver com dentes de 30 cm",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Denver Museum of Nature & Science"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tyrannosaurus_rex_by_scotthartman-d7i86t2.png/960px-Tyrannosaurus_rex_by_scotthartman-d7i86t2.png",
+        "caption": "[🦴 Osteologia] Reconstituição esquelética hiper-acurada com proporções anatômicas",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Scott Hartman"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Tyrannosaurus_Life_Restoration.png/960px-Tyrannosaurus_Life_Restoration.png",
+        "caption": "[🌿 Em Vida] Reconstituição dinâmica destacando musculatura masseter e bulbo olfatório aguçado",
+        "type": "life_restoration",
+        "category": "life_view",
+        "author": "Nobu Tamura / Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/T-Rex_Tooth.jpg/960px-T-Rex_Tooth.jpg",
+        "caption": "[💀 Dente] Dente fossilizado hiper-robusto serrilhado capaz de pulverizar ossos",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Smithsonian National Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Tyrannosaurus_rex_foot_bones.jpg/960px-Tyrannosaurus_rex_foot_bones.jpg",
+        "caption": "[⛏️ Fóssil] Articulação dos membros posteriores e metatarsos arctometatarsais de corrida",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Museum of the Rockies"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Tyrannosaurus_scale_chart.png/960px-Tyrannosaurus_scale_chart.png",
+        "caption": "[⛏️ Escala] Comparativo de escala corporal volumétrica com o ser humano (12.8 m)",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Tyrannosaurus_rex_AMNH_5027_mount.jpg/960px-Tyrannosaurus_rex_AMNH_5027_mount.jpg",
+        "caption": "[🦴 Museu] Montagem histórica clássica ereta no salão fóssil de Nova York",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "AMNH New York"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Tyrannosaurus_Scotty_Cast.jpg/960px-Tyrannosaurus_Scotty_Cast.jpg",
+        "caption": "[⛏️ Fóssil] Molde completo do espécime 'Scotty', o maior e mais pesado T-Rex com 8.870 kg",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Royal Saskatchewan Museum"
       }
     ],
     "etymology": "Do grego 'tyrannos' (tirano) e 'sauros' (lagarto), com o latim 'rex' (rei). Descrito por Henry Fairfield Osborn em 1905.",
@@ -1797,10 +2056,73 @@ const EMBEDDED_CATALOG = [
     "gallery": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Velociraptor_restoration.png/960px-Velociraptor_restoration.png",
-        "caption": "Reconstrução em vida cientificamente acurada de Velociraptor com plumagem completa",
+        "caption": "[🌿 Em Vida] Reconstrução com plumagem pennácea completa e asas emplumadas",
         "type": "life_restoration",
         "category": "life_view",
         "author": "Emily Willoughby"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Fighting_Dinosaurs_fossil.jpg/960px-Fighting_Dinosaurs_fossil.jpg",
+        "caption": "[⛏️ Fóssil] Fóssil mundialmente famoso 'Dinossauros Lutadores' (Velociraptor travado com Protoceratops)",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Mongolian Academy of Sciences"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Velociraptor_mongoliensis_skeleton.jpg/960px-Velociraptor_mongoliensis_skeleton.jpg",
+        "caption": "[🦴 Esqueleto] Esqueleto fóssil articulado com postura bípede e cauda rígida",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "American Museum of Natural History"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Velociraptor_sickle_claw.jpg/960px-Velociraptor_sickle_claw.jpg",
+        "caption": "[⛏️ Garra] Garra falciforme hiper-extensível de 9 cm do segundo dígito do pé",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Smithsonian Institution"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Velociraptor_skull_cast.jpg/960px-Velociraptor_skull_cast.jpg",
+        "caption": "[💀 Crânio] Crânio fóssil alongado e baixo com focinho ligeiramente arrebitado",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Paleontological Center of Mongolia"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Velociraptor_quill_knobs.jpg/960px-Velociraptor_quill_knobs.jpg",
+        "caption": "[⛏️ Fóssil] Papilas ulnárias ('quill knobs') comprovando ancoragem direta de penas secundárias",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Science / Turner et al."
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Velociraptor_scale.svg/960px-Velociraptor_scale.svg.png",
+        "caption": "[⛏️ Escala] Escala real: tamanho aproximado de um peru grande (2.07 m de comprimento)",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Velociraptor_tail_rods.jpg/960px-Velociraptor_tail_rods.jpg",
+        "caption": "[🦴 Osteologia] Hastes ósseas alongadas pré-zigapofisárias que mantinham a cauda rígida",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Royal Tyrrell Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Velociraptor_hunting_paleoart.jpg/960px-Velociraptor_hunting_paleoart.jpg",
+        "caption": "[🌿 Em Vida] Velociraptor em emboscada nas dunas de areia do Deserto de Gobi",
+        "type": "life_restoration",
+        "category": "life_view",
+        "author": "Nobu Tamura"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Velociraptor_jaw_dentition.jpg/960px-Velociraptor_jaw_dentition.jpg",
+        "caption": "[💀 Dentes] Dentes afiados e recurvados com serrilhas posteriores de corte",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Polish Academy of Sciences"
       }
     ],
     "etymology": "Do latim 'velox' (veloz) e 'raptor' (ladrão/saqueador), 'da Mongólia'. Descrito por Henry Fairfield Osborn em 1924.",
@@ -2281,6 +2603,372 @@ const EMBEDDED_CATALOG = [
     "occurrences_count": 12,
     "fossil_locations": "Kolyma, Sibéria (Rússia) - Camada de 30 metros de permafrost",
     "is_custom_ingested": false
+  },
+  {
+    "id": "alossauro",
+    "name": "Alossauro",
+    "genus": "Allosaurus",
+    "scientific_name": "Allosaurus fragilis (Marsh, 1877)",
+    "era": "mesozoico",
+    "era_display": "Mesozoico",
+    "period": "Jurássico",
+    "epoch": "Jurássico Superior (Kimmeridgiano)",
+    "geological_range": "155 a 145 Ma",
+    "group": "dinossauro",
+    "group_display": "Dinossauro Terópode Carnívoro",
+    "diet": "carnivoro",
+    "diet_display": "Hipercarnívoro Ápice (Caçador de Saurópodes)",
+    "habitat": "terrestre",
+    "skeletal_type": "vertebrado",
+    "skeletal_composition": "Endoesqueleto Ósseo Articulado com Vértebras Pneumatizadas",
+    "is_contemporary": false,
+    "conservation_status": "Fóssil Extinto",
+    "length": "8.5 a 10.0 m",
+    "height": "3.2 m nos quadris",
+    "weight": "2.000 a 3.000 kg",
+    "speed": "35 km/h",
+    "bite_force": "8.500 N (Golpe cortante em machado)",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Allosaurus_SDNHM.jpg/960px-Allosaurus_SDNHM.jpg",
+    "image_caption": "Esqueleto fóssil completo de Allosaurus fragilis em postura dinâmica",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Allosaurus_SDNHM.jpg/960px-Allosaurus_SDNHM.jpg",
+        "caption": "[🦴 Esqueleto] Montagem fóssil completa de Allosaurus fragilis em postura dinâmica de ataque",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "San Diego Natural History Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Allosaurus_BW.jpg/960px-Allosaurus_BW.jpg",
+        "caption": "[🌿 Em Vida] Reconstituição em vida destacando cristas lacrimais avermelhadas e garras em foice",
+        "type": "life_restoration",
+        "category": "life_view",
+        "author": "Nobu Tamura / Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Allosaurus_fragilis_skull.jpg/960px-Allosaurus_fragilis_skull.jpg",
+        "caption": "[💀 Crânio] Crânio com mobilidade cinética interna e dentes comprimidos serrilhados de 10 cm",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Allosaurus_hand_claws.jpg/960px-Allosaurus_hand_claws.jpg",
+        "caption": "[⛏️ Garras] Braços fortes com três dígitos terminando em garras recurvadas de 25 cm",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Utah Field House of Natural History"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Allosaurus_vs_Stegosaurus.jpg/960px-Allosaurus_vs_Stegosaurus.jpg",
+        "caption": "[🦴 Museu] Montagem em combate fóssil comprovado com o blindado Stegosaurus",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Denver Museum of Nature & Science"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Allosaurus_size_comparison.svg/960px-Allosaurus_size_comparison.svg.png",
+        "caption": "[⛏️ Escala] Comparativo anatômico de tamanho em relação ao ser humano (9.5 metros)",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Cleveland_Lloyd_Allosaurus_Quarry.jpg/960px-Cleveland_Lloyd_Allosaurus_Quarry.jpg",
+        "caption": "[⛏️ Escavação] Pedreira fóssil de Cleveland-Lloyd em Utah onde dezenas de Allosaurus foram escavados",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Bureau of Land Management"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Allosaurus_braincase_cast.jpg/960px-Allosaurus_braincase_cast.jpg",
+        "caption": "[💀 Caixa Craniana] Endocasto fóssil revelando estrutura de bulbos olfatórios e audição",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "University of Utah"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Allosaurus_jimmadseni_skull.jpg/960px-Allosaurus_jimmadseni_skull.jpg",
+        "caption": "[💀 Crânio] Crânio completo da espécie gigante Allosaurus jimmadseni",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Natural History Museum of Utah"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Allosaurus_foot_claws.jpg/960px-Allosaurus_foot_claws.jpg",
+        "caption": "[⛏️ Fóssil] Articulação dos dígitos posteriores pesados de bípede carnívoro",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Smithsonian Institution"
+      }
+    ],
+    "etymology": "Do grego 'allos' (estranho/diferente) e 'sauros' (lagarto).",
+    "bio": "O Alossauro foi o maior e mais abundante predador do Jurássico Superior na América do Norte. Com braços musculosos de três garras de foice e crânio cinético adaptado para aplicar ataques de cisalhamento, dominava ecossistemas caçando ornitópodes e saurópodes.",
+    "curiosities": [
+      "Marcas fósseis comprovam combates mortais entre o Alossauro e o Estegossauro.",
+      "Sua mandíbula abria até 92 graus de ângulo para golpear com a mandíbula superior como um machado.",
+      "É o fóssil oficial do estado norte-americano de Utah.",
+      "Substituía dentes quebrados continuamente durante toda a vida."
+    ],
+    "expert": {
+      "cladogram": [
+        "Dinosauria",
+        "Theropoda",
+        "Avetheropoda",
+        "Carnosauria",
+        "Allosaurus"
+      ],
+      "osteology": "Crânio cinético leve com junções flexíveis e vértebras com pneumatização respiratória.",
+      "biomechanics": "Crânio estruturado para suportar forças verticais de impacto 15 vezes maiores que seu peso.",
+      "histology": "Ossos fibrolamelares com rápida taxa de crescimento semelhante à das aves."
+    },
+    "occurrences_count": 82,
+    "fossil_locations": "Estados Unidos (Utah, Wyoming, Colorado), Portugal (Lourinhã)",
+    "is_custom_ingested": false
+  },
+  {
+    "id": "estegossauro",
+    "name": "Estegossauro",
+    "genus": "Stegosaurus",
+    "scientific_name": "Stegosaurus stenops (Marsh, 1887)",
+    "era": "mesozoico",
+    "era_display": "Mesozoico",
+    "period": "Jurássico",
+    "epoch": "Jurássico Superior",
+    "geological_range": "155 a 150 Ma",
+    "group": "dinossauro",
+    "group_display": "Tireóforo Blindado Herbívoro",
+    "diet": "herbivoro",
+    "diet_display": "Herbívoro Rasteiro (Pteridófitas & Cicadáceas)",
+    "habitat": "terrestre",
+    "skeletal_type": "vertebrado",
+    "skeletal_composition": "Endoesqueleto Ósseo com Placas Dérmicas",
+    "is_contemporary": false,
+    "conservation_status": "Fóssil Extinto",
+    "length": "9.0 m",
+    "height": "4.0 m até o topo das placas",
+    "weight": "4.500 a 5.000 kg",
+    "speed": "12 km/h",
+    "bite_force": "2.800 N",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Stegosaurus_stenops_life_restoration.png/960px-Stegosaurus_stenops_life_restoration.png",
+    "image_caption": "Representação em vida de Stegosaurus stenops com placas dorsais",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Stegosaurus_stenops_life_restoration.png/960px-Stegosaurus_stenops_life_restoration.png",
+        "caption": "[🌿 Em Vida] Reconstituição com placas dorsais dérmicas vascularizadas e espinhos caudais",
+        "type": "life_restoration",
+        "category": "life_view",
+        "author": "Nobu Tamura / Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Stegosaurus_Sophie_NHM.jpg/960px-Stegosaurus_Sophie_NHM.jpg",
+        "caption": "[🦴 Esqueleto] 'Sophie' (NHMUK PV R36730), o espécime de Stegosaurus mais completo do mundo em Londres",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Natural History Museum London"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Stegosaurus_skull_cast.jpg/960px-Stegosaurus_skull_cast.jpg",
+        "caption": "[💀 Crânio] Crânio proporcionalmente diminuto com caixa craniana de cérebro do tamanho de uma noz",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Smithsonian Institution"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Stegosaurus_thagomizer_spikes.jpg/960px-Stegosaurus_thagomizer_spikes.jpg",
+        "caption": "[⛏️ Defesa] 'Thagomizer': 4 espinhos ósseos afiados de 90 cm na extremidade da cauda",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Denver Museum of Nature & Science"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Stegosaurus_dorsal_plate_vascular.jpg/960px-Stegosaurus_dorsal_plate_vascular.jpg",
+        "caption": "[🦴 Placas] Placa dérmica óssea pentagonal gigante com sulcos de vasos sanguíneos termorreguladores",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Carnegie Museum of Natural History"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Stegosaurus_scale.svg/960px-Stegosaurus_scale.svg.png",
+        "caption": "[⛏️ Escala] Proporções corporais volumétricas de Stegosaurus comparado ao humano (9 m)",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Stegosaurus_gular_armor_ossicles.jpg/960px-Stegosaurus_gular_armor_ossicles.jpg",
+        "caption": "[⛏️ Armadura] Cota de malha dérmica com centenas de ossículos protegia a garganta vulnerável",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Yale Peabody Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Stegosaurus_Denver_Museum.jpg/960px-Stegosaurus_Denver_Museum.jpg",
+        "caption": "[🦴 Museu] Montagem esquelética clássica no Denver Museum of Nature & Science",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Denver Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Stegosaurus_tooth_fossil.jpg/960px-Stegosaurus_tooth_fossil.jpg",
+        "caption": "[💀 Dente] Dente diminuto em formato de folha serrilhada para triturar pteridófitas e samambaias",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Museum of the Rockies"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Stegosaurus_Garden_Park_Quarry.jpg/960px-Stegosaurus_Garden_Park_Quarry.jpg",
+        "caption": "[⛏️ Escavação] Sítio fóssil de Garden Park no Colorado de onde o holótipo de Marsh foi escavado",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "US Geological Survey"
+      }
+    ],
+    "etymology": "Do grego 'stegos' (teto/telhado) e 'sauros' (lagarto) — 'lagarto telhado'.",
+    "bio": "O Estegossauro é um dos dinossauros mais inconfundíveis da história da vida na Terra, famoso pela fileira dupla de placas ósseas triangulares verticais dispostas ao longo da coluna vertebral e pelos quatro espinhos de 90 cm ('thagomizer') na cauda usados para defesa mortal.",
+    "curiosities": [
+      "Seu cérebro pesava apenas cerca de 80 gramas, equivalente ao tamanho de uma noz.",
+      "As placas ósseas dorsais não estavam ligadas à coluna, mas sim ancoradas na pele espessa do dorso.",
+      "A cauda flexível com 4 espinhos pontiagudos perfurava ossos de carnívoros como o Alossauro.",
+      "Sua garganta era protegida por uma 'cota de malha' de centenas de pequenos ossículos redondos."
+    ],
+    "expert": {
+      "cladogram": [
+        "Dinosauria",
+        "Ornithischia",
+        "Thyreophora",
+        "Stegosauria",
+        "Stegosaurus"
+      ],
+      "osteology": "Placas dérmicas achatadas sulcadas por leitos vasculares para termorregulação e exibição.",
+      "biomechanics": "Vértebras caudais com grande amplitude lateral capazes de desferir golpes letais de mais de 40 km/h.",
+      "histology": "Tecido ósseo esponjoso no interior das placas dérmicas com córtex mineralizado externo."
+    },
+    "occurrences_count": 55,
+    "fossil_locations": "Estados Unidos (Colorado, Utah, Wyoming), Portugal",
+    "is_custom_ingested": false
+  },
+  {
+    "id": "pterodactilo",
+    "name": "Pterodáctilo",
+    "genus": "Pterodactylus",
+    "scientific_name": "Pterodactylus antiquus (Soemmerring, 1812)",
+    "era": "mesozoico",
+    "era_display": "Mesozoico",
+    "period": "Jurássico",
+    "epoch": "Jurássico Superior (Titoniano)",
+    "geological_range": "150.8 a 148.5 Ma",
+    "group": "pterossauro",
+    "group_display": "Pterossauro (Réptil Voador Mesozoico)",
+    "diet": "piscivoro",
+    "diet_display": "Piscívoro & Insetívoro Costeiro",
+    "habitat": "aereo",
+    "skeletal_type": "vertebrado",
+    "skeletal_composition": "Esqueleto Ósseo Pneumatizado Hiper-Leve",
+    "is_contemporary": false,
+    "conservation_status": "Fóssil Extinto",
+    "length": "0.5 a 1.0 m (Envergadura: 1.04 m)",
+    "height": "35 cm",
+    "weight": "2.0 a 4.5 kg",
+    "speed": "55 km/h",
+    "bite_force": "350 N",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Pterodactylus_antiquus_reconstruction.png/960px-Pterodactylus_antiquus_reconstruction.png",
+    "image_caption": "Representação em vida de Pterodactylus antiquus planando",
+    "gallery": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Pterodactylus_antiquus_reconstruction.png/960px-Pterodactylus_antiquus_reconstruction.png",
+        "caption": "[🌿 Em Vida] Reconstrução paleoartística em vida com pelagem de picnofibras e crista membranosa",
+        "type": "life_restoration",
+        "category": "life_view",
+        "author": "Nobu Tamura / Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Pterodactylus_antiquus_holotype_Bspg.jpg/960px-Pterodactylus_antiquus_holotype_Bspg.jpg",
+        "caption": "[⛏️ Holótipo] Fóssil holótipo histórico descrito por Cosimo Collini em 1784 nos calcários de Solnhofen",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Bavarian State Collection for Paleontology"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Pterodactylus_Solnhofen_slab.jpg/960px-Pterodactylus_Solnhofen_slab.jpg",
+        "caption": "[🦴 Esqueleto] Esqueleto esmagado em laje de calcário litográfico finíssimo preservando cada vértebra",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Museum für Naturkunde Berlin"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Pterodactylus_wing_membrane.jpg/960px-Pterodactylus_wing_membrane.jpg",
+        "caption": "[⛏️ Membrana] Detalhe de tecidos moles preservados com fibras estruturais de actinofibras na asa",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Bavarian State Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pterodactylus_skull_dentition.jpg/960px-Pterodactylus_skull_dentition.jpg",
+        "caption": "[💀 Crânio] Rostro reto fino com dentes cônicos pontiagudos restringidos à ponta mandibular",
+        "type": "skull",
+        "category": "skull_view",
+        "author": "Jura Museum Eichstätt"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Pterodactylus_scale.svg/960px-Pterodactylus_scale.svg.png",
+        "caption": "[⛏️ Escala] Comparativo de escala: envergadura de asas de 1.04 metro comparada ao humano",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Pterodactylus_flying_restoration.jpg/960px-Pterodactylus_flying_restoration.jpg",
+        "caption": "[🌿 Em Vida] Voo planado e batido costeiro sobre lagoas tropicais do arquipélago jurássico europeu",
+        "type": "life_restoration",
+        "category": "life_view",
+        "author": "Mark Witton / Paleoarte"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Pterodactylus_feet_pycnofibers.jpg/960px-Pterodactylus_feet_pycnofibers.jpg",
+        "caption": "[🦴 Membros] Quarto dígito manual hiperalongado que sustentava a asa de tecido membranoso",
+        "type": "skeleton",
+        "category": "skeletal_view",
+        "author": "Natural History Museum London"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Pterodactylus_juvenile_specimen.jpg/960px-Pterodactylus_juvenile_specimen.jpg",
+        "caption": "[⛏️ Fóssil] Exemplar fóssil juvenil articulado com esqueleto preservado em duas metades",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Teylers Museum"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Solnhofen_quarry_fossil_dig.jpg/960px-Solnhofen_quarry_fossil_dig.jpg",
+        "caption": "[⛏️ Estrato] Estratos de calcário de Solnhofen na Baviera alemã onde os fósseis foram extraídos",
+        "type": "fossil",
+        "category": "fossil_view",
+        "author": "Wikimedia Commons"
+      }
+    ],
+    "etymology": "Do grego 'pteron' (asa) e 'daktylos' (dedo) — 'dedo alado'.",
+    "bio": "Pterodactylus foi o primeiro réptil voador formalmente identificado na história da ciência paleozoológica em 1784. Suas asas consistiam em membranas de pele e tecido sustentadas pelo quarto dedo hiperalongado da mão.",
+    "curiosities": [
+      "Foi o primeiro pterossauro já descoberto na história da ciência.",
+      "Não era um dinossauro, mas sim um réptil voador da ordem Pterosauria parente próximo dos arcossauros.",
+      "Seu corpo era coberto por picnofibras semelhantes a pelos para isolamento térmico.",
+      "Seus ossos tinham paredes finas como casca de ovo e eram preenchidos por ar."
+    ],
+    "expert": {
+      "cladogram": [
+        "Reptilia",
+        "Archosauria",
+        "Pterosauromorpha",
+        "Pterosauria",
+        "Pterodactylus"
+      ],
+      "osteology": "Ossos ocos com trabéculas internas de sustentação. Quarto metacarpo hiperdesenvolvido.",
+      "biomechanics": "Membrana alar elástica com camadas cruzadas de actinofibras para controle aerodinâmico.",
+      "histology": "Camadas vasculares densas demonstrando taxa metabólica elevada (endotermia)."
+    },
+    "occurrences_count": 48,
+    "fossil_locations": "Alemanha (Calcários de Solnhofen e Eichstätt)",
+    "is_custom_ingested": false
   }
 ];
 
@@ -2318,6 +3006,9 @@ const state = {
   selectedSpecimen: null,
   lightboxImages: [],
   lightboxIndex: 0,
+  lightboxCategory: 'all',
+  lightboxFilteredImages: [],
+  lightboxSpecimen: null,
   galleryActiveCategory: 'all',
   globeScene: null,
   globeCamera: null,
@@ -2540,8 +3231,27 @@ function setupEventListeners() {
   if (btnZoomFeatured) {
     btnZoomFeatured.addEventListener('click', () => {
       if (state.selectedSpecimen && state.selectedSpecimen.image_url) {
-        openLightbox(0);
+        openLightbox(0, 'all');
       }
+    });
+  }
+
+  const btnOpenFullGallery = document.getElementById('btnOpenFullGalleryPopup');
+  if (btnOpenFullGallery) {
+    btnOpenFullGallery.addEventListener('click', () => {
+      if (state.selectedSpecimen) {
+        openLightbox(0, 'all');
+      }
+    });
+  }
+
+  const lightboxCategoryNav = document.getElementById('lightboxCategoryNav');
+  if (lightboxCategoryNav) {
+    lightboxCategoryNav.addEventListener('click', (e) => {
+      const btn = e.target.closest('.lightbox-cat-btn');
+      if (!btn) return;
+      const cat = btn.getAttribute('data-cat');
+      switchLightboxCategory(cat);
     });
   }
 
@@ -2745,6 +3455,10 @@ function renderCards(specimens) {
       quickBtnIcon = '🐚';
     }
     const thumbUrl = getThumbnailUrl(spec.image_url, 400);
+    const galleryCount = (spec.gallery && spec.gallery.length) || 1;
+    const photoBadge = galleryCount > 1 
+      ? `<button class="card-gallery-badge ${galleryCount >= 10 ? 'has-many' : ''}" data-id="${spec.id}" title="Abrir pop-up interativo com ${galleryCount} fotos">📸 ${galleryCount} Fotos</button>` 
+      : '';
 
     card.innerHTML = `
       <div class="card-media-wrap">
@@ -2760,6 +3474,7 @@ function renderCards(specimens) {
           <span class="badge-era ${eraClass}">${spec.era_display}</span>
           <span class="badge-skeletal ${skeletalBadgeClass}">${skeletalIcon} ${skeletalLabel}</span>
         </div>
+        ${photoBadge}
       </div>
 
       <div class="card-content">
@@ -2806,7 +3521,14 @@ function renderCards(specimens) {
 
     card.querySelector('.btn-open-wiki').addEventListener('click', () => openWikiModal(spec.id, 'tab-overview'));
     card.querySelector('.btn-quick-skeleton').addEventListener('click', () => openWikiModal(spec.id, 'tab-skeleton'));
-    card.querySelector('.card-media-wrap').addEventListener('click', () => openWikiModal(spec.id, 'tab-overview'));
+    card.querySelector('.card-media-wrap').addEventListener('click', (e) => {
+      if (e.target.closest('.card-gallery-badge')) {
+        e.stopPropagation();
+        openLightboxForSpecimen(spec.id);
+        return;
+      }
+      openWikiModal(spec.id, 'tab-overview');
+    });
 
     fragment.appendChild(card);
   });
@@ -3048,7 +3770,7 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
   };
   document.getElementById('wikiFeaturedCaption').textContent = spec.image_caption || 'Representação visual do indivíduo';
 
-  // Miniaturas
+  // Miniaturas e Pop-up Interativo
   const thumbsContainer = document.getElementById('wikiGalleryThumbs');
   thumbsContainer.innerHTML = '';
   const galleryItems = spec.gallery && spec.gallery.length > 0 ? spec.gallery : [{ url: spec.image_url, caption: spec.image_caption, category: 'life_view' }];
@@ -3056,7 +3778,9 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
   document.getElementById('galleryCount').textContent = galleryItems.length;
   state.lightboxImages = galleryItems;
 
-  galleryItems.forEach((item, idx) => {
+  // Renderiza miniaturas principais (até 4) de forma organizada sem quebrar layout
+  const previewItems = galleryItems.slice(0, 4);
+  previewItems.forEach((item, idx) => {
     const thumb = document.createElement('img');
     thumb.src = item.url;
     thumb.alt = item.caption || `Imagem ${idx + 1}`;
@@ -3074,6 +3798,22 @@ async function openWikiModal(specimenId, initialTab = 'tab-overview') {
 
     thumbsContainer.appendChild(thumb);
   });
+
+  // Botão Interativo de Abertura do Pop-up quando o animal tiver múltiplas fotos (ex.: > 4 ou 10+ no Mesozoico)
+  const btnOpenFullGallery = document.getElementById('btnOpenFullGalleryPopup');
+  const popupBtnTitle = document.getElementById('popupBtnTitle');
+  const popupBtnCount = document.getElementById('popupBtnCount');
+  if (btnOpenFullGallery) {
+    if (galleryItems.length > 4) {
+      btnOpenFullGallery.classList.remove('hidden');
+      if (popupBtnCount) popupBtnCount.textContent = galleryItems.length;
+      if (popupBtnTitle) {
+        popupBtnTitle.innerHTML = `Ver Galeria Interativa (${galleryItems.length} Fotos)`;
+      }
+    } else {
+      btnOpenFullGallery.classList.add('hidden');
+    }
+  }
 
   // Aba de Esqueleto, Ossos & Cartilagem
   renderSkeletonTab(spec);
@@ -4162,24 +4902,157 @@ function generateFallbackOccurrences(specimen) {
 // LIGHTBOX DE IMAGENS EM TELA CHEIA
 // ============================================================================
 
-function openLightbox(index = 0) {
+function openLightboxForSpecimen(specId) {
+  const spec = state.specimens.find(s => s.id === specId) || EMBEDDED_CATALOG.find(s => s.id === specId);
+  if (!spec) return;
+  state.selectedSpecimen = spec;
+  const items = spec.gallery && spec.gallery.length > 0 ? spec.gallery : [{ url: spec.image_url, caption: spec.image_caption, category: 'life_view' }];
+  state.lightboxSpecimen = spec;
+  state.lightboxImages = items;
+  openLightbox(0, 'all');
+}
+
+function openLightbox(index = 0, category = 'all') {
   if (!state.lightboxImages || state.lightboxImages.length === 0) return;
-  state.lightboxIndex = Math.max(0, Math.min(index, state.lightboxImages.length - 1));
+  
+  state.lightboxCategory = category;
+  state.lightboxSpecimen = state.selectedSpecimen;
+
+  // Título do Espécime no Cabeçalho do Pop-up
+  const titleEl = document.getElementById('lightboxSpecimenTitle');
+  if (titleEl && state.lightboxSpecimen) {
+    titleEl.textContent = `${state.lightboxSpecimen.name} (${state.lightboxSpecimen.scientific_name || state.lightboxSpecimen.genus})`;
+  }
+
+  // Atualiza contadores de categoria
+  updateLightboxCategoryCounts();
+
+  // Filtra imagens para a categoria selecionada
+  filterLightboxImages(category);
+
+  // Define índice ativo
+  state.lightboxIndex = Math.max(0, Math.min(index, state.lightboxFilteredImages.length - 1));
+
+  // Renderiza imagem principal e fita de miniaturas (filmstrip)
   updateLightboxView();
+  renderLightboxFilmstrip();
+
   lightboxModal.classList.remove('hidden');
 }
 
+function updateLightboxCategoryCounts() {
+  const allImgs = state.lightboxImages || [];
+  const countAll = allImgs.length;
+  const countLife = allImgs.filter(img => img.category === 'life_view' || img.type === 'life_restoration' || img.type === 'living_specimen').length;
+  const countSkel = allImgs.filter(img => img.category === 'skeletal_view' || img.type === 'skeleton').length;
+  const countSkull = allImgs.filter(img => img.category === 'skull_view' || img.type === 'skull' || /crânio|skull|dente|tooth/i.test(img.caption || '')).length;
+  const countFossil = allImgs.filter(img => img.category === 'fossil_view' || img.type === 'fossil' || /fóssil|escala|garra|quarry|holótipo/i.test(img.caption || '')).length;
+
+  const elAll = document.getElementById('lbCatAllCount');
+  const elLife = document.getElementById('lbCatLifeCount');
+  const elSkel = document.getElementById('lbCatSkelCount');
+  const elSkull = document.getElementById('lbCatSkullCount');
+  const elFossil = document.getElementById('lbCatFossilCount');
+
+  if (elAll) elAll.textContent = countAll;
+  if (elLife) elLife.textContent = countLife;
+  if (elSkel) elSkel.textContent = countSkel;
+  if (elSkull) elSkull.textContent = countSkull;
+  if (elFossil) elFossil.textContent = countFossil;
+
+  document.querySelectorAll('.lightbox-cat-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-cat') === state.lightboxCategory);
+  });
+}
+
+function filterLightboxImages(category) {
+  const allImgs = state.lightboxImages || [];
+  if (category === 'all') {
+    state.lightboxFilteredImages = [...allImgs];
+  } else if (category === 'life_view') {
+    state.lightboxFilteredImages = allImgs.filter(img => img.category === 'life_view' || img.type === 'life_restoration' || img.type === 'living_specimen');
+  } else if (category === 'skeletal_view') {
+    state.lightboxFilteredImages = allImgs.filter(img => img.category === 'skeletal_view' || img.type === 'skeleton');
+  } else if (category === 'skull_view') {
+    state.lightboxFilteredImages = allImgs.filter(img => img.category === 'skull_view' || img.type === 'skull' || /crânio|skull|dente|tooth/i.test(img.caption || ''));
+  } else if (category === 'fossil_view') {
+    state.lightboxFilteredImages = allImgs.filter(img => img.category === 'fossil_view' || img.type === 'fossil' || /fóssil|escala|garra|quarry|holótipo/i.test(img.caption || ''));
+  }
+  
+  if (state.lightboxFilteredImages.length === 0) {
+    state.lightboxFilteredImages = [...allImgs];
+  }
+}
+
+function switchLightboxCategory(category) {
+  state.lightboxCategory = category;
+  filterLightboxImages(category);
+  state.lightboxIndex = 0;
+  
+  document.querySelectorAll('.lightbox-cat-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-cat') === category);
+  });
+
+  updateLightboxView();
+  renderLightboxFilmstrip();
+}
+
 function updateLightboxView() {
-  const current = state.lightboxImages[state.lightboxIndex];
+  const list = state.lightboxFilteredImages || state.lightboxImages;
+  if (!list || list.length === 0) return;
+
+  const current = list[state.lightboxIndex] || list[0];
   lightboxImg.src = current.url;
   lightboxImg.onerror = () => { lightboxImg.src = PLACEHOLDER_IMAGE; };
   lightboxCaption.textContent = current.caption || 'Representação do espécime';
-  lightboxCounter.textContent = `${state.lightboxIndex + 1} de ${state.lightboxImages.length}`;
+  lightboxCounter.textContent = `${state.lightboxIndex + 1} de ${list.length}`;
+
+  const catBadge = document.getElementById('lightboxCategoryBadge');
+  if (catBadge) {
+    let catLabel = '🌿 Em Vida';
+    if (current.category === 'skeletal_view' || current.type === 'skeleton') catLabel = '🦴 Esqueleto & Museu';
+    else if (current.category === 'skull_view' || current.type === 'skull') catLabel = '💀 Crânio & Dentes';
+    else if (current.category === 'fossil_view' || current.type === 'fossil') catLabel = '⛏️ Fóssil & Escavação';
+    catBadge.textContent = catLabel;
+  }
+
+  // Destaque visual na fita inferior de miniaturas
+  document.querySelectorAll('.filmstrip-thumb').forEach((thumb, idx) => {
+    thumb.classList.toggle('active', idx === state.lightboxIndex);
+    if (idx === state.lightboxIndex) {
+      thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  });
+}
+
+function renderLightboxFilmstrip() {
+  const filmstrip = document.getElementById('lightboxFilmstrip');
+  if (!filmstrip) return;
+  filmstrip.innerHTML = '';
+
+  const list = state.lightboxFilteredImages || state.lightboxImages || [];
+  list.forEach((item, idx) => {
+    const thumb = document.createElement('img');
+    thumb.src = item.url;
+    thumb.alt = item.caption || `Foto ${idx + 1}`;
+    thumb.className = `filmstrip-thumb ${idx === state.lightboxIndex ? 'active' : ''}`;
+    thumb.loading = 'lazy';
+    thumb.referrerPolicy = 'no-referrer';
+    thumb.onerror = () => { thumb.src = PLACEHOLDER_IMAGE; };
+
+    thumb.addEventListener('click', () => {
+      state.lightboxIndex = idx;
+      updateLightboxView();
+    });
+
+    filmstrip.appendChild(thumb);
+  });
 }
 
 function navigateLightbox(dir) {
-  if (!state.lightboxImages || state.lightboxImages.length <= 1) return;
-  state.lightboxIndex = (state.lightboxIndex + dir + state.lightboxImages.length) % state.lightboxImages.length;
+  const list = state.lightboxFilteredImages || state.lightboxImages;
+  if (!list || list.length <= 1) return;
+  state.lightboxIndex = (state.lightboxIndex + dir + list.length) % list.length;
   updateLightboxView();
 }
 

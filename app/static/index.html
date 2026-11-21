@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title>Super Wiki Global da Vida na Terra | Animais de Todas as Eras</title>
-  <meta name="description" content="Super Wiki da Vida na Terra com FastAPI, GBIF, PBDB e Wikimedia Commons: explore qualquer animal contemporâneo ou fóssil, vertebrados e invertebrados, com fotos em vida, esqueletos, ossos, cartilagem e mapas georreferenciados.">
+  <title>BioAtlas — Plataforma Global de Biodiversidade e Paleontologia</title>
+  <meta name="description" content="BioAtlas: Plataforma Global de Biodiversidade e Paleontologia integrada com FastAPI, GBIF, PBDB e Wikimedia Commons. Explore qualquer animal da história da Terra com fotos em vida, esqueletos, ossos, cartilagem e mapa 3D georreferenciado.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
-  <link rel="stylesheet" href="style.css?v=8.0">
+  <link rel="stylesheet" href="style.css?v=9.0">
 </head>
 <body>
   <header class="hero">
     <div class="hero-content">
       <div class="hero-top-bar">
-        <div class="logo-tag">Universal Biodiversity Engine • GBIF & PBDB • 635 Ma ao Presente</div>
+        <div class="logo-tag">BioAtlas • Plataforma Global de Biodiversidade e Paleontologia</div>
         
         <!-- Toggle Global de Modo Especialista / Zoólogo e Paleontólogo -->
         <div class="expert-mode-toggle-wrap">
@@ -32,7 +32,8 @@
         </div>
       </div>
 
-      <h1 class="hero-title">Super Wiki da Vida no Planeta Terra</h1>
+      <h1 class="hero-title">BioAtlas</h1>
+      <p class="hero-tagline">Plataforma Global de Biodiversidade e Paleontologia</p>
       <p class="hero-subtitle">
         Da <strong>Fauna Contemporânea aos Monstros Pré-Históricos</strong>: catálogo universal com <strong>ingestão automática via APIs</strong> (GBIF, PBDB e Wikimedia Commons).
         Descubra imagens <strong>do animal em vida</strong>, <strong>esqueleto, ossos, cartilagem ou exoesqueleto</strong>, classificação de <strong>vertebrados ou invertebrados</strong> e mapas mundiais de distribuição.
@@ -356,12 +357,24 @@
                 <div id="wikiFeaturedCaption" class="featured-caption">Representação visual do indivíduo</div>
               </div>
 
-              <!-- Miniaturas -->
+              <!-- Miniaturas e Gatilho do Pop-up Interativo -->
               <div class="gallery-thumbs-header">
-                <span>Imagens & Vistas (<span id="galleryCount">0</span>)</span>
+                <span>Imagens & Múltiplas Vistas (<span id="galleryCount">0</span>)</span>
                 <span class="gallery-hint">Clique para alternar</span>
               </div>
               <div id="wikiGalleryThumbs" class="gallery-thumbs-scroll"></div>
+
+              <!-- Botão Interativo para Pop-up Separado quando houver muitas fotos -->
+              <button id="btnOpenFullGalleryPopup" class="btn-open-gallery-popup hidden" title="Abrir pop-up interativo com todas as fotos">
+                <div class="popup-btn-left">
+                  <span class="popup-camera-icon">📸</span>
+                  <div class="popup-btn-texts">
+                    <strong id="popupBtnTitle">Ver Galeria Interativa (<span id="popupBtnCount">12</span> fotos)</strong>
+                    <small>Separadas por Vida, Esqueleto, Crânio & Fósseis</small>
+                  </div>
+                </div>
+                <span class="popup-open-badge">Abrir Pop-up ↗</span>
+              </button>
             </div>
 
             <!-- Ficha Técnica e Biologia -->
@@ -549,7 +562,7 @@
       <!-- Rodapé do Modal da Wiki -->
       <div class="modal-footer wiki-modal-footer">
         <div class="footer-left-info">
-          <span class="wiki-source-note">Super Wiki da Vida na Terra • GBIF, PBDB & Wikimedia Commons APIs</span>
+          <span class="wiki-source-note">BioAtlas • Plataforma Global de Biodiversidade e Paleontologia • GBIF & PBDB</span>
         </div>
         <div class="footer-right-actions">
           <button id="btnToggleExpertInFooter" class="secondary-btn">
@@ -565,24 +578,52 @@
   </div>
 
   <!-- =======================================================================
-       MODAL: LIGHTBOX EM TELA CHEIA (POP-UP DE IMAGENS)
+       MODAL: POP-UP INTERATIVO DE IMAGENS (BIOATLAS GALLERY LIGHTBOX)
        ======================================================================= -->
-  <div id="lightboxModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Visualizador de Imagem">
+  <div id="lightboxModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Visualizador Interativo de Imagem">
     <div class="modal-backdrop" id="lightboxBackdrop"></div>
-    <div class="lightbox-container">
-      <button id="closeLightboxBtn" class="lightbox-close" aria-label="Fechar visualizador">&times;</button>
-      
-      <button id="lightboxPrevBtn" class="lightbox-arrow left" aria-label="Imagem anterior">&#10094;</button>
-
-      <div class="lightbox-content">
-        <img id="lightboxImg" src="" alt="Imagem ampliada" referrerpolicy="no-referrer">
-        <div class="lightbox-caption-bar">
-          <span id="lightboxCaption">Representação do espécime</span>
-          <span id="lightboxCounter" class="lightbox-counter">1 de 4</span>
+    <div class="lightbox-container interactive-gallery-popup">
+      <!-- Barra Superior do Pop-up com Título e Filtros por Categoria -->
+      <div class="lightbox-header-bar">
+        <div class="lightbox-title-wrap">
+          <span class="lightbox-logo-badge">📸 BioAtlas Galeria</span>
+          <h3 id="lightboxSpecimenTitle" class="lightbox-specimen-title">Espécime</h3>
         </div>
+        
+        <!-- Categorias Interativas dentro do Pop-up -->
+        <div class="lightbox-category-nav" id="lightboxCategoryNav">
+          <button class="lightbox-cat-btn active" data-cat="all">🌟 Todas (<span id="lbCatAllCount">0</span>)</button>
+          <button class="lightbox-cat-btn" data-cat="life_view">🌿 Em Vida (<span id="lbCatLifeCount">0</span>)</button>
+          <button class="lightbox-cat-btn" data-cat="skeletal_view">🦴 Esqueleto (<span id="lbCatSkelCount">0</span>)</button>
+          <button class="lightbox-cat-btn" data-cat="skull_view">💀 Crânio & Dentes (<span id="lbCatSkullCount">0</span>)</button>
+          <button class="lightbox-cat-btn" data-cat="fossil_view">⛏️ Fósseis & Escala (<span id="lbCatFossilCount">0</span>)</button>
+        </div>
+
+        <button id="closeLightboxBtn" class="lightbox-close" aria-label="Fechar pop-up">&times;</button>
       </div>
 
-      <button id="lightboxNextBtn" class="lightbox-arrow right" aria-label="Próxima imagem">&#10095;</button>
+      <!-- Palco Central com Imagem e Setas -->
+      <div class="lightbox-main-stage">
+        <button id="lightboxPrevBtn" class="lightbox-arrow left" aria-label="Imagem anterior">&#10094;</button>
+
+        <div class="lightbox-content">
+          <div class="lightbox-image-box">
+            <img id="lightboxImg" src="" alt="Imagem ampliada" referrerpolicy="no-referrer">
+            <span id="lightboxCategoryBadge" class="lightbox-category-badge">🌿 Em Vida</span>
+          </div>
+          <div class="lightbox-caption-bar">
+            <span id="lightboxCaption">Representação do espécime</span>
+            <span id="lightboxCounter" class="lightbox-counter">1 de 12</span>
+          </div>
+        </div>
+
+        <button id="lightboxNextBtn" class="lightbox-arrow right" aria-label="Próxima imagem">&#10095;</button>
+      </div>
+
+      <!-- Fita Inferior de Miniaturas Interativas (Filmstrip) -->
+      <div class="lightbox-filmstrip-wrap">
+        <div id="lightboxFilmstrip" class="lightbox-filmstrip"></div>
+      </div>
     </div>
   </div>
 
@@ -590,7 +631,7 @@
   <footer class="footer">
     <div class="footer-content">
       <p>
-        <strong>Super Wiki da Vida no Planeta Terra</strong> — FastAPI Engine com ingestão em tempo real de animais contemporâneos e fósseis via GBIF, PBDB e Wikimedia Commons.
+        <strong>BioAtlas — Plataforma Global de Biodiversidade e Paleontologia</strong> — FastAPI Engine com ingestão em tempo real de animais contemporâneos e fósseis via GBIF, PBDB e Wikimedia Commons.
       </p>
       <p class="sources">
         Consome dados científicos abertos da 
@@ -602,6 +643,6 @@
 
   <!-- Three.js CDN para o Globo Terrestre 3D Interativo -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="app.js?v=8.0"></script>
+  <script src="app.js?v=9.0"></script>
 </body>
 </html>

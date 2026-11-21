@@ -26,12 +26,12 @@ from app.services.knowledge_engine import (
 )
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("superwiki_api")
+logger = logging.getLogger("bioatlas_api")
 
 app = FastAPI(
-    title="Super Wiki Global da Vida na Terra",
-    description="Enciclopédia universal com FastAPI, GBIF, PBDB e Wikimedia Commons cobrindo animais de todas as eras, contemporâneos e fósseis, vertebrados e invertebrados.",
-    version="3.0.0"
+    title="BioAtlas — Plataforma Global de Biodiversidade e Paleontologia",
+    description="Plataforma global com FastAPI, GBIF, PBDB e Wikimedia Commons cobrindo a vida de todas as eras geológicas, espécies contemporâneas e fósseis, vertebrados e invertebrados.",
+    version="4.0.0"
 )
 
 # Enable CORS for all origins
@@ -419,7 +419,7 @@ async def ingest_specimen_endpoint(req: IngestRequest):
             )
         return IngestResponse(
             success=True,
-            message=f"Espécime '{specimen.name}' ({specimen.skeletal_type.capitalize()}) catalogado com sucesso na Super Wiki!",
+            message=f"Espécime '{specimen.name}' ({specimen.skeletal_type.capitalize()}) catalogado com sucesso no BioAtlas!",
             specimen=specimen
         )
     except Exception as e:
