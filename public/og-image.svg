@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="BioAtlas — Descubra toda a vida da Terra">
+  <defs>
+    <radialGradient id="ogGlowTopRight" cx="85%" cy="14%" r="62%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.22"/>
+      <stop offset="55%" stop-color="#4ADE80" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#0F141B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ogTimeBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A78BFA"/>
+      <stop offset="36%" stop-color="#60A5FA"/>
+      <stop offset="68%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#4ADE80"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0F141B"/>
+  <rect width="1200" height="630" fill="url(#ogGlowTopRight)"/>
+  <g transform="translate(112 162) scale(1.42)">
+    <circle cx="50" cy="50" r="44" fill="none" stroke="#E6EDF5" stroke-opacity="0.34" stroke-width="2.2"/>
+    <path d="M48.99 51.49 Q48.49 51.33 47.99 50.86" stroke="#A78BFA" stroke-width="2.05" stroke-linecap="round" fill="none"/>
+    <path d="M47.99 50.86 Q47.49 50.38 47.27 49.54" stroke="#9C8FFA" stroke-width="2.19" stroke-linecap="round" fill="none"/>
+    <path d="M47.27 49.54 Q47.08 48.69 47.45 47.68" stroke="#9591FA" stroke-width="2.34" stroke-linecap="round" fill="none"/>
+    <path d="M47.45 47.68 Q47.86 46.68 48.92 45.93" stroke="#8E94FA" stroke-width="2.49" stroke-linecap="round" fill="none"/>
+    <path d="M48.92 45.93 Q50 45.21 51.55 45.21" stroke="#8797FA" stroke-width="2.66" stroke-linecap="round" fill="none"/>
+    <path d="M51.55 45.21 Q53.1 45.25 54.57 46.26" stroke="#8099FA" stroke-width="2.83" stroke-linecap="round" fill="none"/>
+    <path d="M54.57 46.26 Q56.06 47.3 56.79 49.23" stroke="#799CFA" stroke-width="3.01" stroke-linecap="round" fill="none"/>
+    <path d="M56.79 49.23 Q57.53 51.17 57 53.46" stroke="#729EFA" stroke-width="3.19" stroke-linecap="round" fill="none"/>
+    <path d="M57 53.46 Q56.45 55.75 54.53 57.57" stroke="#6BA1FA" stroke-width="3.37" stroke-linecap="round" fill="none"/>
+    <path d="M54.53 57.57 Q52.58 59.36 49.68 59.86" stroke="#64A4FA" stroke-width="3.56" stroke-linecap="round" fill="none"/>
+    <path d="M49.68 59.86 Q46.75 60.33 43.78 59.01" stroke="#5EA6FA" stroke-width="3.75" stroke-linecap="round" fill="none"/>
+    <path d="M43.78 59.01 Q40.8 57.64 38.86 54.63" stroke="#5AA9FA" stroke-width="3.94" stroke-linecap="round" fill="none"/>
+    <path d="M38.86 54.63 Q36.95 51.58 37 47.66" stroke="#55ABF9" stroke-width="4.14" stroke-linecap="round" fill="none"/>
+    <path d="M37 47.66 Q37.09 43.73 39.49 40.2" stroke="#51AEF9" stroke-width="4.33" stroke-linecap="round" fill="none"/>
+    <path d="M39.49 40.2 Q41.93 36.67 46.18 34.9" stroke="#4CB1F9" stroke-width="4.53" stroke-linecap="round" fill="none"/>
+    <path d="M46.18 34.9 Q50.47 33.17 55.35 34.07" stroke="#48B4F9" stroke-width="4.74" stroke-linecap="round" fill="none"/>
+    <path d="M55.35 34.07 Q60.23 35.04 64.1 38.73" stroke="#43B6F9" stroke-width="4.94" stroke-linecap="round" fill="none"/>
+    <path d="M64.1 38.73 Q67.92 42.48 69.22 48.03" stroke="#3FB9F8" stroke-width="5.15" stroke-linecap="round" fill="none"/>
+    <path d="M69.22 48.03 Q70.46 53.61 68.38 59.34" stroke="#3ABCF8" stroke-width="5.35" stroke-linecap="round" fill="none"/>
+    <path d="M68.38 59.34 Q66.24 65.06 61.06 68.94" stroke="#39BFF2" stroke-width="5.56" stroke-linecap="round" fill="none"/>
+    <path d="M61.06 68.94 Q55.84 72.8 48.98 73.26" stroke="#3BC2E4" stroke-width="5.77" stroke-linecap="round" fill="none"/>
+    <path d="M48.98 73.26 Q42.11 73.66 35.77 70.11" stroke="#3DC6D7" stroke-width="5.99" stroke-linecap="round" fill="none"/>
+    <path d="M35.77 70.11 Q29.44 66.49 25.86 59.72" stroke="#3FCACA" stroke-width="6.20" stroke-linecap="round" fill="none"/>
+    <path d="M25.86 59.72 Q22.36 52.88 23.07 44.84" stroke="#41CDBC" stroke-width="6.41" stroke-linecap="round" fill="none"/>
+    <path d="M23.07 44.84 Q23.9 36.77 29.13 30.1" stroke="#43D1AF" stroke-width="6.63" stroke-linecap="round" fill="none"/>
+    <path d="M29.13 30.1 Q34.47 23.46 42.9 20.57" stroke="#45D5A1" stroke-width="6.85" stroke-linecap="round" fill="none"/>
+    <path d="M42.9 20.57 Q51.39 17.77 60.44 20.04" stroke="#47D894" stroke-width="7.07" stroke-linecap="round" fill="none"/>
+    <path d="M60.44 20.04 Q69.5 22.42 76.16 29.56" stroke="#4ADE80" stroke-width="7.29" stroke-linecap="round" fill="none"/>
+    <circle cx="87.3" cy="26.7" r="4.8" fill="#FFFFFF"/>
+  </g>
+  <text x="280" y="264" fill="#E6EDF5" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="94" font-weight="600" letter-spacing="-2.4">BıoAtlas</text>
+  <circle cx="352" cy="197" r="7.5" fill="#4ADE80"/>
+  <text x="116" y="392" fill="#E6EDF5" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="46" font-weight="600" letter-spacing="-1.1">Descubra toda a vida da Terra.</text>
+  <text x="116" y="446" fill="#94A3B8" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="25" font-weight="400">Atlas global de biodiversidade e paleontologia · 3.800 Ma até hoje</text>
+  <rect x="116" y="518" width="968" height="6" rx="3" fill="url(#ogTimeBar)"/>
+</svg>

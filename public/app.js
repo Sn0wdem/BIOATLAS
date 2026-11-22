@@ -355,15 +355,15 @@ function applyHabitatTheme(habitat) {
   const metaTheme = document.getElementById('metaThemeColor');
   if (metaTheme) {
     const themeHexMap = {
-      all: '#090d12',
-      aquatico: '#04101f',
-      terrestre: '#07110b',
-      aereo: '#080f1f',
-      anfibio: '#051314',
-      bentonico: '#040b18',
-      microbiologico: '#090d1e',
+      all: '#0F141B',
+      aquatico: '#0A1522',
+      terrestre: '#0C1713',
+      aereo: '#0D1524',
+      anfibio: '#0A181A',
+      bentonico: '#0B1320',
+      microbiologico: '#131324',
     };
-    metaTheme.setAttribute('content', themeHexMap[key] || '#090d12');
+    metaTheme.setAttribute('content', themeHexMap[key] || '#0F141B');
   }
 
   syncUrlParams();

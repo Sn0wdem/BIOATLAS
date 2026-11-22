@@ -3,29 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#090d12" id="metaThemeColor">
+  <meta name="theme-color" content="#0F141B" id="metaThemeColor">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="referrer" content="no-referrer">
-  <title>BioAtlas — Atlas Vivo de Biodiversidade e Paleontologia</title>
-  <meta name="description" content="Explore toda a vida da Terra dos oceanos profundos à era dos dinossauros. Plataforma integrada com GBIF, PBDB e Wikimedia Commons, globo 3D paleocontinental e comparador biométrico.">
-  <meta property="og:title" content="BioAtlas — Atlas Vivo de Biodiversidade e Paleontologia">
-  <meta property="og:description" content="Explore toda a vida da Terra dos oceanos profundos à era dos dinossauros. Plataforma integrada com GBIF, PBDB e Wikimedia Commons, globo 3D paleocontinental e comparador biométrico.">
+  <title>BioAtlas — Atlas Global de Biodiversidade e Paleontologia</title>
+  <meta name="description" content="Da primeira célula ao presente. Atlas global de biodiversidade e paleontologia — 3.800 Ma até hoje, com GBIF, PBDB, Wikimedia Commons e globo 3D paleogeográfico.">
+  <meta property="og:title" content="BioAtlas — Descubra toda a vida da Terra.">
+  <meta property="og:description" content="Atlas global de biodiversidade e paleontologia · 3.800 Ma até hoje.">
+  <meta property="og:image" content="/og-image.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b1220%22/><circle cx=%2250%22 cy=%2250%22 r=%2230%22 fill=%22none%22 stroke=%22%2338bdf8%22 stroke-width=%228%22/><path d=%22M35 55 Q50 30 68 48%22 fill=%22none%22 stroke=%22%2322c55e%22 stroke-width=%227%22 stroke-linecap=%22round%22/></svg>">
-  <link rel="stylesheet" href="style.css?v=15.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <link rel="stylesheet" href="style.css?v=16.2">
 </head>
 <body data-theme-habitat="all" data-audience-mode="explorer">
 
   <!-- =======================================================================
-       TOP BAR — CONTRATO LIMPO DE 3 ZONAS
+       TOP BAR — IDENTIDADE VISUAL BIOATLAS (LOGO HORIZONTAL EM DESTAQUE)
        ======================================================================= -->
   <nav class="topbar" aria-label="Navegação principal">
     <div class="topbar-inner">
-      <!-- Zona 1: Wordmark limpa em linha única -->
-      <a href="#top" class="brand-wordmark" id="brandHomeLink">BioAtlas</a>
+      <!-- Zona 1: Logo horizontal oficial (Símbolo espiral + Wordmark BioAtlas) -->
+      <a href="#top" class="brand-wordmark" id="brandHomeLink" aria-label="BioAtlas">
+        <img src="/assets/brand/bioatlas-symbol.svg" alt="" class="brand-symbol-nav" width="44" height="44" aria-hidden="true">
+        <span class="brand-wordmark-text" aria-hidden="true">B<span class="brand-dotless-i">ı</span>oAtlas</span>
+      </a>
 
       <!-- Zona 2: Links de navegação tipográficos limpos (1 linha) -->
       <div class="topbar-nav">
@@ -41,8 +48,21 @@
         </button>
       </div>
 
-      <!-- Zona 3: 1 ação primária (Autenticação Google) -->
+      <!-- Zona 3: GitHub do autor + Autenticação Google -->
       <div class="topbar-action" id="authControls">
+        <a
+          href="https://github.com/Sn0wdem"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="topbar-github-btn"
+          title="GitHub — Guilherme Albuquerque Nepomuceno"
+          aria-label="GitHub de Guilherme Albuquerque Nepomuceno"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+
         <button type="button" id="btnGoogleSignIn" class="btn-topbar-primary">
           <svg viewBox="0 0 48 48" width="16" height="16" aria-hidden="true">
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -70,10 +90,14 @@
     <div class="hero-ambient-layer" aria-hidden="true"></div>
     <div class="hero-inner">
       <div class="hero-intro">
-        <p class="hero-kicker">Atlas Global de Biodiversidade e Paleontologia · GBIF, PBDB &amp; Wikimedia</p>
-        <h1 class="hero-title">Descubra toda a vida da Terra, dos oceanos profundos à era dos dinossauros.</h1>
+        <div class="hero-brand-showcase" aria-hidden="true">
+          <img src="/assets/brand/bioatlas-symbol.svg" alt="" class="hero-brand-symbol" width="76" height="76">
+          <span class="brand-wordmark-text hero-brand-wordmark">B<span class="brand-dotless-i">ı</span>oAtlas</span>
+        </div>
+        <p class="hero-kicker">Da primeira célula ao presente · 3.800 Ma → hoje</p>
+        <h1 class="hero-title">Descubra toda a vida da Terra.</h1>
         <p class="hero-subtitle">
-          Feito para despertar a curiosidade de jovens exploradores e oferecer precisão taxonômica, osteologia, cladogramas e paleogeografia 3D para biólogos e pesquisadores.
+          Atlas global de biodiversidade e paleontologia — dos oceanos profundos à era dos dinossauros, unindo descoberta interativa, osteologia, cladogramas e globo 3D paleogeográfico.
         </p>
       </div>
 
@@ -502,6 +526,14 @@
       </div>
 
       <div class="timeline-card">
+        <div class="brand-time-spectrum" aria-hidden="true">
+          <div class="brand-time-spectrum-bar"></div>
+          <div class="brand-time-spectrum-labels">
+            <span class="spectrum-origin">3.800 Ma · origem</span>
+            <span class="spectrum-present">hoje</span>
+          </div>
+        </div>
+
         <div class="timeline-era-bar" aria-hidden="true">
           <span class="tl-seg tl-precambrian">Pré-Cambriano</span>
           <span class="tl-seg tl-paleozoic">Paleozoico</span>
@@ -1129,16 +1161,41 @@
     </div>
   </div>
 
-  <!-- Rodapé Editorial Limpo -->
+  <!-- Rodapé Editorial — Versão Vertical Oficial da Marca & Créditos -->
   <footer class="footer">
     <div class="page-shell footer-inner">
-      <p class="footer-brand"><strong>BioAtlas</strong> — Atlas Global de Biodiversidade e Paleontologia</p>
-      <p class="footer-sources">
-        Dados abertos de
-        <a href="https://www.gbif.org/" target="_blank" rel="noopener">GBIF</a>,
-        <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a> e
-        <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>.
-      </p>
+      <div class="footer-brand-vertical">
+        <a href="#top" class="brand-lockup-vertical" aria-label="BioAtlas — voltar ao topo">
+          <img src="/assets/brand/bioatlas-symbol.svg" alt="" class="brand-symbol-footer" width="64" height="64" aria-hidden="true">
+          <span class="brand-wordmark-text brand-wordmark-footer" aria-hidden="true">B<span class="brand-dotless-i">ı</span>oAtlas</span>
+        </a>
+        <p class="footer-tagline">Da primeira célula ao presente · 3.800 Ma → hoje</p>
+      </div>
+      <div class="footer-meta-col">
+        <p class="footer-brand">Atlas global de biodiversidade e paleontologia</p>
+        <p class="footer-sources">
+          Dados abertos de
+          <a href="https://www.gbif.org/" target="_blank" rel="noopener">GBIF</a>,
+          <a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a>,
+          <a href="https://openalex.org/" target="_blank" rel="noopener">OpenAlex</a> e
+          <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>.
+        </p>
+        <p class="footer-author">
+          Desenvolvido por
+          <a
+            href="https://github.com/Sn0wdem"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-github-link"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+            <span>Guilherme Albuquerque Nepomuceno</span>
+            <span class="footer-github-handle">@Sn0wdem</span>
+          </a>
+        </p>
+      </div>
     </div>
   </footer>
 
@@ -1256,6 +1313,19 @@
               </span>
               <span class="mobile-sheet-chevron" aria-hidden="true">›</span>
             </button>
+
+            <a
+              href="https://github.com/Sn0wdem"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mobile-sheet-row mobile-sheet-link-row"
+            >
+              <span class="mobile-sheet-row-texts">
+                <strong>GitHub · Guilherme Albuquerque Nepomuceno</strong>
+                <small>github.com/Sn0wdem</small>
+              </span>
+              <span class="mobile-sheet-chevron" aria-hidden="true">↗</span>
+            </a>
           </div>
         </div>
       </div>
@@ -1263,8 +1333,8 @@
   </div>
 
   <!-- Bundle Firebase (Auth + Firestore), Globo 3D (lazy-load Three.js) e Aplicação Modular -->
-  <script src="firebase-bundle.js?v=15.0"></script>
-  <script src="globe3d.js?v=15.0"></script>
-  <script src="app.js?v=15.0"></script>
+  <script src="firebase-bundle.js?v=16.1"></script>
+  <script src="globe3d.js?v=16.0"></script>
+  <script src="app.js?v=16.0"></script>
 </body>
 </html>

@@ -1191,9 +1191,7 @@ app.use(express.static(PUBLIC_DIR));
 
 app.get('/favicon.ico', (_req, res) => {
   res.setHeader('Content-Type', 'image/svg+xml');
-  res.send(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌍</text></svg>'
-  );
+  res.sendFile(path.join(PUBLIC_DIR, 'favicon.svg'));
 });
 
 app.get('/', (_req, res) => {
