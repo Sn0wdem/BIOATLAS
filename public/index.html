@@ -2,7 +2,10 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#090d12" id="metaThemeColor">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="referrer" content="no-referrer">
   <title>BioAtlas — Atlas Vivo de Biodiversidade e Paleontologia</title>
   <meta name="description" content="Explore toda a vida da Terra dos oceanos profundos à era dos dinossauros. Plataforma integrada com GBIF, PBDB e Wikimedia Commons, globo 3D paleocontinental e comparador biométrico.">
@@ -12,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b1220%22/><circle cx=%2250%22 cy=%2250%22 r=%2230%22 fill=%22none%22 stroke=%22%2338bdf8%22 stroke-width=%228%22/><path d=%22M35 55 Q50 30 68 48%22 fill=%22none%22 stroke=%22%2322c55e%22 stroke-width=%227%22 stroke-linecap=%22round%22/></svg>">
-  <link rel="stylesheet" href="style.css?v=14.0">
+  <link rel="stylesheet" href="style.css?v=15.0">
 </head>
 <body data-theme-habitat="all" data-audience-mode="explorer">
 
@@ -47,7 +50,8 @@
             <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
             <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l7.98-6.19C6.51 42.62 14.62 48 24 48z"/>
           </svg>
-          <span>Entrar com Google</span>
+          <span class="auth-label-full">Entrar com Google</span>
+          <span class="auth-label-short">Entrar</span>
         </button>
 
         <div id="authUserPill" class="auth-user-menu hidden">
@@ -1138,9 +1142,129 @@
     </div>
   </footer>
 
+  <!-- =======================================================================
+       NAVEGAÇÃO MOBILE INFERIOR (THUMB-ZONE · VISÍVEL EM TELAS <= 860px)
+       ======================================================================= -->
+  <nav id="mobileBottomNav" class="mobile-bottom-nav" aria-label="Navegação mobile">
+    <button type="button" id="mobileNavExplore" class="mobile-tab-btn active" data-mobile-tab="explore">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <span>Explorar</span>
+    </button>
+
+    <button type="button" id="mobileNavQuiz" class="mobile-tab-btn" data-mobile-tab="quiz">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      <span>Quiz</span>
+    </button>
+
+    <button type="button" id="mobileNavFavorites" class="mobile-tab-btn" data-mobile-tab="favorites">
+      <span class="mobile-tab-icon-wrap">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span id="mobileFavBadge" class="mobile-tab-badge tabular-num hidden">0</span>
+      </span>
+      <span>Favoritos</span>
+    </button>
+
+    <button type="button" id="mobileNavCollections" class="mobile-tab-btn" data-mobile-tab="collections">
+      <span class="mobile-tab-icon-wrap">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span id="mobileColBadge" class="mobile-tab-badge tabular-num hidden">0</span>
+      </span>
+      <span>Coleções</span>
+    </button>
+
+    <button type="button" id="mobileNavMenu" class="mobile-tab-btn" data-mobile-tab="menu" aria-expanded="false" aria-controls="mobileMenuSheet">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+      </svg>
+      <span>Mais</span>
+    </button>
+  </nav>
+
+  <!-- =======================================================================
+       BOTTOM SHEET MOBILE: ATALHOS, LINHA DO TEMPO, ÁRVORE & MODO DE LEITURA
+       ======================================================================= -->
+  <div id="mobileMenuSheet" class="mobile-sheet hidden" role="dialog" aria-modal="true" aria-labelledby="mobileSheetTitle">
+    <div class="mobile-sheet-backdrop" id="mobileSheetBackdrop"></div>
+    <div class="mobile-sheet-panel">
+      <div class="mobile-sheet-handle" aria-hidden="true"></div>
+      <div class="mobile-sheet-header">
+        <div>
+          <span class="modal-kicker">Navegação Rápida</span>
+          <h3 id="mobileSheetTitle">Explorar BioAtlas</h3>
+        </div>
+        <button type="button" id="btnCloseMobileSheet" class="close-btn" aria-label="Fechar menu">&times;</button>
+      </div>
+
+      <div class="mobile-sheet-body">
+        <div class="mobile-sheet-section">
+          <span class="mobile-sheet-label">Modo de Leitura</span>
+          <div class="mobile-sheet-mode-grid" role="group" aria-label="Alternar modo de leitura">
+            <button type="button" id="mobileSheetModeExplorer" class="audience-btn active" data-mode="explorer">Modo Explorador</button>
+            <button type="button" id="mobileSheetModeResearcher" class="audience-btn" data-mode="researcher">Modo Pesquisador</button>
+          </div>
+        </div>
+
+        <div class="mobile-sheet-section">
+          <span class="mobile-sheet-label">Seções &amp; Ferramentas</span>
+          <div class="mobile-sheet-list">
+            <button type="button" class="mobile-sheet-row" id="mobileActionTimeline">
+              <span class="mobile-sheet-row-texts">
+                <strong>Linha do Tempo Geológica</strong>
+                <small>Viaje de 3.800 Ma até hoje e explore as 5 extinções</small>
+              </span>
+              <span class="mobile-sheet-chevron" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mobile-sheet-row" id="mobileActionTree">
+              <span class="mobile-sheet-row-texts">
+                <strong>Árvore da Vida Interativa</strong>
+                <small>Ramos evolutivos e clados de todo o acervo</small>
+              </span>
+              <span class="mobile-sheet-chevron" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mobile-sheet-row" id="mobileActionFilters">
+              <span class="mobile-sheet-row-texts">
+                <strong>Filtros Avançados</strong>
+                <small>Estrutura corporal, grupo taxonômico, período e dieta</small>
+              </span>
+              <span class="mobile-sheet-chevron" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mobile-sheet-row" id="mobileActionRandom">
+              <span class="mobile-sheet-row-texts">
+                <strong>Surpreenda-me</strong>
+                <small>Abrir um espécime aleatório do acervo global</small>
+              </span>
+              <span class="mobile-sheet-chevron" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mobile-sheet-row" id="mobileActionTop">
+              <span class="mobile-sheet-row-texts">
+                <strong>Busca &amp; Catálogo via API</strong>
+                <small>Ir para a barra de pesquisa no topo</small>
+              </span>
+              <span class="mobile-sheet-chevron" aria-hidden="true">›</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bundle Firebase (Auth + Firestore), Globo 3D (lazy-load Three.js) e Aplicação Modular -->
-  <script src="firebase-bundle.js?v=12.0"></script>
-  <script src="globe3d.js?v=12.0"></script>
-  <script src="app.js?v=12.0"></script>
+  <script src="firebase-bundle.js?v=15.0"></script>
+  <script src="globe3d.js?v=15.0"></script>
+  <script src="app.js?v=15.0"></script>
 </body>
 </html>

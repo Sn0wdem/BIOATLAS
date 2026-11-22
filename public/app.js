@@ -352,6 +352,20 @@ function applyHabitatTheme(habitat) {
   if (descEl) {
     descEl.textContent = HABITAT_META[key].description;
   }
+  const metaTheme = document.getElementById('metaThemeColor');
+  if (metaTheme) {
+    const themeHexMap = {
+      all: '#090d12',
+      aquatico: '#04101f',
+      terrestre: '#07110b',
+      aereo: '#080f1f',
+      anfibio: '#051314',
+      bentonico: '#040b18',
+      microbiologico: '#090d1e',
+    };
+    metaTheme.setAttribute('content', themeHexMap[key] || '#090d12');
+  }
+
   syncUrlParams();
 }
 
@@ -363,9 +377,13 @@ function setAudienceMode(mode, notify = false) {
 
   const btnExp = document.getElementById('btnModeExplorer');
   const btnRes = document.getElementById('btnModeResearcher');
+  const mobExp = document.getElementById('mobileSheetModeExplorer');
+  const mobRes = document.getElementById('mobileSheetModeResearcher');
   const modalToggle = document.getElementById('modalExpertToggle');
   if (btnExp) btnExp.classList.toggle('active', normalized === 'explorer');
   if (btnRes) btnRes.classList.toggle('active', normalized === 'researcher');
+  if (mobExp) mobExp.classList.toggle('active', normalized === 'explorer');
+  if (mobRes) mobRes.classList.toggle('active', normalized === 'researcher');
   if (modalToggle) modalToggle.checked = state.isExpertMode;
 
   syncUrlParams();
@@ -464,11 +482,29 @@ function saveLocalPersonalData() {
 function updatePersonalBadges() {
   const favBadge = document.getElementById('favoritesCountBadge');
   const colBadge = document.getElementById('collectionsCountBadge');
-  if (favBadge) favBadge.textContent = String(state.favoritesSet.size);
-  if (colBadge) colBadge.textContent = String(state.collections.length);
+  const favCount = state.favoritesSet.size;
+  const colCount = state.collections.length;
+  if (favBadge) favBadge.textContent = String(favCount);
+  if (colBadge) colBadge.textContent = String(colCount);
 
   const favBtn = document.getElementById('btnFavoritesFilter');
   if (favBtn) favBtn.classList.toggle('active', state.favoritesOnly);
+
+  const mobFavBadge = document.getElementById('mobileFavBadge');
+  const mobColBadge = document.getElementById('mobileColBadge');
+  if (mobFavBadge) {
+    mobFavBadge.textContent = favCount > 99 ? '99+' : String(favCount);
+    mobFavBadge.classList.toggle('hidden', favCount === 0);
+  }
+  if (mobColBadge) {
+    mobColBadge.textContent = colCount > 99 ? '99+' : String(colCount);
+    mobColBadge.classList.toggle('hidden', colCount === 0);
+  }
+
+  const mobFavBtn = document.getElementById('mobileNavFavorites');
+  const mobExploreBtn = document.getElementById('mobileNavExplore');
+  if (mobFavBtn) mobFavBtn.classList.toggle('active', state.favoritesOnly);
+  if (mobExploreBtn && state.favoritesOnly) mobExploreBtn.classList.remove('active');
 }
 
 function initFirebaseIntegration() {
@@ -1117,9 +1153,11 @@ function setupEventListeners() {
     const colm = document.getElementById('collectionsModal');
     const qm = document.getElementById('quizModal');
     const em = document.getElementById('exportModal');
+    const ms = document.getElementById('mobileMenuSheet');
 
     if (e.key === 'Escape') {
       if (lb && !lb.classList.contains('hidden')) closeLightbox();
+      else if (ms && !ms.classList.contains('hidden')) closeMobileMenuSheet();
       else if (em && !em.classList.contains('hidden')) closeExportModal();
       else if (qm && !qm.classList.contains('hidden')) closeQuizModal();
       else if (cm && !cm.classList.contains('hidden')) closeCompareModal();
@@ -1147,6 +1185,198 @@ function setupEventListeners() {
 
   const reloadBtn = document.getElementById('reloadSuggestionsBtn');
   if (reloadBtn) reloadBtn.addEventListener('click', () => resetAllFilters());
+
+  setupMobileExperience();
+}
+
+function setMobileActiveTab(tabKey) {
+  document.querySelectorAll('#mobileBottomNav .mobile-tab-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.getAttribute('data-mobile-tab') === tabKey);
+  });
+}
+
+function openMobileMenuSheet() {
+  const sheet = document.getElementById('mobileMenuSheet');
+  const menuBtn = document.getElementById('mobileNavMenu');
+  if (!sheet) return;
+  sheet.classList.remove('hidden');
+  document.body.classList.add('mobile-sheet-open');
+  if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
+  setMobileActiveTab('menu');
+}
+
+function closeMobileMenuSheet() {
+  const sheet = document.getElementById('mobileMenuSheet');
+  const menuBtn = document.getElementById('mobileNavMenu');
+  if (!sheet) return;
+  sheet.classList.add('hidden');
+  document.body.classList.remove('mobile-sheet-open');
+  if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+  setMobileActiveTab(state.favoritesOnly ? 'favorites' : 'explore');
+}
+
+function setupMobileExperience() {
+  const mobExplore = document.getElementById('mobileNavExplore');
+  const mobQuiz = document.getElementById('mobileNavQuiz');
+  const mobFavs = document.getElementById('mobileNavFavorites');
+  const mobCols = document.getElementById('mobileNavCollections');
+  const mobMenu = document.getElementById('mobileNavMenu');
+
+  if (mobExplore) {
+    mobExplore.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      if (state.favoritesOnly) {
+        state.favoritesOnly = false;
+        updatePersonalBadges();
+        loadCatalog();
+      }
+      setMobileActiveTab('explore');
+      const catEl = document.getElementById('catalogo');
+      if (catEl) catEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  if (mobQuiz) {
+    mobQuiz.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      setMobileActiveTab('quiz');
+      openQuizModal();
+    });
+  }
+
+  if (mobFavs) {
+    mobFavs.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      state.favoritesOnly = !state.favoritesOnly;
+      if (state.favoritesOnly) state.activeCollectionId = null;
+      updatePersonalBadges();
+      setMobileActiveTab(state.favoritesOnly ? 'favorites' : 'explore');
+      loadCatalog();
+      const catEl = document.getElementById('catalogo');
+      if (catEl) catEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  if (mobCols) {
+    mobCols.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      setMobileActiveTab('collections');
+      openCollectionsModal(null);
+    });
+  }
+
+  if (mobMenu) {
+    mobMenu.addEventListener('click', () => {
+      const sheet = document.getElementById('mobileMenuSheet');
+      if (sheet && !sheet.classList.contains('hidden')) {
+        closeMobileMenuSheet();
+      } else {
+        openMobileMenuSheet();
+      }
+    });
+  }
+
+  ['btnCloseMobileSheet', 'mobileSheetBackdrop'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', closeMobileMenuSheet);
+  });
+
+  const mobExp = document.getElementById('mobileSheetModeExplorer');
+  const mobRes = document.getElementById('mobileSheetModeResearcher');
+  if (mobExp) {
+    mobExp.addEventListener('click', () => {
+      setAudienceMode('explorer', true);
+      closeMobileMenuSheet();
+    });
+  }
+  if (mobRes) {
+    mobRes.addEventListener('click', () => {
+      setAudienceMode('researcher', true);
+      closeMobileMenuSheet();
+    });
+  }
+
+  const mobTimeline = document.getElementById('mobileActionTimeline');
+  if (mobTimeline) {
+    mobTimeline.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      const el = document.getElementById('linha-do-tempo');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  const mobTree = document.getElementById('mobileActionTree');
+  if (mobTree) {
+    mobTree.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      const el = document.getElementById('arvore-da-vida');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  const mobFilters = document.getElementById('mobileActionFilters');
+  if (mobFilters) {
+    mobFilters.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      const panel = document.getElementById('advancedFiltersPanel');
+      const toggleBtn = document.getElementById('btnToggleFiltersDrawer');
+      if (panel) panel.classList.remove('hidden');
+      if (toggleBtn) {
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        toggleBtn.classList.add('active');
+      }
+      const catEl = document.getElementById('catalogo');
+      if (catEl) catEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  const mobRandom = document.getElementById('mobileActionRandom');
+  if (mobRandom) {
+    mobRandom.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      discoverRandomSpecimen('all');
+    });
+  }
+
+  const mobTop = document.getElementById('mobileActionTop');
+  if (mobTop) {
+    mobTop.addEventListener('click', () => {
+      closeMobileMenuSheet();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        setTimeout(() => searchInput.focus(), 320);
+      }
+    });
+  }
+
+  // Gesto de swipe horizontal no Lightbox para navegação fluida por toque
+  const lbStage = document.querySelector('#lightboxModal .lightbox-main-stage');
+  if (lbStage) {
+    let swipeStartX = 0;
+    let swipeStartY = 0;
+    lbStage.addEventListener(
+      'touchstart',
+      (e) => {
+        if (e.touches.length !== 1) return;
+        swipeStartX = e.touches[0].clientX;
+        swipeStartY = e.touches[0].clientY;
+      },
+      { passive: true }
+    );
+    lbStage.addEventListener(
+      'touchend',
+      (e) => {
+        if (!e.changedTouches || e.changedTouches.length !== 1) return;
+        const dx = e.changedTouches[0].clientX - swipeStartX;
+        const dy = e.changedTouches[0].clientY - swipeStartY;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.25) {
+          navigateLightbox(dx < 0 ? 1 : -1);
+        }
+      },
+      { passive: true }
+    );
+  }
 }
 
 function applyTimelineFilter(era, period, label) {
@@ -1805,6 +2035,7 @@ function closeCollectionsModal() {
   const modal = document.getElementById('collectionsModal');
   if (modal) modal.classList.add('hidden');
   state.assignSpecimenForCollection = null;
+  setMobileActiveTab(state.favoritesOnly ? 'favorites' : 'explore');
 }
 
 function renderCollectionsModalContent() {
@@ -5541,6 +5772,7 @@ function closeQuizModal() {
   const modal = document.getElementById('quizModal');
   if (modal) modal.classList.add('hidden');
   document.body.style.overflow = '';
+  setMobileActiveTab(state.favoritesOnly ? 'favorites' : 'explore');
 }
 
 function renderQuizModalView() {

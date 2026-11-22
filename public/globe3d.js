@@ -511,16 +511,52 @@
       if (this.controlsBound) return;
       this.controlsBound = true;
 
+      let pointerDownPos = { x: 0, y: 0 };
+      let pinchStartDist = 0;
+      let pinchStartZ = 27.5;
+
+      const isCoarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+      const hintEl = container.querySelector('.globe-interaction-hint');
+      if (hintEl && isCoarsePointer) {
+        hintEl.textContent = 'Arraste para girar · Pinça para zoom';
+      }
+
+      const inspectMarkerAt = (clientX, clientY) => {
+        if (!this.raycaster || !this.camera || this.interactiveMarkers.length === 0) return false;
+        const rect = canvas.getBoundingClientRect();
+        this.mouseNdc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+        this.mouseNdc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+        this.raycaster.setFromCamera(this.mouseNdc, this.camera);
+        const hits = this.raycaster.intersectObjects(this.interactiveMarkers, false);
+        const tooltip = document.getElementById('globe3dTooltip');
+        if (!tooltip) return false;
+
+        if (hits.length > 0) {
+          const d = hits[0].object.userData;
+          tooltip.innerHTML = `<strong>${d.locality || d.country}</strong><br><small>${d.country || ''} ${d.formation ? '• ' + d.formation : ''}</small>`;
+          tooltip.style.left = `${Math.min(Math.max(8, rect.width - 180), Math.max(8, clientX - rect.left + 10))}px`;
+          tooltip.style.top = `${Math.max(8, clientY - rect.top - 48)}px`;
+          tooltip.classList.remove('hidden');
+          canvas.style.cursor = 'pointer';
+          return true;
+        }
+        tooltip.classList.add('hidden');
+        canvas.style.cursor = 'grab';
+        return false;
+      };
+
       canvas.addEventListener('pointerdown', (e) => {
+        if (pinchStartDist > 0) return;
         this.isDragging = true;
         this.autoRotate = false;
         this.prevPointer = { x: e.clientX, y: e.clientY };
+        pointerDownPos = { x: e.clientX, y: e.clientY };
         const toggleBtn = document.getElementById('btnToggleGlobeRotate');
         if (toggleBtn) toggleBtn.textContent = '▶️';
       });
 
       window.addEventListener('pointermove', (e) => {
-        if (this.isDragging && this.globeGroup) {
+        if (this.isDragging && this.globeGroup && pinchStartDist === 0) {
           const dx = e.clientX - this.prevPointer.x;
           const dy = e.clientY - this.prevPointer.y;
           this.targetRotY += dx * 0.008;
@@ -529,31 +565,48 @@
         }
       });
 
-      window.addEventListener('pointerup', () => {
+      window.addEventListener('pointerup', (e) => {
+        if (this.isDragging) {
+          const moved = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
+          if (moved < 8 && e.pointerType === 'touch') {
+            inspectMarkerAt(e.clientX, e.clientY);
+          }
+        }
         this.isDragging = false;
       });
 
-      canvas.addEventListener('mousemove', (e) => {
-        if (this.isDragging || !this.raycaster || !this.camera || this.interactiveMarkers.length === 0) return;
-        const rect = canvas.getBoundingClientRect();
-        this.mouseNdc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        this.mouseNdc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouseNdc, this.camera);
-        const hits = this.raycaster.intersectObjects(this.interactiveMarkers, false);
-        const tooltip = document.getElementById('globe3dTooltip');
-        if (!tooltip) return;
-
-        if (hits.length > 0) {
-          const d = hits[0].object.userData;
-          tooltip.innerHTML = `<strong>${d.locality || d.country}</strong><br><small>${d.country || ''} ${d.formation ? '• ' + d.formation : ''}</small>`;
-          tooltip.style.left = `${Math.min(rect.width - 170, Math.max(10, e.clientX - rect.left + 12))}px`;
-          tooltip.style.top = `${Math.max(10, e.clientY - rect.top - 48)}px`;
-          tooltip.classList.remove('hidden');
-          canvas.style.cursor = 'pointer';
-        } else {
-          tooltip.classList.add('hidden');
-          canvas.style.cursor = 'grab';
+      canvas.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2 && this.camera) {
+          this.isDragging = false;
+          pinchStartDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          pinchStartZ = this.camera.position.z;
         }
+      }, { passive: true });
+
+      canvas.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && pinchStartDist > 0 && this.camera) {
+          e.preventDefault();
+          const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          const scale = pinchStartDist / Math.max(20, dist);
+          this.camera.position.z = Math.max(15, Math.min(40, pinchStartZ * scale));
+        }
+      }, { passive: false });
+
+      canvas.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) {
+          pinchStartDist = 0;
+        }
+      }, { passive: true });
+
+      canvas.addEventListener('mousemove', (e) => {
+        if (this.isDragging) return;
+        inspectMarkerAt(e.clientX, e.clientY);
       });
 
       canvas.addEventListener('mouseleave', () => {

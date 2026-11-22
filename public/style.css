@@ -166,6 +166,7 @@ body[data-theme-habitat="microbiologico"] {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -178,8 +179,24 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: clip;
   transition: background-color 0.35s var(--ease-out);
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.mobile-sheet-open {
+  overflow: hidden;
+}
+
+button,
+a,
+select {
+  touch-action: manipulation;
+}
+
+.auth-label-short {
+  display: none;
 }
 
 a {
@@ -2223,6 +2240,7 @@ body[data-audience-mode="explorer"] .insight-researcher {
   width: 100%;
   height: 100%;
   display: block;
+  touch-action: none;
 }
 
 .globe-loading-overlay {
@@ -4628,7 +4646,9 @@ body[data-audience-mode="explorer"] .insight-researcher {
   #quizModal,
   #compareModal,
   #collectionsModal,
-  #lightboxModal {
+  #lightboxModal,
+  #mobileBottomNav,
+  #mobileMenuSheet {
     display: none !important;
   }
   #wikiModal {
@@ -5591,6 +5611,1032 @@ body[data-audience-mode="explorer"] .rw-table-section {
   }
   .expert-paper-item {
     flex-direction: column;
+  }
+}
+
+/* ============================================================================
+   VERSÃO MOBILE & ERGONOMIA TOUCH-FIRST (360px – 860px)
+   ============================================================================ */
+
+/* Navegação Inferior Mobile & Bottom Sheet (Ocultos no Desktop) */
+.mobile-bottom-nav {
+  display: none;
+}
+
+.mobile-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.mobile-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 7, 14, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.mobile-sheet-panel {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 560px;
+  max-height: 86dvh;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-strong);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -20px 54px rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: mobile-sheet-up 0.22s var(--ease-out);
+}
+
+@keyframes mobile-sheet-up {
+  from {
+    transform: translateY(36px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.mobile-sheet-handle {
+  width: 40px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.35);
+  margin: 10px auto 4px;
+  flex-shrink: 0;
+}
+
+.mobile-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 20px 14px;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.mobile-sheet-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+.mobile-sheet-body {
+  padding: 16px 20px 22px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mobile-sheet-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-sheet-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.mobile-sheet-mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 4px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+}
+
+.mobile-sheet-mode-grid .audience-btn {
+  min-height: 44px;
+  font-size: 0.86rem;
+}
+
+.mobile-sheet-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-input);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.mobile-sheet-row {
+  width: 100%;
+  min-height: 58px;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-hairline);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.16s var(--ease-out);
+}
+
+.mobile-sheet-row:last-child {
+  border-bottom: none;
+}
+
+.mobile-sheet-row:active,
+.mobile-sheet-row:hover {
+  background: var(--accent-soft);
+}
+
+.mobile-sheet-row-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mobile-sheet-row-texts strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mobile-sheet-row-texts small {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.mobile-sheet-chevron {
+  font-size: 1.35rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+@media (max-width: 860px) {
+  /* Barra Superior Compacta + Barra Inferior Fixa (<= 15% da altura da tela) */
+  .topbar {
+    height: 52px;
+  }
+
+  .topbar-inner {
+    padding: 0 14px;
+    gap: 12px;
+  }
+
+  .brand-wordmark {
+    font-size: 1.2rem;
+  }
+
+  .topbar-nav {
+    display: none;
+  }
+
+  .btn-topbar-primary {
+    min-height: 38px;
+    padding: 7px 12px;
+    font-size: 0.8rem;
+  }
+
+  .auth-user-name {
+    max-width: 92px;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 860;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: stretch;
+    min-height: 58px;
+    padding: 4px 4px calc(4px + env(safe-area-inset-bottom, 0px));
+    background: rgba(9, 13, 18, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  body[data-theme-habitat="aquatico"] .mobile-bottom-nav {
+    background: rgba(4, 16, 31, 0.94);
+  }
+
+  body[data-theme-habitat="terrestre"] .mobile-bottom-nav {
+    background: rgba(7, 17, 11, 0.94);
+  }
+
+  .mobile-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    min-height: 48px;
+    padding: 4px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 0.67rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.16s var(--ease-out);
+  }
+
+  .mobile-tab-btn.active {
+    color: var(--accent);
+  }
+
+  .mobile-tab-btn.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 24%;
+    right: 24%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  .mobile-tab-icon-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-tab-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-size: 0.62rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  /* Espaçamento inferior seguro para o rodapé, dock e toast */
+  .footer {
+    padding: 22px 0 calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .compare-dock {
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+    width: calc(100vw - 16px);
+    padding: 10px 12px;
+  }
+
+  .compare-dock-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .compare-dock-actions {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+  }
+
+  .toast {
+    left: 12px;
+    right: 12px;
+    bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+    max-width: none;
+  }
+
+  /* Layout geral mais compacto e confortável */
+  .page-shell {
+    padding: 0 14px;
+  }
+
+  .hero {
+    padding: 28px 14px 24px;
+  }
+
+  .hero-kicker {
+    font-size: 0.76rem;
+    margin-bottom: 10px;
+  }
+
+  .hero-title {
+    font-size: clamp(1.7rem, 6.8vw, 2.35rem);
+    margin-bottom: 12px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.92rem;
+    margin-bottom: 20px;
+  }
+
+  /* Evita zoom automático no iOS ao focar campos */
+  input[type="text"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  .command-search-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .command-input-wrap {
+    padding-left: 8px;
+  }
+
+  .command-input-wrap input {
+    min-height: 44px;
+    padding: 8px 34px 8px 0;
+  }
+
+  .command-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .command-actions .btn-primary,
+  .command-actions .btn-secondary {
+    min-height: 44px;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 0.86rem;
+  }
+
+  .search-autocomplete {
+    max-height: 52dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .autocomplete-item {
+    min-height: 54px;
+  }
+
+  /* Destaques rápidos em faixa horizontal com swipe */
+  .quick-explore-row {
+    margin-top: 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    text-align: left;
+  }
+
+  .quick-explore-list {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 4px;
+    padding-bottom: 2px;
+  }
+
+  .quick-explore-list::-webkit-scrollbar,
+  .habitat-tabs-grid::-webkit-scrollbar,
+  .era-segmented-bar::-webkit-scrollbar,
+  .extinctions-strip::-webkit-scrollbar,
+  .wiki-quick-tools::-webkit-scrollbar,
+  .wiki-tabs-bar::-webkit-scrollbar,
+  .lightbox-category-nav::-webkit-scrollbar,
+  .rw-segmented::-webkit-scrollbar {
+    display: none;
+  }
+
+  .quick-link-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-height: 36px;
+    padding: 6px 8px;
+  }
+
+  .btn-ghost-inline {
+    align-self: flex-start;
+    padding: 6px 2px;
+  }
+
+  /* Portal de Habitats em carrossel horizontal fluido */
+  .habitat-portal-section {
+    padding: 20px 0 18px;
+  }
+
+  .habitat-portal-header {
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .audience-switcher {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .audience-btn {
+    min-height: 42px;
+    padding: 8px 10px;
+    font-size: 0.84rem;
+  }
+
+  .habitat-tabs-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 10px;
+    padding-bottom: 2px;
+  }
+
+  .habitat-card-tab {
+    flex: 0 0 176px;
+    scroll-snap-align: start;
+    min-height: 58px;
+    padding: 10px 12px;
+  }
+
+  /* Barra de Eras e Filtros */
+  .main-workspace {
+    padding-top: 18px;
+    padding-bottom: 36px;
+  }
+
+  .workspace-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .era-segmented-bar {
+    width: 100%;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .era-tab-btn {
+    min-height: 38px;
+    padding: 8px 12px;
+  }
+
+  .workspace-toolbar-right {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  .workspace-toolbar-right .btn-outline-sm,
+  .workspace-toolbar-right .btn-ghost-sm {
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .advanced-filters-panel {
+    padding: 14px;
+  }
+
+  .filter-field select {
+    min-height: 44px;
+  }
+
+  .discovery-inline-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .discovery-inline-label {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .discovery-btn {
+    min-height: 38px;
+    flex-shrink: 0;
+  }
+
+  /* Cards de Espécimes com alvos de toque >= 44px */
+  .card-icon-action {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .card-content {
+    padding: 16px;
+  }
+
+  .btn-card-open,
+  .btn-card-anatomy {
+    min-height: 44px;
+  }
+
+  /* Bancada Científica do Modo Pesquisador no Mobile */
+  .researcher-workbench {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .rw-title {
+    font-size: 1.08rem;
+  }
+
+  .rw-toolbar {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .rw-segmented {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .rw-seg-btn {
+    flex: 1 0 auto;
+    min-height: 38px;
+    padding: 7px 11px;
+  }
+
+  .rw-view-controls {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .rw-view-controls .rw-segmented {
+    grid-column: 1 / -1;
+  }
+
+  .rw-view-controls .btn-outline-sm {
+    min-height: 40px;
+    justify-content: center;
+    padding: 8px 6px;
+    font-size: 0.78rem;
+  }
+
+  .rw-kpi-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .rw-kpi-cell:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .rw-kpi-value {
+    font-size: 1.08rem;
+  }
+
+  .rw-chart-stage,
+  .rw-inspector-side {
+    padding: 12px;
+  }
+
+  .rw-heatmap-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .rw-table-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Linha do Tempo & Extinções em Massa */
+  .timeline-section {
+    margin-top: 40px;
+    padding-top: 28px;
+  }
+
+  .timeline-card {
+    padding: 16px;
+  }
+
+  .tl-seg {
+    font-size: 0.65rem;
+    padding: 5px 2px;
+  }
+
+  .timeline-slider {
+    height: 28px;
+  }
+
+  .extinctions-strip {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .extinctions-label {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .extinction-btn {
+    min-height: 40px;
+    flex-shrink: 0;
+  }
+
+  /* Árvore da Vida Interativa */
+  .tree-section {
+    margin-top: 36px;
+  }
+
+  .tree-of-life-card {
+    padding: 12px;
+  }
+
+  .tree-branch-summary {
+    padding: 12px;
+    min-height: 50px;
+  }
+
+  .tree-toolbar-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tree-toolbar-actions button {
+    min-height: 42px;
+    justify-content: center;
+  }
+
+  /* Modais viram Bottom Sheets em Tela Quase Cheia no Mobile */
+  .modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+    height: 94dvh;
+    max-height: 94dvh;
+    border-radius: 22px 22px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .modal-header {
+    padding: 14px 16px;
+    gap: 10px;
+    position: relative;
+  }
+
+  .modal-body {
+    padding: 14px 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-footer {
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    gap: 10px;
+  }
+
+  .modal-footer .wiki-source-note {
+    display: none;
+  }
+
+  .footer-right-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .modal-footer > .btn-primary-sm,
+  .modal-footer > .btn-outline-sm {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .footer-right-actions button {
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .close-btn {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+  }
+
+  /* Dossiê do Espécime (#wikiModal) Mobile */
+  .wiki-modal-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding-right: 64px;
+  }
+
+  #wikiModal .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+
+  .wiki-header-controls {
+    width: 100%;
+  }
+
+  .wiki-quick-tools {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .wiki-quick-tools .btn-outline-sm {
+    min-height: 38px;
+    flex-shrink: 0;
+    padding: 7px 12px;
+  }
+
+  .wiki-tabs-bar-wrap {
+    padding: 0 14px 8px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .wiki-tabs-bar {
+    width: 100%;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .wiki-tab-btn {
+    min-height: 44px;
+    padding: 10px 2px;
+    flex-shrink: 0;
+  }
+
+  .modal-mode-toggle {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .gallery-thumbs-scroll {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+
+  .gallery-thumb {
+    flex: 0 0 84px;
+    width: 84px;
+  }
+
+  .globe-3d-viewport {
+    height: 245px;
+  }
+
+  .globe-ctrl-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .paleo-mode-btn {
+    min-height: 36px;
+  }
+
+  .structural-spec-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .structural-spec-val {
+    text-align: left;
+  }
+
+  /* Lightbox em Tela Cheia com Swipe */
+  .lightbox-container {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+
+  .lightbox-header-bar {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .lightbox-category-nav {
+    order: 3;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .lightbox-cat-btn {
+    min-height: 36px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .lightbox-close {
+    width: 42px;
+    height: 42px;
+  }
+
+  .lightbox-main-stage {
+    flex: 1;
+    min-height: 0;
+    padding: 10px 12px;
+  }
+
+  .lightbox-image-box,
+  .lightbox-image-box img {
+    max-height: 54dvh;
+  }
+
+  .lightbox-arrow {
+    width: 42px;
+    height: 42px;
+    background: rgba(8, 13, 20, 0.72);
+  }
+
+  .lightbox-arrow.left { left: 8px; }
+  .lightbox-arrow.right { right: 8px; }
+
+  .lightbox-filmstrip-wrap {
+    padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Quiz Mobile */
+  .quiz-option-btn {
+    min-height: 52px;
+    padding: 12px 14px;
+  }
+
+  .quiz-stage-img-wrap {
+    max-height: 220px;
+  }
+
+  .quiz-summary-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quiz-summary-actions button {
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  /* Aba Científica do Dossiê (#tab-expert) no Mobile */
+  .expert-quick-cite-bar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .expert-quick-cite-bar .btn-outline-sm {
+    min-height: 40px;
+    justify-content: center;
+    padding: 6px;
+    font-size: 0.75rem;
+  }
+
+  .expert-card-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .expert-card-actions .btn-outline-sm {
+    min-height: 40px;
+    justify-content: center;
+  }
+
+  .expert-occ-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .expert-paper-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .expert-paper-actions button {
+    min-height: 38px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .specimen-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .full-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .export-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .specs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .spec-card {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 430px) {
+  .auth-label-full {
+    display: none;
+  }
+
+  .auth-label-short {
+    display: inline;
+  }
+
+  .auth-user-name {
+    display: none;
+  }
+
+  .quiz-levels-row {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .quiz-level-tile {
+    min-height: 62px;
+  }
+
+  .rw-kpi-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .expert-taxonomy-matrix,
+  .expert-scale-sim-results,
+  .expert-lat-strip {
+    grid-template-columns: 1fr;
   }
 }
 
